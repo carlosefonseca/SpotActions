@@ -19,11 +19,11 @@ public class UserManagerImplementation: UserManager, ObservableObject {
     public var userPublished: Published<User?> { _user }
     public var userPublisher: Published<User?>.Publisher { $user }
 
-    private let gateway: SpotifyWebApiGateway
+    private let gateway: SpotifyUserProfileGateway
 
     private var bag = Set<AnyCancellable>()
 
-    public init(auth: SpotifyAuthManager, gateway: SpotifyWebApiGateway) {
+    public init(auth: SpotifyAuthManager, gateway: SpotifyUserProfileGateway) {
         self.gateway = gateway
 
         auth.statePublisher

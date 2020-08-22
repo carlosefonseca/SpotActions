@@ -1,89 +1,9 @@
 //
-//  SpotifyGateway.swift
-//
+//  AuthenticatedSpotifyRequestManager.swift
+//  
 
 import Foundation
 import Combine
-
-public protocol WebApiError: Error {}
-
-public struct SpotifyWebApiError: Error, Decodable {
-    let error: SpotifyRegularError
-}
-
-public struct SpotifyRegularError: Decodable {
-    let status: Int
-    let message: String
-}
-
-public enum SpotifyRequestError: WebApiError, LocalizedError {
-    case requestError(error: Error?)
-    case networkError(error: Error)
-    case httpError(error: ResponseType, data: Data?)
-    case parseError(error: Error)
-    case apiError(error: ResponseType, data: SpotifyRegularError)
-    case noLogin
-    case unauthorized(error: ResponseType)
-}
-
-public struct User: Codable {
-    public var country: String?
-    public var display_name: String?
-    public var email: String?
-    //   public var external_urls : [String:String]?
-    //   public var followers : String?
-    public var href: String?
-    public var id: String?
-    //   public var images : String?
-    public var product: String?
-    public var type: String?
-    public var uri: String?
-}
-
-public protocol URLRequestable {
-    var urlRequest: URLRequest { get }
-}
-
-public protocol SpotifyWebApiGateway {
-    func user(callback: @escaping (Result<User, SpotifyRequestError>) -> Void)
-}
-
-public class SASpotifyWebApiGateway: SpotifyWebApiGateway {
-
-    let baseURL: URL
-    let requestManager: RequestManager
-
-    public init(baseURL: URL, requestManager: RequestManager) {
-        self.baseURL = baseURL
-        self.requestManager = requestManager
-    }
-
-    public func user(callback: @escaping (Result<User, SpotifyRequestError>) -> Void) {
-        let request = UserRequest(baseURL: baseURL)
-        requestManager.execute(request: request) { (result: Result<User, SpotifyRequestError>) in
-            callback(result)
-        }
-    }
-}
-
-public struct UserRequest: URLRequestable {
-
-    let url: URL!
-
-    init(baseURL: URL) {
-        url = URL(string: "/v1/me", relativeTo: baseURL)
-    }
-
-    public var urlRequest: URLRequest {
-        URLRequest(url: url)
-    }
-}
-
-public protocol RequestManager {
-    func execute<T>(request: URLRequestable, completion: @escaping (Result<T, SpotifyRequestError>) -> Void) where T: Decodable
-//    func execute(request: URLRequestable, completion: @escaping (Error?) -> Void)
-//    func execute(request: URLRequest, completion: @escaping (Result<(HTTPURLResponse, Data?)>) -> Void)
-}
 
 public class AuthenticatedSpotifyRequestManager: RequestManager {
 
@@ -132,6 +52,7 @@ public class AuthenticatedSpotifyRequestManager: RequestManager {
                 }
                 return
             case .failure(let error):
+                print(error)
                 switch error {
                 case .unauthorized(_):
                     auth.refreshToken { _ in exec(urlRequest: urlRequest) { result in
