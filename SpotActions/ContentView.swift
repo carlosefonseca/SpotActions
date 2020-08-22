@@ -13,20 +13,36 @@ class Presenter: ObservableObject {
 
     @Published var isAuthenticated = false
 
-    var sub : AnyCancellable?
+    var userManager: UserManager
 
-    init(auth: SpotifyAuthManager) {
+    @Published var user: User?
+
+    var bag = Set<AnyCancellable>()
+
+    @Published var error: Error?
+
+    init(auth: SpotifyAuthManager, userManager: UserManager) {
         self.auth = auth
+        self.userManager = userManager
 
-        sub = self.auth.statePublisher
+        self.auth.statePublisher
             .receive(on: RunLoop.main)
-            .sink { authState in
-            if case .notLoggedIn = authState {
-                self.isAuthenticated = false
-            } else {
-                self.isAuthenticated = true
-            }
-        }
+            .sink { [self] authState in
+                switch authState {
+                case .notLoggedIn:
+                    isAuthenticated = false
+                case .loggedIn:
+                    isAuthenticated = true
+                case .error(let error):
+                    isAuthenticated = false
+                    self.error = error
+                }
+            }.store(in: &bag)
+
+        self.userManager.userPublisher
+            .receive(on: RunLoop.main)
+            .sink { self.user = $0 }
+            .store(in: &bag)
     }
 }
 
@@ -39,10 +55,13 @@ struct ContentView: View {
         VStack {
             Text("Hello, world!").padding()
             if presenter.isAuthenticated {
-                Text("Ola").padding()
+                Text("Ola \(presenter.user?.display_name ?? "<?>")").padding()
                 Button("Logout", action: { presenter.auth.logout() })
             } else {
                 Button("Login", action: { presenter.auth.login() })
+                if let error = presenter.error {
+                    Text("Error: \(error.localizedDescription)").foregroundColor(.red)
+                }
             }
         }
     }
@@ -50,7 +69,7 @@ struct ContentView: View {
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView(presenter: Presenter(auth: FakeSpotifyAuthManager()))
+        ContentView(presenter: Presenter(auth: FakeSpotifyAuthManager(), userManager: FakeUserManager()))
     }
 }
 
@@ -71,4 +90,19 @@ class FakeSpotifyAuthManager: SpotifyAuthManager {
 
     var statePublished: Published<AuthState> { _state }
     var statePublisher: Published<AuthState>.Publisher { $state }
+}
+
+class FakeUserManager: UserManager {
+    @Published var user: User?
+
+    var userPublished: Published<User?> { _user }
+
+    var userPublisher: Published<User?>.Publisher { $user }
+
+    var fakeUser: User?
+
+    func getUser(completion: @escaping (Result<User, SpotifyRequestError>) -> Void) {
+        user = fakeUser
+        completion(Result.success(fakeUser!))
+    }
 }

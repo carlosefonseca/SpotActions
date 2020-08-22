@@ -19,7 +19,15 @@ public protocol SpotifyAuthManager {
 public enum AuthState {
     case notLoggedIn
     case loggedIn(token: TokenResponse)
+    case error(_ error: Error?)
 }
+
+// public struct AuthError : Error {
+//    let error:Error
+// }
+// public enum AuthError: Error {
+//    case someError(error: Error)
+// }
 
 public final class SpotifyAuthManagerImplementation: ObservableObject, SpotifyAuthManager {
 
@@ -65,7 +73,6 @@ public final class SpotifyAuthManagerImplementation: ObservableObject, SpotifyAu
     public var statePublished: Published<AuthState> { _state }
     public var statePublisher: Published<AuthState>.Publisher { $state }
 
-
     public func login() {
 
         webAuthManager.execute(url: fullAuthorizationUrl, callbackURLScheme: redirectUri) { result in
@@ -85,35 +92,77 @@ public final class SpotifyAuthManagerImplementation: ObservableObject, SpotifyAu
         }
     }
 
-    public func logout() {
-        try? self.credentialStore.delete(account: defaultAccountKey)
-        state = .notLoggedIn
+    func clearStoredToken() {
+        try? credentialStore.delete(account: defaultAccountKey)
     }
 
+    public func logout() {
+        clearStoredToken()
+        state = .notLoggedIn
+    }
 
     private func swapCodeForToken(token: String) {
         let url = accessTokenUrl
         var urlRequest = URLRequest(url: url)
-        urlRequest.setValue(authHeader, forHTTPHeaderField: "Authorization")
+
+        guard let authHeader = self.authHeader else { print("no auth header!"); return }
+
+        urlRequest.setValue("Basic \(authHeader)", forHTTPHeaderField: "Authorization")
 
         let bodyStr = "grant_type=authorization_code&code=\(token)&redirect_uri=\(redirectUri)"
 
         urlRequest.httpMethod = "POST"
         urlRequest.httpBody = bodyStr.data(using: .utf8)
 
-        URLSession.shared.dataTask(with: urlRequest) { data, _, error in
-            // TODO: Check error
+        print(urlRequest)
 
-            guard error == nil else { print(error!); return }
-            guard let data = data else { print("NO DATA!"); return }
-
-            do {
-                let token = try JSONDecoder().decode(TokenResponse.self, from: data)
-                self.storeToken(data: data)
-                self.state = .loggedIn(token: token)
-            } catch {
-                print(error)
+        URLSession.shared.dataTask(with: urlRequest) { [self] data, response, error in
+            if (error as NSError?)?.isNetworkConnectionError() != nil {
+                clearStoredToken()
+                self.state = .error(error)
                 return
+            }
+
+            // Check if an error happened while making the request
+            if let error = error {
+                clearStoredToken()
+                self.state = .error(error)
+                return
+            }
+
+            // Check if we have a `HTTPURLResponse`
+            guard let httpUrlResponse = response as? HTTPURLResponse else {
+                clearStoredToken()
+                self.state = .error(error)
+                return
+            }
+
+            // Check if response is success or a known error
+            switch httpUrlResponse.type {
+            case .success:
+
+                do {
+                    let token = try JSONDecoder().decode(TokenResponse.self, from: data!)
+                    self.storeToken(data: data!)
+                    self.state = .loggedIn(token: token)
+                } catch {
+                    clearStoredToken()
+                    self.state = .error(error)
+                }
+                return
+
+            case .unauthorized, .forbidden, .error, .other:
+                clearStoredToken()
+                do {
+                    if let data = data {
+                        let error = try JSONDecoder().decode(AuthError.self, from: data)
+                        self.state = .error(error)
+                    } else {
+                        self.state = .error(error)
+                    }
+                } catch {
+                    self.state = .error(error)
+                }
             }
         }.resume()
     }
@@ -138,7 +187,9 @@ public final class SpotifyAuthManagerImplementation: ObservableObject, SpotifyAu
         guard let existingData = data else { return nil }
 
         do {
-            return try JSONDecoder().decode(TokenResponse.self, from: existingData)
+            let parsedData = try JSONDecoder().decode(TokenResponse.self, from: existingData)
+            guard parsedData.access_token != nil else { return nil }
+            return parsedData
         } catch {
             print(error)
             return nil
@@ -154,4 +205,13 @@ public struct TokenResponse: Codable {
     var refresh_token: String?
 
     public init() {}
+}
+
+public struct AuthError: Error, Codable, LocalizedError {
+    var error: String?
+    var error_description: String?
+
+    public var errorDescription: String? {
+        error_description ?? error ?? "Unknown auth error"
+    }
 }
