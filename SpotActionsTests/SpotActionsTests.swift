@@ -1,8 +1,5 @@
 //
 //  SpotActionsTests.swift
-//  SpotActionsTests
-//
-//  Created by carlos.fonseca on 20/08/2020.
 //
 
 import XCTest

@@ -1,17 +1,30 @@
 //
 //  SpotActionsApp.swift
-//  SpotActions
-//
-//  Created by carlos.fonseca on 20/08/2020.
 //
 
 import SwiftUI
+import CEFSpotifyCore
+
+struct Dependencies {
+    var keychain:CredentialStore
+    var auth : SpotifyAuthManager
+
+    init() {
+        keychain = Keychain()
+        auth = SpotifyAuthManagerImplementation(webAuthManager:WebAuthManager(), credentialStore: keychain)
+    }
+
+}
+
 
 @main
 struct SpotActionsApp: App {
+
+    var dependencies = Dependencies()
+
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            ContentView(presenter: Presenter(auth: dependencies.auth))
         }
     }
 }

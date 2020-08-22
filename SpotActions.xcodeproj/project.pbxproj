@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -13,6 +13,10 @@
 		2DA5DE5C24EE819B00E9BE87 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2DA5DE5B24EE819B00E9BE87 /* Preview Assets.xcassets */; };
 		2DA5DE6724EE819B00E9BE87 /* SpotActionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DA5DE6624EE819B00E9BE87 /* SpotActionsTests.swift */; };
 		2DA5DE7224EE819B00E9BE87 /* SpotActionsUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DA5DE7124EE819B00E9BE87 /* SpotActionsUITests.swift */; };
+		2DA5DE8124EE845100E9BE87 /* AuthenticationServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2DA5DE8024EE845100E9BE87 /* AuthenticationServices.framework */; };
+		2DD91ADE24F117620032D7C6 /* CEFSpotifyCore in Frameworks */ = {isa = PBXBuildFile; productRef = 2DD91ADD24F117620032D7C6 /* CEFSpotifyCore */; };
+		2DD91AE024F119B50032D7C6 /* WebAuth.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DD91ADF24F119B50032D7C6 /* WebAuth.swift */; };
+		2DD91AE224F11ADF0032D7C6 /* Keychain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DD91AE124F11ADF0032D7C6 /* Keychain.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -45,6 +49,9 @@
 		2DA5DE6D24EE819B00E9BE87 /* SpotActionsUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SpotActionsUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		2DA5DE7124EE819B00E9BE87 /* SpotActionsUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotActionsUITests.swift; sourceTree = "<group>"; };
 		2DA5DE7324EE819B00E9BE87 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		2DA5DE8024EE845100E9BE87 /* AuthenticationServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AuthenticationServices.framework; path = System/Library/Frameworks/AuthenticationServices.framework; sourceTree = SDKROOT; };
+		2DD91ADF24F119B50032D7C6 /* WebAuth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebAuth.swift; sourceTree = "<group>"; };
+		2DD91AE124F11ADF0032D7C6 /* Keychain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Keychain.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -52,6 +59,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2DA5DE8124EE845100E9BE87 /* AuthenticationServices.framework in Frameworks */,
+				2DD91ADE24F117620032D7C6 /* CEFSpotifyCore in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -79,6 +88,7 @@
 				2DA5DE6524EE819B00E9BE87 /* SpotActionsTests */,
 				2DA5DE7024EE819B00E9BE87 /* SpotActionsUITests */,
 				2DA5DE5224EE819A00E9BE87 /* Products */,
+				2DA5DE7F24EE845100E9BE87 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -100,6 +110,8 @@
 				2DA5DE5824EE819B00E9BE87 /* Assets.xcassets */,
 				2DA5DE5D24EE819B00E9BE87 /* Info.plist */,
 				2DA5DE5A24EE819B00E9BE87 /* Preview Content */,
+				2DD91ADF24F119B50032D7C6 /* WebAuth.swift */,
+				2DD91AE124F11ADF0032D7C6 /* Keychain.swift */,
 			);
 			path = SpotActions;
 			sourceTree = "<group>";
@@ -130,6 +142,14 @@
 			path = SpotActionsUITests;
 			sourceTree = "<group>";
 		};
+		2DA5DE7F24EE845100E9BE87 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				2DA5DE8024EE845100E9BE87 /* AuthenticationServices.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -146,6 +166,9 @@
 			dependencies = (
 			);
 			name = SpotActions;
+			packageProductDependencies = (
+				2DD91ADD24F117620032D7C6 /* CEFSpotifyCore */,
+			);
 			productName = SpotActions;
 			productReference = 2DA5DE5124EE819A00E9BE87 /* SpotActions.app */;
 			productType = "com.apple.product-type.application";
@@ -259,6 +282,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2DD91AE024F119B50032D7C6 /* WebAuth.swift in Sources */,
+				2DD91AE224F11ADF0032D7C6 /* Keychain.swift in Sources */,
 				2DA5DE5724EE819A00E9BE87 /* ContentView.swift in Sources */,
 				2DA5DE5524EE819A00E9BE87 /* SpotActionsApp.swift in Sources */,
 			);
@@ -580,6 +605,13 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		2DD91ADD24F117620032D7C6 /* CEFSpotifyCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = CEFSpotifyCore;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 2DA5DE4924EE819A00E9BE87 /* Project object */;
 }
