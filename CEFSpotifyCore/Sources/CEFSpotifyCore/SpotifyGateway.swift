@@ -117,17 +117,52 @@ public class AuthenticatedSpotifyRequestManager: RequestManager {
         }
 
         var urlRequest = request.urlRequest
-        // TODO: REFRESH TOKEN
+
         urlRequest.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
 
-        urlSession.dataTask(with: urlRequest) { data, response, error in
-            if (error as NSError?)?.isNetworkConnectionError() != nil {
-                completion(.failure(SpotifyRequestError.requestError(error: error)))
+        exec(urlRequest: urlRequest) { [self] result in
+            switch result {
+            case .success(let data):
+                do {
+                    let entity = try self.jsonDecoder.decode(T.self, from: data)
+                    completion(.success(entity))
+                } catch {
+                    completion(.failure(SpotifyRequestError.parseError(error: error)))
+                }
                 return
+            case .failure(let error):
+                switch error {
+                case .apiError(let innerError, _), .httpError(let innerError, _):
+                    switch innerError {
+                    case .unauthorized:
+                        auth.refreshToken { _ in exec(urlRequest: urlRequest) { result in
+                            switch result {
+                            case .success(let data):
+                                do {
+                                    let entity = try self.jsonDecoder.decode(T.self, from: data)
+                                    completion(.success(entity))
+                                } catch {
+                                    completion(.failure(SpotifyRequestError.parseError(error: error)))
+                                }
+                                return
+                            case .failure(let error):
+                                completion(.failure(error))
+                            }
+                        }
+                        }
+                    default:
+                        completion(.failure(error))
+                    }
+                default:
+                    completion(.failure(error))
+                }
             }
+        }
+    }
 
-            // Check if an error happened while making the request
-            if let error = error {
+    func exec(urlRequest: URLRequest, completion: @escaping (Result<Data, SpotifyRequestError>) -> Void) {
+        urlSession.dataTask(with: urlRequest) { data, response, error in
+            guard error == nil else {
                 completion(.failure(SpotifyRequestError.requestError(error: error)))
                 return
             }
@@ -138,16 +173,17 @@ public class AuthenticatedSpotifyRequestManager: RequestManager {
                 return
             }
 
+
             // Check if response is success or a known error
             switch httpUrlResponse.type {
             case .success:
 
-                do {
-                    let entity = try self.jsonDecoder.decode(T.self, from: data!)
-                    completion(.success(entity))
-                } catch {
-                    completion(.failure(SpotifyRequestError.parseError(error: error)))
+                guard let data = data else {
+                    completion(.failure(SpotifyRequestError.httpError(error: httpUrlResponse.type, data: nil)))
+                    return
                 }
+
+                completion(.success(data))
                 return
 
             case .unauthorized, .forbidden, .error:
@@ -170,6 +206,7 @@ public class AuthenticatedSpotifyRequestManager: RequestManager {
         }.resume()
     }
 }
+
 
 extension NSError {
     func isNetworkConnectionError() -> Bool {

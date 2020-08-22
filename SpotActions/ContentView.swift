@@ -74,6 +74,7 @@ struct ContentView_Previews: PreviewProvider {
 }
 
 class FakeSpotifyAuthManager: SpotifyAuthManager {
+
     init(initialState: AuthState = .notLoggedIn) {
         state = initialState
     }
@@ -85,6 +86,8 @@ class FakeSpotifyAuthManager: SpotifyAuthManager {
     func logout() {
         state = .notLoggedIn
     }
+
+    func refreshToken(completion: @escaping (Error?) -> Void) {}
 
     @Published var state: AuthState
 

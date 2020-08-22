@@ -14,6 +14,7 @@ public protocol SpotifyAuthManager {
     var statePublished: Published<AuthState> { get }
     var statePublisher: Published<AuthState>.Publisher { get }
     func logout()
+    func refreshToken(completion: @escaping (Error?) -> Void)
 }
 
 public enum AuthState {
@@ -194,6 +195,85 @@ public final class SpotifyAuthManagerImplementation: ObservableObject, SpotifyAu
             print(error)
             return nil
         }
+    }
+
+    public func refreshToken(completion: @escaping (Error?) -> Void) {
+        guard
+            case .loggedIn(let token) = state,
+            let refreshToken = token.refresh_token
+        else { return }
+
+        let url = accessTokenUrl
+        var urlRequest = URLRequest(url: url)
+
+        guard let authHeader = self.authHeader else { print("no auth header!"); return }
+
+        urlRequest.setValue("Basic \(authHeader)", forHTTPHeaderField: "Authorization")
+
+        let bodyStr = "grant_type=refresh_token&refresh_token=\(refreshToken)"
+
+        urlRequest.httpMethod = "POST"
+        urlRequest.httpBody = bodyStr.data(using: .utf8)
+
+        print(urlRequest)
+
+        URLSession.shared.dataTask(with: urlRequest) { [self] data, response, error in
+            if (error as NSError?)?.isNetworkConnectionError() != nil {
+                clearStoredToken()
+                self.state = .error(error)
+                completion(error)
+                return
+            }
+
+            // Check if an error happened while making the request
+            if let error = error {
+                clearStoredToken()
+                self.state = .error(error)
+                completion(error)
+                return
+            }
+
+            // Check if we have a `HTTPURLResponse`
+            guard let httpUrlResponse = response as? HTTPURLResponse else {
+                clearStoredToken()
+                self.state = .error(error)
+                completion(error)
+                return
+            }
+
+            // Check if response is success or a known error
+            switch httpUrlResponse.type {
+            case .success:
+
+                do {
+                    let token = try JSONDecoder().decode(TokenResponse.self, from: data!)
+                    self.storeToken(data: data!)
+                    self.state = .loggedIn(token: token)
+                    completion(nil)
+                } catch {
+                    clearStoredToken()
+                    self.state = .error(error)
+                    completion(error)
+                }
+                return
+
+            case .unauthorized, .forbidden, .error, .other:
+                clearStoredToken()
+                do {
+                    if let data = data {
+                        let error = try JSONDecoder().decode(AuthError.self, from: data)
+                        self.state = .error(error)
+                        completion(error)
+                    } else {
+                        self.state = .error(error)
+                        completion(error)
+                    }
+                } catch {
+                    self.state = .error(error)
+                    completion(error)
+                }
+            }
+        }.resume()
     }
 }
 
