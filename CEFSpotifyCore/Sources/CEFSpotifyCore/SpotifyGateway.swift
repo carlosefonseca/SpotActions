@@ -23,6 +23,7 @@ public enum SpotifyRequestError: WebApiError, LocalizedError {
     case parseError(error: Error)
     case apiError(error: ResponseType, data: SpotifyRegularError)
     case noLogin
+    case unauthorized(error: ResponseType)
 }
 
 public struct User: Codable {
@@ -132,26 +133,21 @@ public class AuthenticatedSpotifyRequestManager: RequestManager {
                 return
             case .failure(let error):
                 switch error {
-                case .apiError(let innerError, _), .httpError(let innerError, _):
-                    switch innerError {
-                    case .unauthorized:
-                        auth.refreshToken { _ in exec(urlRequest: urlRequest) { result in
-                            switch result {
-                            case .success(let data):
-                                do {
-                                    let entity = try self.jsonDecoder.decode(T.self, from: data)
-                                    completion(.success(entity))
-                                } catch {
-                                    completion(.failure(SpotifyRequestError.parseError(error: error)))
-                                }
-                                return
-                            case .failure(let error):
-                                completion(.failure(error))
+                case .unauthorized(_):
+                    auth.refreshToken { _ in exec(urlRequest: urlRequest) { result in
+                        switch result {
+                        case .success(let data):
+                            do {
+                                let entity = try self.jsonDecoder.decode(T.self, from: data)
+                                completion(.success(entity))
+                            } catch {
+                                completion(.failure(SpotifyRequestError.parseError(error: error)))
                             }
+                            return
+                        case .failure(let error):
+                            completion(.failure(error))
                         }
-                        }
-                    default:
-                        completion(.failure(error))
+                    }
                     }
                 default:
                     completion(.failure(error))
@@ -173,7 +169,6 @@ public class AuthenticatedSpotifyRequestManager: RequestManager {
                 return
             }
 
-
             // Check if response is success or a known error
             switch httpUrlResponse.type {
             case .success:
@@ -186,8 +181,11 @@ public class AuthenticatedSpotifyRequestManager: RequestManager {
                 completion(.success(data))
                 return
 
-            case .unauthorized, .forbidden, .error:
+            case .unauthorized:
+                completion(.failure(.unauthorized(error: httpUrlResponse.type)))
+                return
 
+            case .forbidden, .error:
                 guard let responseData = data else {
                     completion(.failure(SpotifyRequestError.httpError(error: httpUrlResponse.type, data: nil)))
                     return
@@ -206,7 +204,6 @@ public class AuthenticatedSpotifyRequestManager: RequestManager {
         }.resume()
     }
 }
-
 
 extension NSError {
     func isNetworkConnectionError() -> Bool {
