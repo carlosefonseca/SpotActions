@@ -14,11 +14,8 @@
 		2DA5DE6724EE819B00E9BE87 /* SpotActionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DA5DE6624EE819B00E9BE87 /* SpotActionsTests.swift */; };
 		2DA5DE7224EE819B00E9BE87 /* SpotActionsUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DA5DE7124EE819B00E9BE87 /* SpotActionsUITests.swift */; };
 		2DA5DE8124EE845100E9BE87 /* AuthenticationServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2DA5DE8024EE845100E9BE87 /* AuthenticationServices.framework */; };
-		2DAC399424F1DB74003AC458 /* IntentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DAC399324F1DB74003AC458 /* IntentHandler.swift */; };
-		2DAC399824F1DB74003AC458 /* SAIntent.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 2DAC399124F1DB74003AC458 /* SAIntent.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		2DAC399E24F1DC45003AC458 /* Intents.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = 2DAC399D24F1DC45003AC458 /* Intents.intentdefinition */; };
 		2DAC399F24F1DC73003AC458 /* Intents.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = 2DAC399D24F1DC45003AC458 /* Intents.intentdefinition */; };
-		2DAC39A124F1DDD1003AC458 /* GetUserProfileHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DAC39A024F1DDD1003AC458 /* GetUserProfileHandler.swift */; };
+		2DAC39A324F1ED40003AC458 /* GetUserProfileHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DAC39A024F1DDD1003AC458 /* GetUserProfileHandler.swift */; };
 		2DD91ADE24F117620032D7C6 /* CEFSpotifyCore in Frameworks */ = {isa = PBXBuildFile; productRef = 2DD91ADD24F117620032D7C6 /* CEFSpotifyCore */; };
 		2DD91AE024F119B50032D7C6 /* WebAuth.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DD91ADF24F119B50032D7C6 /* WebAuth.swift */; };
 		2DD91AE224F11ADF0032D7C6 /* Keychain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DD91AE124F11ADF0032D7C6 /* Keychain.swift */; };
@@ -39,13 +36,6 @@
 			remoteGlobalIDString = 2DA5DE5024EE819A00E9BE87;
 			remoteInfo = SpotActions;
 		};
-		2DAC399624F1DB74003AC458 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 2DA5DE4924EE819A00E9BE87 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 2DAC399024F1DB74003AC458;
-			remoteInfo = SAIntent;
-		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -55,7 +45,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
-				2DAC399824F1DB74003AC458 /* SAIntent.appex in Embed App Extensions */,
 			);
 			name = "Embed App Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -76,9 +65,6 @@
 		2DA5DE7124EE819B00E9BE87 /* SpotActionsUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotActionsUITests.swift; sourceTree = "<group>"; };
 		2DA5DE7324EE819B00E9BE87 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2DA5DE8024EE845100E9BE87 /* AuthenticationServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AuthenticationServices.framework; path = System/Library/Frameworks/AuthenticationServices.framework; sourceTree = SDKROOT; };
-		2DAC399124F1DB74003AC458 /* SAIntent.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = SAIntent.appex; sourceTree = BUILT_PRODUCTS_DIR; };
-		2DAC399324F1DB74003AC458 /* IntentHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntentHandler.swift; sourceTree = "<group>"; };
-		2DAC399524F1DB74003AC458 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2DAC399D24F1DC45003AC458 /* Intents.intentdefinition */ = {isa = PBXFileReference; lastKnownFileType = file.intentdefinition; path = Intents.intentdefinition; sourceTree = "<group>"; };
 		2DAC39A024F1DDD1003AC458 /* GetUserProfileHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetUserProfileHandler.swift; sourceTree = "<group>"; };
 		2DD91ADF24F119B50032D7C6 /* WebAuth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebAuth.swift; sourceTree = "<group>"; };
@@ -109,13 +95,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		2DAC398E24F1DB74003AC458 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -125,7 +104,6 @@
 				2DA5DE5324EE819A00E9BE87 /* SpotActions */,
 				2DA5DE6524EE819B00E9BE87 /* SpotActionsTests */,
 				2DA5DE7024EE819B00E9BE87 /* SpotActionsUITests */,
-				2DAC399224F1DB74003AC458 /* SAIntent */,
 				2DA5DE5224EE819A00E9BE87 /* Products */,
 				2DA5DE7F24EE845100E9BE87 /* Frameworks */,
 			);
@@ -137,7 +115,6 @@
 				2DA5DE5124EE819A00E9BE87 /* SpotActions.app */,
 				2DA5DE6224EE819B00E9BE87 /* SpotActionsTests.xctest */,
 				2DA5DE6D24EE819B00E9BE87 /* SpotActionsUITests.xctest */,
-				2DAC399124F1DB74003AC458 /* SAIntent.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -145,6 +122,7 @@
 		2DA5DE5324EE819A00E9BE87 /* SpotActions */ = {
 			isa = PBXGroup;
 			children = (
+				2DAC39A224F1EC0B003AC458 /* Intents */,
 				2DA5DE5424EE819A00E9BE87 /* SpotActionsApp.swift */,
 				2DA5DE5624EE819A00E9BE87 /* ContentView.swift */,
 				2DA5DE5824EE819B00E9BE87 /* Assets.xcassets */,
@@ -190,15 +168,13 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		2DAC399224F1DB74003AC458 /* SAIntent */ = {
+		2DAC39A224F1EC0B003AC458 /* Intents */ = {
 			isa = PBXGroup;
 			children = (
-				2DAC399324F1DB74003AC458 /* IntentHandler.swift */,
-				2DAC399524F1DB74003AC458 /* Info.plist */,
 				2DAC399D24F1DC45003AC458 /* Intents.intentdefinition */,
 				2DAC39A024F1DDD1003AC458 /* GetUserProfileHandler.swift */,
 			);
-			path = SAIntent;
+			path = Intents;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -216,7 +192,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				2DAC399724F1DB74003AC458 /* PBXTargetDependency */,
 			);
 			name = SpotActions;
 			packageProductDependencies = (
@@ -262,23 +237,6 @@
 			productReference = 2DA5DE6D24EE819B00E9BE87 /* SpotActionsUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
-		2DAC399024F1DB74003AC458 /* SAIntent */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 2DAC399C24F1DB74003AC458 /* Build configuration list for PBXNativeTarget "SAIntent" */;
-			buildPhases = (
-				2DAC398D24F1DB74003AC458 /* Sources */,
-				2DAC398E24F1DB74003AC458 /* Frameworks */,
-				2DAC398F24F1DB74003AC458 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = SAIntent;
-			productName = SAIntent;
-			productReference = 2DAC399124F1DB74003AC458 /* SAIntent.appex */;
-			productType = "com.apple.product-type.app-extension";
-		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -299,9 +257,6 @@
 						CreatedOnToolsVersion = 12.0;
 						TestTargetID = 2DA5DE5024EE819A00E9BE87;
 					};
-					2DAC399024F1DB74003AC458 = {
-						CreatedOnToolsVersion = 12.0;
-					};
 				};
 			};
 			buildConfigurationList = 2DA5DE4C24EE819A00E9BE87 /* Build configuration list for PBXProject "SpotActions" */;
@@ -320,7 +275,6 @@
 				2DA5DE5024EE819A00E9BE87 /* SpotActions */,
 				2DA5DE6124EE819B00E9BE87 /* SpotActionsTests */,
 				2DA5DE6C24EE819B00E9BE87 /* SpotActionsUITests */,
-				2DAC399024F1DB74003AC458 /* SAIntent */,
 			);
 		};
 /* End PBXProject section */
@@ -349,13 +303,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		2DAC398F24F1DB74003AC458 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -367,6 +314,7 @@
 				2DD91AE224F11ADF0032D7C6 /* Keychain.swift in Sources */,
 				2DA5DE5724EE819A00E9BE87 /* ContentView.swift in Sources */,
 				2DAC399F24F1DC73003AC458 /* Intents.intentdefinition in Sources */,
+				2DAC39A324F1ED40003AC458 /* GetUserProfileHandler.swift in Sources */,
 				2DA5DE5524EE819A00E9BE87 /* SpotActionsApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -387,16 +335,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		2DAC398D24F1DB74003AC458 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				2DAC399E24F1DC45003AC458 /* Intents.intentdefinition in Sources */,
-				2DAC39A124F1DDD1003AC458 /* GetUserProfileHandler.swift in Sources */,
-				2DAC399424F1DB74003AC458 /* IntentHandler.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -409,11 +347,6 @@
 			isa = PBXTargetDependency;
 			target = 2DA5DE5024EE819A00E9BE87 /* SpotActions */;
 			targetProxy = 2DA5DE6E24EE819B00E9BE87 /* PBXContainerItemProxy */;
-		};
-		2DAC399724F1DB74003AC458 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 2DAC399024F1DB74003AC458 /* SAIntent */;
-			targetProxy = 2DAC399624F1DB74003AC458 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -664,44 +597,6 @@
 			};
 			name = Release;
 		};
-		2DAC399A24F1DB74003AC458 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = VF8BTMF3F4;
-				INFOPLIST_FILE = SAIntent/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@executable_path/../../Frameworks",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.carlosefonseca.SpotActions.SAIntent;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Debug;
-		};
-		2DAC399B24F1DB74003AC458 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = VF8BTMF3F4;
-				INFOPLIST_FILE = SAIntent/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@executable_path/../../Frameworks",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.carlosefonseca.SpotActions.SAIntent;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Release;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -737,15 +632,6 @@
 			buildConfigurations = (
 				2DA5DE7D24EE819B00E9BE87 /* Debug */,
 				2DA5DE7E24EE819B00E9BE87 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		2DAC399C24F1DB74003AC458 /* Build configuration list for PBXNativeTarget "SAIntent" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				2DAC399A24F1DB74003AC458 /* Debug */,
-				2DAC399B24F1DB74003AC458 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
