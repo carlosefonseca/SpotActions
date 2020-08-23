@@ -21,9 +21,14 @@ class Presenter: ObservableObject {
 
     @Published var error: Error?
 
-    init(auth: SpotifyAuthManager, userManager: UserManager) {
+    var playlistManager: PlaylistsManager
+
+    @Published var playlists: [PlaylistJSON]?
+
+    init(auth: SpotifyAuthManager, userManager: UserManager, playlistManager: PlaylistsManager) {
         self.auth = auth
         self.userManager = userManager
+        self.playlistManager = playlistManager
 
         self.auth.statePublisher
             .receive(on: RunLoop.main)
@@ -43,6 +48,8 @@ class Presenter: ObservableObject {
             .receive(on: RunLoop.main)
             .sink { self.user = $0 }
             .store(in: &bag)
+
+//        self.playlistManager.
     }
 }
 
@@ -69,7 +76,9 @@ struct ContentView: View {
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView(presenter: Presenter(auth: FakeSpotifyAuthManager(), userManager: FakeUserManager()))
+        ContentView(presenter: Presenter(auth: FakeSpotifyAuthManager(),
+                                         userManager: FakeUserManager(),
+                                         playlistManager: FakePlaylistsManager()))
     }
 }
 
@@ -107,5 +116,12 @@ class FakeUserManager: UserManager {
     func getUser(completion: @escaping (Result<UserJSON, SpotifyRequestError>) -> Void) {
         user = fakeUser
         completion(Result.success(fakeUser!))
+    }
+}
+
+class FakePlaylistsManager: PlaylistsManager {
+
+    func getUserPlaylistsEach() -> Future<PagedPlaylistsJSON, SpotifyRequestError> {
+        return Future { _ in }
     }
 }

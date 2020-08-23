@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2D6A966624F27D1800993587 /* GetUserPlaylistsHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D6A966524F27D1800993587 /* GetUserPlaylistsHandler.swift */; };
 		2DA5DE5524EE819A00E9BE87 /* SpotActionsApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DA5DE5424EE819A00E9BE87 /* SpotActionsApp.swift */; };
 		2DA5DE5724EE819A00E9BE87 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DA5DE5624EE819A00E9BE87 /* ContentView.swift */; };
 		2DA5DE5924EE819B00E9BE87 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2DA5DE5824EE819B00E9BE87 /* Assets.xcassets */; };
@@ -52,6 +53,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		2D6A966524F27D1800993587 /* GetUserPlaylistsHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetUserPlaylistsHandler.swift; sourceTree = "<group>"; };
 		2DA5DE5124EE819A00E9BE87 /* SpotActions.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SpotActions.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2DA5DE5424EE819A00E9BE87 /* SpotActionsApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotActionsApp.swift; sourceTree = "<group>"; };
 		2DA5DE5624EE819A00E9BE87 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -173,6 +175,7 @@
 			children = (
 				2DAC399D24F1DC45003AC458 /* Intents.intentdefinition */,
 				2DAC39A024F1DDD1003AC458 /* GetUserProfileHandler.swift */,
+				2D6A966524F27D1800993587 /* GetUserPlaylistsHandler.swift */,
 			);
 			path = Intents;
 			sourceTree = "<group>";
@@ -312,6 +315,7 @@
 			files = (
 				2DD91AE024F119B50032D7C6 /* WebAuth.swift in Sources */,
 				2DD91AE224F11ADF0032D7C6 /* Keychain.swift in Sources */,
+				2D6A966624F27D1800993587 /* GetUserPlaylistsHandler.swift in Sources */,
 				2DA5DE5724EE819A00E9BE87 /* ContentView.swift in Sources */,
 				2DAC399F24F1DC73003AC458 /* Intents.intentdefinition in Sources */,
 				2DAC39A324F1ED40003AC458 /* GetUserProfileHandler.swift in Sources */,

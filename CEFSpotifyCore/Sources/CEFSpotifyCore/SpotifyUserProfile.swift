@@ -5,20 +5,6 @@
 import Foundation
 import Combine
 
-public struct UserJSON: Codable {
-    public var country: String?
-    public var display_name: String?
-    public var email: String?
-    //   public var external_urls : [String:String]?
-    //   public var followers : String?
-    public var href: String?
-    public var id: String?
-    //   public var images : String?
-    public var product: String?
-    public var type: String?
-    public var uri: String?
-}
-
 extension SpotifyWebApi.UserProfile {
 
     public typealias Response = UserJSON

@@ -8,9 +8,11 @@ import CEFSpotifyCore
 
 struct Gateways {
     let userProfile: SpotifyUserProfileGateway
+    let playlists: SpotifyPlaylistsGateway
 
     init(baseURL: URL, requestManager: RequestManager) {
         userProfile = SpotifyUserProfileGatewayImplementation(baseURL: baseURL, requestManager: requestManager)
+        playlists = SpotifyPlaylistsGatewayImplementation(baseURL: baseURL, requestManager: requestManager)
     }
 }
 
@@ -19,9 +21,10 @@ struct Dependencies {
     var auth: SpotifyAuthManager
     var spotifyRequestManager: RequestManager
 
-    var userManager: UserManager
-
     var gateways: Gateways
+
+    var userManager: UserManager
+    var playlistsManager: PlaylistsManager
 
     init() {
         keychain = Keychain()
@@ -30,6 +33,7 @@ struct Dependencies {
         gateways = Gateways(baseURL: URL(string: "https://api.spotify.com")!, requestManager: spotifyRequestManager)
 
         userManager = UserManagerImplementation(auth: auth, gateway: gateways.userProfile)
+        playlistsManager = PlaylistsManagerImplementation(auth: auth, gateway: gateways.playlists)
     }
 }
 
@@ -38,11 +42,13 @@ struct SpotActionsApp: App {
 
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
 
-    var dependencies : Dependencies { self.appDelegate.dependencies }
+    var dependencies: Dependencies { appDelegate.dependencies }
 
     var body: some Scene {
         WindowGroup {
-            ContentView(presenter: Presenter(auth: dependencies.auth, userManager: dependencies.userManager))
+            ContentView(presenter: Presenter(auth: dependencies.auth,
+                                             userManager: dependencies.userManager,
+                                             playlistManager: dependencies.playlistsManager))
         }
     }
 }
@@ -56,6 +62,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         switch intent {
         case is GetUserProfileIntent:
             return GetUserProfileHandler(auth: dependencies.auth, userManager: dependencies.userManager)
+        case is GetUserPlaylistsIntent:
+            return GetUserPlaylistsHandler(auth: dependencies.auth, userManager: dependencies.userManager, playlistsManager: dependencies.playlistsManager)
         default:
             fatalError("No handler for this intent")
         }

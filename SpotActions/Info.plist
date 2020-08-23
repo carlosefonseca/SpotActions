@@ -32,11 +32,13 @@
 	<key>INIntentsSupported</key>
 	<array>
 		<string>GetUserProfileIntent</string>
+		<string>GetUserPlaylistsIntent</string>
 	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSUserActivityTypes</key>
 	<array>
+		<string>GetUserPlaylistsIntent</string>
 		<string>GetUserProfileIntent</string>
 	</array>
 	<key>UIApplicationSceneManifest</key>
