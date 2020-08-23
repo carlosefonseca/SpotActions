@@ -28,7 +28,12 @@ class GetUserProfileHandler: NSObject, GetUserProfileIntentHandling {
 
             switch result {
             case .success(let user):
-                completion(.success(result: user.display_name ?? user.id!))
+                let u = User(identifier: user.id, display: user.display_name!)
+                u.email = user.email
+                u.country = user.country
+                u.product = user.product
+                u.uri = user.uri
+                completion(.success(result: u))
             case .failure(let error):
                 completion(.failure(error: error.errorDescription ?? String(describing: error)))
             }

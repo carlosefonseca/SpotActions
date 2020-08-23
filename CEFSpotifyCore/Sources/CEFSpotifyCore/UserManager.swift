@@ -6,18 +6,18 @@ import Foundation
 import Combine
 
 public protocol UserManager {
-    var user: User? { get }
-    var userPublished: Published<User?> { get }
-    var userPublisher: Published<User?>.Publisher { get }
+    var user: UserJSON? { get }
+    var userPublished: Published<UserJSON?> { get }
+    var userPublisher: Published<UserJSON?>.Publisher { get }
 
-    func getUser(completion: @escaping (Result<User, SpotifyRequestError>) -> Void)
+    func getUser(completion: @escaping (Result<UserJSON, SpotifyRequestError>) -> Void)
 }
 
 public class UserManagerImplementation: UserManager, ObservableObject {
 
-    @Published public var user: User?
-    public var userPublished: Published<User?> { _user }
-    public var userPublisher: Published<User?>.Publisher { $user }
+    @Published public var user: UserJSON?
+    public var userPublished: Published<UserJSON?> { _user }
+    public var userPublisher: Published<UserJSON?>.Publisher { $user }
 
     private let gateway: SpotifyUserProfileGateway
 
@@ -38,7 +38,7 @@ public class UserManagerImplementation: UserManager, ObservableObject {
             }.store(in: &bag)
     }
 
-    public func getUser(completion: @escaping (Result<User, SpotifyRequestError>) -> Void) {
+    public func getUser(completion: @escaping (Result<UserJSON, SpotifyRequestError>) -> Void) {
         gateway.user { result in
             switch result {
             case .success(let user):

@@ -5,7 +5,7 @@
 import Foundation
 import Combine
 
-public struct User: Codable {
+public struct UserJSON: Codable {
     public var country: String?
     public var display_name: String?
     public var email: String?
@@ -21,7 +21,7 @@ public struct User: Codable {
 
 extension SpotifyWebApi.UserProfile {
 
-    public typealias Response = User
+    public typealias Response = UserJSON
 
     public struct Request: URLRequestable {
 
@@ -38,9 +38,9 @@ public protocol SpotifyUserProfileGateway {
 }
 
 public class SpotifyUserProfileGatewayImplementation: BaseSpotifyGateway, SpotifyUserProfileGateway {
-    public func user(callback: @escaping (Result<User, SpotifyRequestError>) -> Void) {
+    public func user(callback: @escaping (Result<UserJSON, SpotifyRequestError>) -> Void) {
         let request = SpotifyWebApi.UserProfile.Request(baseURL: baseURL)
-        requestManager.execute(request: request) { (result: Result<User, SpotifyRequestError>) in
+        requestManager.execute(request: request) { (result: Result<UserJSON, SpotifyRequestError>) in
             callback(result)
         }
     }

@@ -15,7 +15,7 @@ class Presenter: ObservableObject {
 
     var userManager: UserManager
 
-    @Published var user: User?
+    @Published var user: UserJSON?
 
     var bag = Set<AnyCancellable>()
 
@@ -96,15 +96,15 @@ class FakeSpotifyAuthManager: SpotifyAuthManager {
 }
 
 class FakeUserManager: UserManager {
-    @Published var user: User?
+    @Published var user: UserJSON?
 
-    var userPublished: Published<User?> { _user }
+    var userPublished: Published<UserJSON?> { _user }
 
-    var userPublisher: Published<User?>.Publisher { $user }
+    var userPublisher: Published<UserJSON?>.Publisher { $user }
 
-    var fakeUser: User?
+    var fakeUser: UserJSON?
 
-    func getUser(completion: @escaping (Result<User, SpotifyRequestError>) -> Void) {
+    func getUser(completion: @escaping (Result<UserJSON, SpotifyRequestError>) -> Void) {
         user = fakeUser
         completion(Result.success(fakeUser!))
     }
