@@ -459,9 +459,106 @@
 			<key>INTypeDisplayNameID</key>
 			<string>E3x3xy</string>
 			<key>INTypeLastPropertyTag</key>
-			<integer>99</integer>
+			<integer>104</integer>
 			<key>INTypeName</key>
 			<string>Track</string>
+			<key>INTypeProperties</key>
+			<array>
+				<dict>
+					<key>INTypePropertyDefault</key>
+					<true/>
+					<key>INTypePropertyDisplayPriority</key>
+					<integer>1</integer>
+					<key>INTypePropertyName</key>
+					<string>identifier</string>
+					<key>INTypePropertyTag</key>
+					<integer>1</integer>
+					<key>INTypePropertyType</key>
+					<string>String</string>
+				</dict>
+				<dict>
+					<key>INTypePropertyDefault</key>
+					<true/>
+					<key>INTypePropertyDisplayPriority</key>
+					<integer>2</integer>
+					<key>INTypePropertyName</key>
+					<string>displayString</string>
+					<key>INTypePropertyTag</key>
+					<integer>2</integer>
+					<key>INTypePropertyType</key>
+					<string>String</string>
+				</dict>
+				<dict>
+					<key>INTypePropertyDefault</key>
+					<true/>
+					<key>INTypePropertyDisplayPriority</key>
+					<integer>3</integer>
+					<key>INTypePropertyName</key>
+					<string>pronunciationHint</string>
+					<key>INTypePropertyTag</key>
+					<integer>3</integer>
+					<key>INTypePropertyType</key>
+					<string>String</string>
+				</dict>
+				<dict>
+					<key>INTypePropertyDefault</key>
+					<true/>
+					<key>INTypePropertyDisplayPriority</key>
+					<integer>4</integer>
+					<key>INTypePropertyName</key>
+					<string>alternativeSpeakableMatches</string>
+					<key>INTypePropertySupportsMultipleValues</key>
+					<true/>
+					<key>INTypePropertyTag</key>
+					<integer>4</integer>
+					<key>INTypePropertyType</key>
+					<string>SpeakableString</string>
+				</dict>
+				<dict>
+					<key>INTypePropertyDisplayName</key>
+					<string>Artists</string>
+					<key>INTypePropertyDisplayNameID</key>
+					<string>Y7Vnap</string>
+					<key>INTypePropertyDisplayPriority</key>
+					<integer>5</integer>
+					<key>INTypePropertyName</key>
+					<string>artists</string>
+					<key>INTypePropertyObjectType</key>
+					<string>Artist</string>
+					<key>INTypePropertyObjectTypeNamespace</key>
+					<string>3vrzzw</string>
+					<key>INTypePropertySupportsMultipleValues</key>
+					<true/>
+					<key>INTypePropertyTag</key>
+					<integer>102</integer>
+					<key>INTypePropertyType</key>
+					<string>Object</string>
+				</dict>
+				<dict>
+					<key>INTypePropertyDisplayName</key>
+					<string>Duration Ms</string>
+					<key>INTypePropertyDisplayNameID</key>
+					<string>p6JY0k</string>
+					<key>INTypePropertyDisplayPriority</key>
+					<integer>6</integer>
+					<key>INTypePropertyName</key>
+					<string>durationMs</string>
+					<key>INTypePropertyTag</key>
+					<integer>104</integer>
+					<key>INTypePropertyType</key>
+					<string>Integer</string>
+				</dict>
+			</array>
+		</dict>
+		<dict>
+			<key>INTypeDisplayName</key>
+			<string>Artist</string>
+			<key>INTypeDisplayNameID</key>
+			<string>pq95Oe</string>
+			<key>INTypeLastPropertyTag</key>
+			<integer>99</integer>
+			<key>INTypeName</key>
+			<string>Artist</string>
 			<key>INTypeProperties</key>
 			<array>
 				<dict>

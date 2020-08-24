@@ -201,7 +201,10 @@ public final class SpotifyAuthManagerImplementation: ObservableObject, SpotifyAu
         guard
             case .loggedIn(let token) = state,
             let refreshToken = token.refresh_token
-        else { print("no refresh token!"); return }
+        else {
+            print("no refresh token!")
+            return
+        }
 
         let url = accessTokenUrl
         var urlRequest = URLRequest(url: url)
