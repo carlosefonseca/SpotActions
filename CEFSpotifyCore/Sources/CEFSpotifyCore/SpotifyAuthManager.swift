@@ -17,15 +17,13 @@ public protocol SpotifyAuthManager {
     func refreshToken(completion: @escaping (Error?) -> Void)
 }
 
-public enum AuthState {
+public enum AuthState: Equatable {
     case notLoggedIn
     case loggedIn(token: TokenResponse)
-    case error(_ error: Error?)
+    case error(_ error: String?)
 }
 
-// public struct AuthError : Error {
-//    let error:Error
-// }
+// public struct AuthError: String, Error, Equatable {}
 // public enum AuthError: Error {
 //    case someError(error: Error)
 // }
@@ -120,21 +118,21 @@ public final class SpotifyAuthManagerImplementation: ObservableObject, SpotifyAu
         URLSession.shared.dataTask(with: urlRequest) { [self] data, response, error in
             if (error as NSError?)?.isNetworkConnectionError() != nil {
                 clearStoredToken()
-                self.state = .error(error)
+                self.state = .error("Network connection error")
                 return
             }
 
             // Check if an error happened while making the request
             if let error = error {
                 clearStoredToken()
-                self.state = .error(error)
+                self.state = .error(error.localizedDescription)
                 return
             }
 
             // Check if we have a `HTTPURLResponse`
             guard let httpUrlResponse = response as? HTTPURLResponse else {
                 clearStoredToken()
-                self.state = .error(error)
+                self.state = .error("Callback contains no response")
                 return
             }
 
@@ -148,21 +146,23 @@ public final class SpotifyAuthManagerImplementation: ObservableObject, SpotifyAu
                     self.state = .loggedIn(token: token)
                 } catch {
                     clearStoredToken()
-                    self.state = .error(error)
+                    self.state = .error(error.localizedDescription)
                 }
                 return
 
             case .unauthorized, .forbidden, .error, .other:
                 clearStoredToken()
+
+                guard let data = data else {
+                    self.state = .error(httpUrlResponse.type.description)
+                    return
+                }
+
                 do {
-                    if let data = data {
-                        let error = try JSONDecoder().decode(AuthError.self, from: data)
-                        self.state = .error(error)
-                    } else {
-                        self.state = .error(error)
-                    }
+                    let error = try JSONDecoder().decode(AuthError.self, from: data)
+                    self.state = .error(error.localizedDescription)
                 } catch {
-                    self.state = .error(error)
+                    self.state = .error(error.localizedDescription)
                 }
             }
         }.resume()
@@ -220,10 +220,11 @@ public final class SpotifyAuthManagerImplementation: ObservableObject, SpotifyAu
 
         print(urlRequest)
 
+        // TODO: REFACTOR THIS CRAP. It's mostly dupped from the refresh token.
         URLSession.shared.dataTask(with: urlRequest) { [self] data, response, error in
             if (error as NSError?)?.isNetworkConnectionError() != nil {
                 clearStoredToken()
-                self.state = .error(error)
+                self.state = .error("Network connection error")
                 completion(error)
                 return
             }
@@ -231,7 +232,7 @@ public final class SpotifyAuthManagerImplementation: ObservableObject, SpotifyAu
             // Check if an error happened while making the request
             if let error = error {
                 clearStoredToken()
-                self.state = .error(error)
+                self.state = .error(error.localizedDescription)
                 completion(error)
                 return
             }
@@ -239,7 +240,7 @@ public final class SpotifyAuthManagerImplementation: ObservableObject, SpotifyAu
             // Check if we have a `HTTPURLResponse`
             guard let httpUrlResponse = response as? HTTPURLResponse else {
                 clearStoredToken()
-                self.state = .error(error)
+                self.state = .error("Callback contains no response")
                 completion(error)
                 return
             }
@@ -255,32 +256,34 @@ public final class SpotifyAuthManagerImplementation: ObservableObject, SpotifyAu
                     completion(nil)
                 } catch {
                     clearStoredToken()
-                    self.state = .error(error)
+                    self.state = .error(error.localizedDescription)
                     completion(error)
                 }
                 return
 
             case .unauthorized, .forbidden, .error, .other:
                 clearStoredToken()
+                guard let data = data else {
+                    self.state = .error(httpUrlResponse.type.description)
+                    completion(error)
+                    return
+                }
+
                 do {
-                    if let data = data {
-                        let error = try JSONDecoder().decode(AuthError.self, from: data)
-                        self.state = .error(error)
-                        completion(error)
-                    } else {
-                        self.state = .error(error)
-                        completion(error)
-                    }
+                    let error = try JSONDecoder().decode(AuthError.self, from: data)
+                    self.state = .error(error.localizedDescription)
+                    completion(error)
                 } catch {
-                    self.state = .error(error)
+                    self.state = .error(error.localizedDescription)
                     completion(error)
                 }
+
             }
         }.resume()
     }
 }
 
-public struct TokenResponse: Codable {
+public struct TokenResponse: Codable, Equatable {
     var access_token: String?
     var token_type: String?
     var scope: String?

@@ -1,6 +1,6 @@
 //
 //  AuthenticatedSpotifyRequestManager.swift
-//  
+//
 
 import Foundation
 import Combine
@@ -54,7 +54,7 @@ public class AuthenticatedSpotifyRequestManager: RequestManager {
             case .failure(let error):
                 print(error)
                 switch error {
-                case .unauthorized(_):
+                case .unauthorized:
                     auth.refreshToken { _ in exec(urlRequest: urlRequest) { result in
                         switch result {
                         case .success(let data):
@@ -165,10 +165,12 @@ extension HTTPURLResponse {
     }
 }
 
-public enum ResponseType {
+public enum ResponseType: String, RawRepresentable, CustomStringConvertible {
     case success
     case unauthorized
     case forbidden
     case error
     case other
+
+    public var description: String { rawValue }
 }

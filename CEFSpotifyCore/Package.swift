@@ -16,6 +16,9 @@ let package = Package(
         .library(
             name: "CEFSpotifyCore",
             targets: ["CEFSpotifyCore"]),
+        .library(
+            name: "CEFSpotifyDoubles",
+            targets: ["CEFSpotifyDoubles"]),
     ],
     dependencies: [
         // Dependencies declare other packages that this package depends on.
@@ -27,8 +30,11 @@ let package = Package(
         .target(
             name: "CEFSpotifyCore",
             dependencies: []),
+        .target(
+            name: "CEFSpotifyDoubles",
+            dependencies: ["CEFSpotifyCore"]),
         .testTarget(
             name: "CEFSpotifyCoreTests",
-            dependencies: ["CEFSpotifyCore"]),
+            dependencies: ["CEFSpotifyCore", "CEFSpotifyDoubles"]),
     ]
 )

@@ -7,17 +7,17 @@ import Combine
 
 public protocol UserManager {
     var user: UserJSON? { get }
-    var userPublished: Published<UserJSON?> { get }
-    var userPublisher: Published<UserJSON?>.Publisher { get }
+    var userPublisher: AnyPublisher<UserJSON?, Never> { get }
 
     func getUser(completion: @escaping (Result<UserJSON, SpotifyRequestError>) -> Void)
 }
 
 public class UserManagerImplementation: UserManager, ObservableObject {
-
     @Published public var user: UserJSON?
-    public var userPublished: Published<UserJSON?> { _user }
-    public var userPublisher: Published<UserJSON?>.Publisher { $user }
+
+    public lazy var userPublisher: AnyPublisher<UserJSON?, Never> = {
+        $user.removeDuplicates().eraseToAnyPublisher()
+    }()
 
     private let gateway: SpotifyUserProfileGateway
 
@@ -27,8 +27,10 @@ public class UserManagerImplementation: UserManager, ObservableObject {
         self.gateway = gateway
 
         auth.statePublisher
-            .receive(on: RunLoop.main)
+            .print()
+//            .receive(on: RunLoop.main)
             .sink { authState in
+                print("UserMngr.auth.statePublisher: \(authState)")
                 switch authState {
                 case .loggedIn:
                     self.getUser(completion: { print($0) })

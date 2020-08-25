@@ -7,18 +7,24 @@
 
 import Foundation
 
-public struct UserJSON: Codable {
-    public var country: String?
+public struct UserJSON: Codable, Equatable, CustomStringConvertible {
+    public var id: String?
     public var display_name: String?
     public var email: String?
+    public var country: String?
     //   public var external_urls : [String:String]?
     //   public var followers : String?
     public var href: String?
-    public var id: String?
     //   public var images : String?
     public var product: String?
     public var type: String?
     public var uri: String?
+
+    public init() {}
+
+    public var description: String {
+        "UserJSON(\(id ?? "-"),\(display_name ?? "-"))"
+    }
 }
 
 public struct PlaylistJSON: Codable {
@@ -89,7 +95,6 @@ public struct PagingJSON<T>: Codable where T: Codable {
     public var previous: String?
     /// The maximum number of items available to return.
     public var total: Int?
-
 }
 
 public struct TrackJSON: Codable {

@@ -6,6 +6,7 @@ import SwiftUI
 import AuthenticationServices
 import CEFSpotifyCore
 import Combine
+import CEFSpotifyDoubles
 
 class Presenter: ObservableObject {
 
@@ -19,13 +20,13 @@ class Presenter: ObservableObject {
 
     var bag = Set<AnyCancellable>()
 
-    @Published var error: Error?
+    @Published var error: String?
 
     var playlistManager: PlaylistsManager
 
     @Published var playlists: [PlaylistJSON]?
 
-    init(auth: SpotifyAuthManager, userManager: UserManager, playlistManager: PlaylistsManager) {
+    public init(auth: SpotifyAuthManager, userManager: UserManager, playlistManager: PlaylistsManager) {
         self.auth = auth
         self.userManager = userManager
         self.playlistManager = playlistManager
@@ -67,7 +68,7 @@ struct ContentView: View {
             } else {
                 Button("Login", action: { presenter.auth.login() })
                 if let error = presenter.error {
-                    Text("Error: \(error.localizedDescription)").foregroundColor(.red)
+                    Text("Error: \(error)").foregroundColor(.red)
                 }
             }
         }
@@ -79,49 +80,5 @@ struct ContentView_Previews: PreviewProvider {
         ContentView(presenter: Presenter(auth: FakeSpotifyAuthManager(),
                                          userManager: FakeUserManager(),
                                          playlistManager: FakePlaylistsManager()))
-    }
-}
-
-class FakeSpotifyAuthManager: SpotifyAuthManager {
-
-    init(initialState: AuthState = .notLoggedIn) {
-        state = initialState
-    }
-
-    func login() {
-        state = .loggedIn(token: TokenResponse())
-    }
-
-    func logout() {
-        state = .notLoggedIn
-    }
-
-    func refreshToken(completion: @escaping (Error?) -> Void) {}
-
-    @Published var state: AuthState
-
-    var statePublished: Published<AuthState> { _state }
-    var statePublisher: Published<AuthState>.Publisher { $state }
-}
-
-class FakeUserManager: UserManager {
-    @Published var user: UserJSON?
-
-    var userPublished: Published<UserJSON?> { _user }
-
-    var userPublisher: Published<UserJSON?>.Publisher { $user }
-
-    var fakeUser: UserJSON?
-
-    func getUser(completion: @escaping (Result<UserJSON, SpotifyRequestError>) -> Void) {
-        user = fakeUser
-        completion(Result.success(fakeUser!))
-    }
-}
-
-class FakePlaylistsManager: PlaylistsManager {
-
-    func getUserPlaylistsEach() -> Future<PagedPlaylistsJSON, SpotifyRequestError> {
-        return Future { _ in }
     }
 }

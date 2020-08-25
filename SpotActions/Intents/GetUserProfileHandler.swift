@@ -13,7 +13,7 @@ class GetUserProfileHandler: NSObject, GetUserProfileIntentHandling {
     let auth: SpotifyAuthManager
     let userManager: UserManager
 
-    init(auth: SpotifyAuthManager, userManager: UserManager) {
+    public init(auth: SpotifyAuthManager, userManager: UserManager) {
         self.auth = auth
         self.userManager = userManager
     }
@@ -38,5 +38,16 @@ class GetUserProfileHandler: NSObject, GetUserProfileIntentHandling {
                 completion(.failure(error: error.errorDescription ?? String(describing: error)))
             }
         }
+    }
+}
+
+extension User {
+
+    convenience init(from json: UserJSON) {
+        self.init(identifier: json.id, display: json.display_name!)
+        email = json.email
+        country = json.country
+        product = json.product
+        uri = json.uri
     }
 }
