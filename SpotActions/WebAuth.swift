@@ -4,12 +4,18 @@
 
 import AuthenticationServices
 import CEFSpotifyCore
+import Combine
 
 class WebAuthManager: WebAuth {
+    func executeRequest<T>(_ urlRequest: URLRequest) -> AnyPublisher<T, Error> where T: Codable {
+        return URLSession.shared.dataTaskPublisher(for: urlRequest)
+            .tryMap { data, _ in try JSONDecoder().decode(T.self, from: data) }
+            .eraseToAnyPublisher()
+    }
 
     let presentationContextProvider = ShimViewController()
 
-    func execute(url: URL, callbackURLScheme: String, callback: @escaping (Result<URL, Error>) -> Void) {
+    func executeLogin(url: URL, callbackURLScheme: String, callback: @escaping (Result<URL, Error>) -> Void) {
         let webAuthSession = ASWebAuthenticationSession(url: url, callbackURLScheme: callbackURLScheme) { successURL, error in
 
             guard error == nil else {

@@ -28,7 +28,7 @@ public class UserManagerImplementation: UserManager, ObservableObject {
 
         auth.statePublisher
             .print()
-//            .receive(on: RunLoop.main)
+            .receive(on: RunLoop.main)
             .sink { authState in
                 print("UserMngr.auth.statePublisher: \(authState)")
                 switch authState {

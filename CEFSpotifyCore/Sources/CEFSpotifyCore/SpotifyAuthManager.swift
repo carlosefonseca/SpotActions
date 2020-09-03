@@ -3,9 +3,11 @@
 //
 
 import Foundation
+import Combine
 
 public protocol WebAuth {
-    func execute(url: URL, callbackURLScheme: String, callback: @escaping (Result<URL, Error>) -> Void)
+    func executeLogin(url: URL, callbackURLScheme: String, callback: @escaping (Result<URL, Error>) -> Void)
+    func executeRequest<T>(_ urlRequest: URLRequest) -> AnyPublisher<T, Error> where T: Codable
 }
 
 public protocol SpotifyAuthManager {
@@ -30,6 +32,7 @@ public enum AuthState: Equatable {
 
 public final class SpotifyAuthManagerImplementation: ObservableObject, SpotifyAuthManager {
 
+    // TODO: Move to config files or whatever
     lazy var authorizationUrl = { URL(string: "https://accounts.spotify.com/authorize")! }()
     lazy var accessTokenUrl = { URL(string: "https://accounts.spotify.com/api/token")! }()
     lazy var scopes = { "playlist-read-private playlist-read-collaborative playlist-modify-private playlist-modify-public user-read-email user-read-recently-played user-read-private user-read-playback-state user-modify-playback-state" }()
@@ -42,6 +45,8 @@ public final class SpotifyAuthManagerImplementation: ObservableObject, SpotifyAu
     let redirectUri = "spotactions://auth"
 
     private let defaultAccountKey = "defaultAccount"
+
+    var bag = Set<AnyCancellable>()
 
     lazy var fullAuthorizationUrl: URL = {
         let x = URLComponents(url: authorizationUrl, resolvingAgainstBaseURL: false)
@@ -74,7 +79,7 @@ public final class SpotifyAuthManagerImplementation: ObservableObject, SpotifyAu
 
     public func login() {
 
-        webAuthManager.execute(url: fullAuthorizationUrl, callbackURLScheme: redirectUri) { result in
+        webAuthManager.executeLogin(url: fullAuthorizationUrl, callbackURLScheme: redirectUri) { result in
             switch result {
             case .success(let url):
                 let token = NSURLComponents(string: url.absoluteString)?.queryItems?.filter { $0.name == "code" }.first
@@ -82,11 +87,16 @@ public final class SpotifyAuthManagerImplementation: ObservableObject, SpotifyAu
                 // Do what you now that you've got the token, or use the callBack URL
                 print(token ?? "No OAuth Token")
 
-                guard let oauthToken = token?.value else { return }
+                guard let oauthToken = token?.value else {
+                    self.state = .error("No OAuth Token")
+                    return
+                }
+
                 self.swapCodeForToken(token: oauthToken)
 
             case .failure(let error):
                 print(error)
+                self.state = .error(error.localizedDescription)
             }
         }
     }
@@ -115,57 +125,21 @@ public final class SpotifyAuthManagerImplementation: ObservableObject, SpotifyAu
 
         print(urlRequest)
 
-        URLSession.shared.dataTask(with: urlRequest) { [self] data, response, error in
-            if (error as NSError?)?.isNetworkConnectionError() != nil {
-                clearStoredToken()
-                self.state = .error("Network connection error")
-                return
-            }
-
-            // Check if an error happened while making the request
-            if let error = error {
-                clearStoredToken()
-                self.state = .error(error.localizedDescription)
-                return
-            }
-
-            // Check if we have a `HTTPURLResponse`
-            guard let httpUrlResponse = response as? HTTPURLResponse else {
-                clearStoredToken()
-                self.state = .error("Callback contains no response")
-                return
-            }
-
-            // Check if response is success or a known error
-            switch httpUrlResponse.type {
-            case .success:
-
-                do {
-                    let token = try JSONDecoder().decode(TokenResponse.self, from: data!)
-                    self.storeToken(data: data!)
-                    self.state = .loggedIn(token: token)
-                } catch {
-                    clearStoredToken()
+        webAuthManager.executeRequest(urlRequest)
+            .print()
+            .sink { completion in
+                if case .failure(let error) = completion {
                     self.state = .error(error.localizedDescription)
                 }
-                return
-
-            case .unauthorized, .forbidden, .error, .other:
-                clearStoredToken()
-
-                guard let data = data else {
-                    self.state = .error(httpUrlResponse.type.description)
-                    return
-                }
-
+            } receiveValue: { (value: TokenResponse) in
                 do {
-                    let error = try JSONDecoder().decode(AuthError.self, from: data)
-                    self.state = .error(error.localizedDescription)
+                    let encodedValue = try JSONEncoder().encode(value)
+                    self.storeToken(data: encodedValue)
+                    self.state = .loggedIn(token: value)
                 } catch {
                     self.state = .error(error.localizedDescription)
                 }
-            }
-        }.resume()
+            }.store(in: &bag)
     }
 
     private func storeToken(data: Data) {
@@ -197,12 +171,33 @@ public final class SpotifyAuthManagerImplementation: ObservableObject, SpotifyAu
         }
     }
 
+    fileprivate func executeUrlRequest<T>(_ urlRequest: URLRequest) -> AnyPublisher<T, Error> where T: Codable {
+        // TODO: REFACTOR THIS CRAP. It's mostly dupped from the refresh token.
+
+        return URLSession.shared.dataTaskPublisher(for: urlRequest).tryMap { element -> Data in
+            guard let httpResponse = element.response as? HTTPURLResponse else {
+                throw URLError(.badServerResponse)
+            }
+
+            switch httpResponse.type {
+            case .success:
+                return element.data
+
+            case .unauthorized, .forbidden, .error, .other:
+                throw URLError(.badServerResponse)
+            }
+
+        }.decode(type: T.self, decoder: JSONDecoder())
+            .eraseToAnyPublisher()
+    }
+
     public func refreshToken(completion: @escaping (Error?) -> Void) {
         guard
             case .loggedIn(let token) = state,
             let refreshToken = token.refresh_token
         else {
             print("no refresh token!")
+            state = .notLoggedIn
             return
         }
 
@@ -220,66 +215,15 @@ public final class SpotifyAuthManagerImplementation: ObservableObject, SpotifyAu
 
         print(urlRequest)
 
-        // TODO: REFACTOR THIS CRAP. It's mostly dupped from the refresh token.
-        URLSession.shared.dataTask(with: urlRequest) { [self] data, response, error in
-            if (error as NSError?)?.isNetworkConnectionError() != nil {
-                clearStoredToken()
-                self.state = .error("Network connection error")
-                completion(error)
-                return
-            }
-
-            // Check if an error happened while making the request
-            if let error = error {
-                clearStoredToken()
-                self.state = .error(error.localizedDescription)
-                completion(error)
-                return
-            }
-
-            // Check if we have a `HTTPURLResponse`
-            guard let httpUrlResponse = response as? HTTPURLResponse else {
-                clearStoredToken()
-                self.state = .error("Callback contains no response")
-                completion(error)
-                return
-            }
-
-            // Check if response is success or a known error
-            switch httpUrlResponse.type {
-            case .success:
-
-                do {
-                    let token = try JSONDecoder().decode(TokenResponse.self, from: data!)
-                    self.storeToken(data: data!)
-                    self.state = .loggedIn(token: token)
-                    completion(nil)
-                } catch {
-                    clearStoredToken()
+        executeUrlRequest(urlRequest)
+            .print()
+            .sink { completion in
+                if case .failure(let error) = completion {
                     self.state = .error(error.localizedDescription)
-                    completion(error)
                 }
-                return
-
-            case .unauthorized, .forbidden, .error, .other:
-                clearStoredToken()
-                guard let data = data else {
-                    self.state = .error(httpUrlResponse.type.description)
-                    completion(error)
-                    return
-                }
-
-                do {
-                    let error = try JSONDecoder().decode(AuthError.self, from: data)
-                    self.state = .error(error.localizedDescription)
-                    completion(error)
-                } catch {
-                    self.state = .error(error.localizedDescription)
-                    completion(error)
-                }
-
-            }
-        }.resume()
+            } receiveValue: { value in
+                self.state = .loggedIn(token: value)
+            }.store(in: &bag)
     }
 }
 
