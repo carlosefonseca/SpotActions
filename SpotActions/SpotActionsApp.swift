@@ -20,6 +20,7 @@ struct Dependencies {
     var keychain: CredentialStore
     var auth: SpotifyAuthManager
     var spotifyRequestManager: RequestManager
+    var requester: URLRequester
 
     var gateways: Gateways
 
@@ -28,8 +29,9 @@ struct Dependencies {
 
     init() {
         keychain = Keychain()
-        auth = SpotifyAuthManagerImplementation(webAuthManager: WebAuthManager(), credentialStore: keychain)
-        spotifyRequestManager = AuthenticatedSpotifyRequestManager(auth: auth)
+        requester = UrlSessionRequester()
+        auth = SpotifyAuthManagerImplementation(webAuthManager: WebAuthManager(), credentialStore: keychain, requester: requester)
+        spotifyRequestManager = AuthenticatedSpotifyRequestManager(auth: auth, requester: requester)
         gateways = Gateways(baseURL: URL(string: "https://api.spotify.com")!, requestManager: spotifyRequestManager)
 
         userManager = UserManagerImplementation(auth: auth, gateway: gateways.userProfile)

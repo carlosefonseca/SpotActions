@@ -27,7 +27,7 @@ public struct UserJSON: Codable, Equatable, CustomStringConvertible {
     }
 }
 
-public struct PlaylistJSON: Codable {
+public struct PlaylistJSON: Codable, Equatable {
     /// Returns true if context is not search and the owner allows other users to modify the playlist. Otherwise returns false.
     public var collaborative: Bool?
     /// The playlist description. Only returned for modified, verified playlists, otherwise null.
@@ -55,13 +55,13 @@ public struct PlaylistJSON: Codable {
     public var uri: String?
 }
 
-public struct ImageJSON: Codable {
+public struct ImageJSON: Codable, Equatable {
     public var url: String?
     public var height: Int?
     public var width: Int?
 }
 
-public struct PublicUserJSON: Codable {
+public struct PublicUserJSON: Codable, Equatable {
     /// The name displayed on the user’s profile. null if not available.
     public var display_name: String?
     /// Known public external URLs for this user.
@@ -80,7 +80,7 @@ public struct PublicUserJSON: Codable {
     public var uri: String?
 }
 
-public struct PagingJSON<T>: Codable where T: Codable {
+public struct PagingJSON<T>: Codable, Equatable where T: Codable, T: Equatable {
     /// A link to the Web API endpoint returning the full result of the request.
     public var href: String?
     /// The requested data.
@@ -97,7 +97,7 @@ public struct PagingJSON<T>: Codable where T: Codable {
     public var total: Int?
 }
 
-public struct TrackJSON: Codable {
+public struct TrackJSON: Codable, Equatable {
     /// The artists who performed the track. Each artist object includes a link in href to more detailed information about the artist.
     public var artists: [ArtistJSON]?
     /// A list of the countries in which the track can be played, identified by their ISO 3166-1 alpha-2 code.
@@ -134,7 +134,7 @@ public struct TrackJSON: Codable {
     public var is_local: Bool?
 }
 
-public struct ArtistJSON: Codable {
+public struct ArtistJSON: Codable, Equatable {
     /// Known external URLs for this artist.
     public var external_urls: ExternalUrlJSON?
     /// A link to the Web API endpoint providing full details of the artist.
@@ -154,3 +154,4 @@ public typealias ExternalUrlJSON = [String: String]
 public typealias PagedTracksJSON = PagingJSON<TrackJSON>
 
 public typealias PagedPlaylistsJSON = PagingJSON<PlaylistJSON>
+

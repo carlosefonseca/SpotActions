@@ -7,16 +7,15 @@ import Combine
 
 public protocol WebAuth {
     func executeLogin(url: URL, callbackURLScheme: String, callback: @escaping (Result<URL, Error>) -> Void)
-    func executeRequest<T>(_ urlRequest: URLRequest) -> AnyPublisher<T, Error> where T: Codable
+//    func executeRequest<T>(_ urlRequest: URLRequest) -> AnyPublisher<T, Error> where T: Codable
 }
 
 public protocol SpotifyAuthManager {
     func login()
     var state: AuthState { get }
-    var statePublished: Published<AuthState> { get }
     var statePublisher: Published<AuthState>.Publisher { get }
     func logout()
-    func refreshToken(completion: @escaping (Error?) -> Void)
+    func refreshToken() -> AnyPublisher<TokenResponse, RefreshTokenError>
 }
 
 public enum AuthState: Equatable {
@@ -25,10 +24,12 @@ public enum AuthState: Equatable {
     case error(_ error: String?)
 }
 
-// public struct AuthError: String, Error, Equatable {}
-// public enum AuthError: Error {
-//    case someError(error: Error)
-// }
+public enum RefreshTokenError: Error {
+    case noLogin
+    case requestError(error: UrlRequesterError)
+    case other(error: Error)
+    case other(message: String)
+}
 
 public final class SpotifyAuthManagerImplementation: ObservableObject, SpotifyAuthManager {
 
@@ -65,16 +66,17 @@ public final class SpotifyAuthManagerImplementation: ObservableObject, SpotifyAu
 
     var webAuthManager: WebAuth
     var credentialStore: CredentialStore
+    let requester: URLRequester
 
-    public init(webAuthManager: WebAuth, credentialStore: CredentialStore) {
+    public init(webAuthManager: WebAuth, credentialStore: CredentialStore, requester: URLRequester) {
         self.webAuthManager = webAuthManager
         self.credentialStore = credentialStore
+        self.requester = requester
         guard let token = getToken() else { return }
         state = .loggedIn(token: token)
     }
 
     @Published public var state: AuthState = .notLoggedIn
-    public var statePublished: Published<AuthState> { _state }
     public var statePublisher: Published<AuthState>.Publisher { $state }
 
     public func login() {
@@ -125,7 +127,7 @@ public final class SpotifyAuthManagerImplementation: ObservableObject, SpotifyAu
 
         print(urlRequest)
 
-        webAuthManager.executeRequest(urlRequest)
+        requester.request(urlRequest: urlRequest)
             .print()
             .sink { completion in
                 if case .failure(let error) = completion {
@@ -171,59 +173,69 @@ public final class SpotifyAuthManagerImplementation: ObservableObject, SpotifyAu
         }
     }
 
-    fileprivate func executeUrlRequest<T>(_ urlRequest: URLRequest) -> AnyPublisher<T, Error> where T: Codable {
-        // TODO: REFACTOR THIS CRAP. It's mostly dupped from the refresh token.
+    func createRefreshTokenUrlRequest() -> AnyPublisher<URLRequest, RefreshTokenError> {
+        return statePublisher
+            .first()
+            .tryMap { existingToken -> URLRequest in
 
-        return URLSession.shared.dataTaskPublisher(for: urlRequest).tryMap { element -> Data in
-            guard let httpResponse = element.response as? HTTPURLResponse else {
-                throw URLError(.badServerResponse)
+                guard
+                    case .loggedIn(let token) = existingToken,
+                    let refreshToken = token.refresh_token
+                else {
+                    print("no refresh token!")
+                    self.state = .notLoggedIn
+                    throw RefreshTokenError.noLogin
+                }
+
+                let url = self.accessTokenUrl
+                var urlRequest = URLRequest(url: url)
+
+                guard let authHeader = self.authHeader else {
+                    print("no auth header!")
+                    throw RefreshTokenError.noLogin
+                }
+
+                urlRequest.setValue("Basic \(authHeader)", forHTTPHeaderField: "Authorization")
+
+                let bodyStr = "grant_type=refresh_token&refresh_token=\(refreshToken)"
+
+                urlRequest.httpMethod = "POST"
+                urlRequest.httpBody = bodyStr.data(using: .utf8)
+
+                print(urlRequest)
+
+                return urlRequest
+            }.mapError { (error) -> RefreshTokenError in
+
+                if let refreshTokenError = error as? RefreshTokenError {
+                    return refreshTokenError
+                } else {
+                    return RefreshTokenError.other(error: error)
+                }
             }
-
-            switch httpResponse.type {
-            case .success:
-                return element.data
-
-            case .unauthorized, .forbidden, .error, .other:
-                throw URLError(.badServerResponse)
-            }
-
-        }.decode(type: T.self, decoder: JSONDecoder())
+            .print("SpotifyAuthManager.createRefreshTokenUrlRequest")
             .eraseToAnyPublisher()
     }
 
-    public func refreshToken(completion: @escaping (Error?) -> Void) {
-        guard
-            case .loggedIn(let token) = state,
-            let refreshToken = token.refresh_token
-        else {
-            print("no refresh token!")
-            state = .notLoggedIn
-            return
-        }
+    private func requestRefreshToken(urlRequest: URLRequest) -> AnyPublisher<TokenResponse, RefreshTokenError> {
+        requester.request(urlRequest: urlRequest)
+            .mapError { RefreshTokenError.requestError(error: $0) }
+            .eraseToAnyPublisher()
+    }
 
-        let url = accessTokenUrl
-        var urlRequest = URLRequest(url: url)
-
-        guard let authHeader = self.authHeader else { print("no auth header!"); return }
-
-        urlRequest.setValue("Basic \(authHeader)", forHTTPHeaderField: "Authorization")
-
-        let bodyStr = "grant_type=refresh_token&refresh_token=\(refreshToken)"
-
-        urlRequest.httpMethod = "POST"
-        urlRequest.httpBody = bodyStr.data(using: .utf8)
-
-        print(urlRequest)
-
-        executeUrlRequest(urlRequest)
-            .print()
-            .sink { completion in
+    public func refreshToken() -> AnyPublisher<TokenResponse, RefreshTokenError> {
+        return createRefreshTokenUrlRequest()
+            .flatMap { self.requestRefreshToken(urlRequest: $0) }
+            .eraseToAnyPublisher()
+            .print("SpotifyAuthManager.refreshToken")
+            .handleEvents(receiveOutput: { value in
+                self.state = .loggedIn(token: value)
+            }, receiveCompletion: { completion in
                 if case .failure(let error) = completion {
                     self.state = .error(error.localizedDescription)
                 }
-            } receiveValue: { value in
-                self.state = .loggedIn(token: value)
-            }.store(in: &bag)
+            })
+            .eraseToAnyPublisher()
     }
 }
 

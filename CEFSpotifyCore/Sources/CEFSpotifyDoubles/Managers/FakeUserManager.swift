@@ -7,6 +7,18 @@ import Combine
 import CEFSpotifyCore
 
 public class FakeUserManager: UserManager {
+    public func getUser() -> AnyPublisher<UserJSON, Error> {
+        return Deferred {
+            Future { c in
+                if self.getUserShouldFail {
+                    c(.failure(SpotifyRequestError.requestError(error: nil)))
+                } else {
+                    c(.success(self.fakeUser!))
+                }
+            }
+        }.eraseToAnyPublisher()
+    }
+
     @Published public var user: UserJSON?
 
     public lazy var userPublisher: AnyPublisher<UserJSON?, Never> = {

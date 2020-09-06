@@ -8,8 +8,28 @@ import CEFSpotifyCore
 
 public class FakeSpotifyAuthManager: SpotifyAuthManager {
 
+    public var refreshTokenResponse: Result<TokenResponse, RefreshTokenError>?
+
     public init(initialState: AuthState = .notLoggedIn) {
         state = initialState
+    }
+
+    public func refreshToken() -> AnyPublisher<TokenResponse, RefreshTokenError> {
+
+        return Deferred {
+            Future { promise in
+                switch self.refreshTokenResponse {
+                case .success(let value):
+                    promise(.success(value))
+                case .failure(let error):
+                    promise(.failure(error))
+                case .none:
+                    promise(.failure(RefreshTokenError.other(message: "No Refresh Token Response set!")))
+                }
+            }
+        }.eraseToAnyPublisher()
+
+//        return Just(TokenResponse()).setFailureType(to: RefreshTokenError.self).eraseToAnyPublisher()
     }
 
     public func login() {
@@ -20,10 +40,7 @@ public class FakeSpotifyAuthManager: SpotifyAuthManager {
         state = .notLoggedIn
     }
 
-    public func refreshToken(completion: @escaping (Error?) -> Void) {}
-
     @Published public var state: AuthState
 
-    public var statePublished: Published<AuthState> { _state }
     public var statePublisher: Published<AuthState>.Publisher { $state }
 }

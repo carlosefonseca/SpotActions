@@ -20,14 +20,12 @@ extension SpotifyWebApi.UserProfile {
 }
 
 public protocol SpotifyUserProfileGateway {
-    func user(callback: @escaping (Result<SpotifyWebApi.UserProfile.Response, SpotifyRequestError>) -> Void)
+    func user() -> AnyPublisher<UserJSON, Error>
 }
 
 public class SpotifyUserProfileGatewayImplementation: BaseSpotifyGateway, SpotifyUserProfileGateway {
-    public func user(callback: @escaping (Result<UserJSON, SpotifyRequestError>) -> Void) {
+    public func user() -> AnyPublisher<UserJSON, Error> {
         let request = SpotifyWebApi.UserProfile.Request(baseURL: baseURL)
-        requestManager.execute(request: request) { (result: Result<UserJSON, SpotifyRequestError>) in
-            callback(result)
-        }
+        return requestManager.execute(request: request)
     }
 }

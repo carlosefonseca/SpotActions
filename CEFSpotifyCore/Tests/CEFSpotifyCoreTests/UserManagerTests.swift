@@ -61,21 +61,21 @@ class UserManagerTests: XCTestCase {
         setup(loggedIn: true)
 
         let ex = expectation(description: "value")
-        ex.expectedFulfillmentCount = 1
+        ex.expectedFulfillmentCount = 2
 
         var values = [UserJSON?]()
 
 //        authManager.login()
 
 
-        manager.userPublisher.sink { value in
+        manager.userPublisher.print().sink { value in
             print("test - manager.userPublisher: \(value?.description ?? "nil")")
             values.append(value)
             ex.fulfill()
         }.store(in: &bag)
 
         waitForExpectations(timeout: 1)
-        XCTAssertEqual(values, [testUser1])
+        XCTAssertEqual(values, [nil, testUser1])
     }
 
     func test_clear_user_on_logout() {

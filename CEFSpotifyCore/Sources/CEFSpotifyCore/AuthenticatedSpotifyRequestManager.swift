@@ -7,18 +7,19 @@ import Combine
 
 public class AuthenticatedSpotifyRequestManager: RequestManager {
 
-    let jsonDecoder: JSONDecoder
-    let urlSession = URLSession.shared
+    let jsonDecoder = JSONDecoder()
+    let urlSession = URLSession.shared // TODO: REMOVE
 
     let auth: SpotifyAuthManager
+    let requester: URLRequester
 
     var token: TokenResponse?
 
     var bag = Set<AnyCancellable>()
 
-    public init(auth: SpotifyAuthManager) {
+    public init(auth: SpotifyAuthManager, requester: URLRequester) {
         self.auth = auth
-        jsonDecoder = JSONDecoder()
+        self.requester = requester
 
         self.auth.statePublisher.sink { authState in
             switch authState {
@@ -30,147 +31,56 @@ public class AuthenticatedSpotifyRequestManager: RequestManager {
         }.store(in: &bag)
     }
 
-    public func execute<T>(request: URLRequestable, completion: @escaping (Result<T, SpotifyRequestError>) -> Void) where T: Decodable {
-
-        guard let token = token, let accessToken = token.access_token else {
-            completion(.failure(SpotifyRequestError.noLogin))
-            return
+    func applyAccessTokenToRequest(urlRequest: URLRequest, token: TokenResponse) throws -> URLRequest {
+        guard let accessToken = token.access_token else {
+            throw SpotifyRequestError.noLogin
         }
 
-        var urlRequest = request.urlRequest
+        var urlRequest = urlRequest
 
         urlRequest.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
+        return urlRequest
+    }
 
-        exec(urlRequest: urlRequest) { [self] result in
-            switch result {
-            case .success(let data):
-                do {
-                    let entity = try self.jsonDecoder.decode(T.self, from: data)
-                    completion(.success(entity))
-                } catch {
-                    completion(.failure(SpotifyRequestError.parseError(error: error)))
+    public func execute<T>(request: URLRequestable) -> AnyPublisher<T, Error> where T: Codable {
+        return execute(urlRequest: request.urlRequest)
+    }
+
+    public func execute<T>(urlRequest: URLRequest) -> AnyPublisher<T, Error> where T: Codable {
+        return auth.statePublisher.first()
+            .tryMap { (auth: AuthState) throws -> URLRequest in
+                guard case .loggedIn(let tokenResponse) = auth else {
+                    throw SpotifyRequestError.noLogin
                 }
-                return
-            case .failure(let error):
-                print(error)
-                switch error {
-                case .unauthorized:
-                    auth.refreshToken { _ in exec(urlRequest: urlRequest) { result in
-                        switch result {
-                        case .success(let data):
-                            do {
-                                let entity = try self.jsonDecoder.decode(T.self, from: data)
-                                completion(.success(entity))
-                            } catch {
-                                completion(.failure(SpotifyRequestError.parseError(error: error)))
+                return try self.applyAccessTokenToRequest(urlRequest: urlRequest, token: tokenResponse)
+
+            }.flatMap { urlRequest -> AnyPublisher<T, Error> in
+
+                self.requester.request(urlRequest: urlRequest)
+                    .print("SpotifyRequestManager")
+                    .catch { (error: UrlRequesterError) -> AnyPublisher<T, Error> in
+                        if case UrlRequesterError.apiError(let response, let data) = error {
+                            print(String(data: data, encoding: .utf8) ?? "noData")
+                            if case .unauthorized = response.type {
+                                return self.refreshRetry(urlRequest: urlRequest)
                             }
-                            return
-                        case .failure(let error):
-                            completion(.failure(error))
                         }
+                        return Fail<T, Error>(error: error).eraseToAnyPublisher()
                     }
-                    }
-                default:
-                    completion(.failure(error))
-                }
-            }
-        }
+                    .eraseToAnyPublisher()
+
+            }.eraseToAnyPublisher()
     }
 
-    func exec(urlRequest: URLRequest, completion: @escaping (Result<Data, SpotifyRequestError>) -> Void) {
-        urlSession.dataTask(with: urlRequest) { data, response, error in
-            guard error == nil else {
-                completion(.failure(SpotifyRequestError.requestError(error: error)))
-                return
-            }
-
-            // Check if we have a `HTTPURLResponse`
-            guard let httpUrlResponse = response as? HTTPURLResponse else {
-                completion(.failure(SpotifyRequestError.requestError(error: error)))
-                return
-            }
-
-            // Check if response is success or a known error
-            switch httpUrlResponse.type {
-            case .success:
-
-                guard let data = data else {
-                    completion(.failure(SpotifyRequestError.httpError(error: httpUrlResponse.type, data: nil)))
-                    return
-                }
-
-                completion(.success(data))
-                return
-
-            case .unauthorized:
-                completion(.failure(.unauthorized(error: httpUrlResponse.type)))
-                return
-
-            case .forbidden, .error:
-                guard let responseData = data else {
-                    completion(.failure(SpotifyRequestError.httpError(error: httpUrlResponse.type, data: nil)))
-                    return
-                }
-
-                guard let apiError = try? self.jsonDecoder.decode(SpotifyWebApiError.self, from: responseData) else {
-                    completion(.failure(SpotifyRequestError.httpError(error: httpUrlResponse.type, data: responseData)))
-                    return
-                }
-
-                completion(.failure(SpotifyRequestError.apiError(error: httpUrlResponse.type, data: apiError.error)))
-
-            case .other:
-                completion(.failure(SpotifyRequestError.httpError(error: httpUrlResponse.type, data: data)))
-            }
-        }.resume()
+    func refreshRetry<T>(urlRequest: URLRequest) -> AnyPublisher<T, Error> where T: Codable {
+        auth.refreshToken()
+            .tryMap { (token: TokenResponse) -> URLRequest in
+                try self.applyAccessTokenToRequest(urlRequest: urlRequest, token: token)
+            }.eraseToAnyPublisher()
+            .flatMap { (urlRequest: URLRequest) -> AnyPublisher<T, Error> in
+                self.requester.request(urlRequest: urlRequest)
+                    .mapError { (error: UrlRequesterError) -> Error in error as Error }
+                    .eraseToAnyPublisher()
+            }.eraseToAnyPublisher()
     }
-}
-
-extension NSError {
-    func isNetworkConnectionError() -> Bool {
-        let networkErrors = [NSURLErrorNetworkConnectionLost, NSURLErrorNotConnectedToInternet]
-
-        return domain == NSURLErrorDomain && networkErrors.contains(code)
-    }
-}
-
-extension HTTPURLResponse {
-
-    var isSuccess: Bool {
-        return (200...299).contains(statusCode)
-    }
-
-    var isUnauthorized: Bool {
-        return statusCode == 401
-    }
-
-    var isNotFound: Bool {
-        return statusCode == 404
-    }
-
-    var isForbidden: Bool {
-        return statusCode == 403
-    }
-
-    var isServerError: Bool {
-        return (500..<600).contains(statusCode)
-    }
-
-    var type: ResponseType {
-        if isSuccess { return .success }
-        if isUnauthorized { return .unauthorized }
-        if isForbidden { return .forbidden }
-        if isServerError { return .error }
-        return .other
-    }
-}
-
-public enum ResponseType: String, RawRepresentable, CustomStringConvertible {
-    case success
-    case unauthorized
-    case forbidden
-    case error
-    case other
-
-    public var description: String { rawValue }
 }

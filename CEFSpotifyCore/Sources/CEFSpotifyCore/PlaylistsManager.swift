@@ -6,59 +6,36 @@ import Foundation
 import Combine
 
 public protocol PlaylistsManager {
-//    func getUserPlaylists() -> AnyPublisher<[PlaylistJSON], SpotifyWebApiError>
-    func getUserPlaylistsEach() -> Future<PagedPlaylistsJSON, SpotifyRequestError>
+    var publisher: AnyPublisher<[PlaylistJSON], Never> { get }
+    func getUserPlaylistsEach() -> AnyPublisher<[PlaylistJSON], Error>
 }
 
 public class PlaylistsManagerImplementation: PlaylistsManager {
+    @Published var playlists: [PlaylistJSON] = []
+    var next: URL?
+
+    public var publisher: AnyPublisher<[PlaylistJSON], Never> {
+        $playlists.removeDuplicates().eraseToAnyPublisher()
+    }
+
     let auth: SpotifyAuthManager
     let gateway: SpotifyPlaylistsGateway
 
     public init(auth: SpotifyAuthManager, gateway: SpotifyPlaylistsGateway) {
         self.auth = auth
         self.gateway = gateway
-
-//        self.auth.statePublisher
-//            .receive(on: RunLoop.main)
-//            .map { authState -> Bool in
-//                if case .loggedIn = authState { return true }
-//                return false
-//            }.flatMap { loggedIn -> AnyPublisher<[PlaylistJSON], SpotifyWebApiError> in
-//                if loggedIn {
-//                    return getUserPlaylists()
-//                } else {
-//                    clearCache()
-//                    return Empty<[PlaylistJSON], SpotifyWebApiError>(completeImmediately: false)
-//                }
-//            }.sink { _ in }
     }
 
-//    public func getUserPlaylists() -> AnyPublisher<[PlaylistJSON], SpotifyWebApiError> {
-    // return AnyPublisher(
-//        getUserPlaylistsEach().
-//
-//
-//        self.gateway.listUserPlaylists(limit: 50, offset: 0) { result in
-//            switch result {
-//            case .success(let response):
-//                print("\(response.href) \(response.offset)...\(response.offset + response.limit) [total : \(response.total)]")
-//            case .failure(let error):
-//                print(error)
-//            }
-//        }
-//    }
-
-    public func getUserPlaylistsEach() -> Future<PagedPlaylistsJSON, SpotifyRequestError> {
-        return Future { promise in
-            self.gateway.listUserPlaylists(limit: 50, offset: 0) { result in
-                switch result {
-                case .success(let value):
-                    promise(.success(value))
-                case .failure(let error):
-                    print(error)
-                    promise(.failure(error))
-                }
+    public func getUserPlaylistsEach() -> AnyPublisher<[PlaylistJSON], Error> {
+        let x = self.gateway.listUserPlaylists(limit: 50, offset: 0)
+        return x.map { (data: PagedPlaylistsJSON) -> [PlaylistJSON] in
+            self.playlists = data.items ?? []
+            if let nextStr = data.next, let nextURL = URL(string: nextStr) {
+                self.next = nextURL
+            } else {
+                self.next = nil
             }
-        }
+            return data.items ?? []
+        }.eraseToAnyPublisher()
     }
 }

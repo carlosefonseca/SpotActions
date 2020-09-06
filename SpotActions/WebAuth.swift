@@ -7,11 +7,11 @@ import CEFSpotifyCore
 import Combine
 
 class WebAuthManager: WebAuth {
-    func executeRequest<T>(_ urlRequest: URLRequest) -> AnyPublisher<T, Error> where T: Codable {
-        return URLSession.shared.dataTaskPublisher(for: urlRequest)
-            .tryMap { data, _ in try JSONDecoder().decode(T.self, from: data) }
-            .eraseToAnyPublisher()
-    }
+//    func executeRequest<T>(_ urlRequest: URLRequest) -> AnyPublisher<T, Error> where T: Codable {
+//        return URLSession.shared.dataTaskPublisher(for: urlRequest)
+//            .tryMap { data, _ in try JSONDecoder().decode(T.self, from: data) }
+//            .eraseToAnyPublisher()
+//    }
 
     let presentationContextProvider = ShimViewController()
 

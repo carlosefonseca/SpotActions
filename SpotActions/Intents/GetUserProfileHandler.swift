@@ -7,11 +7,14 @@
 
 import Intents
 import CEFSpotifyCore
+import Combine
 
 class GetUserProfileHandler: NSObject, GetUserProfileIntentHandling {
 
     let auth: SpotifyAuthManager
     let userManager: UserManager
+
+    var bag = Set<AnyCancellable>()
 
     public init(auth: SpotifyAuthManager, userManager: UserManager) {
         self.auth = auth
@@ -24,20 +27,18 @@ class GetUserProfileHandler: NSObject, GetUserProfileIntentHandling {
             return
         }
 
-        userManager.getUser { result in
-
-            switch result {
-            case .success(let user):
-                let u = User(identifier: user.id, display: user.display_name!)
-                u.email = user.email
-                u.country = user.country
-                u.product = user.product
-                u.uri = user.uri
-                completion(.success(result: u))
-            case .failure(let error):
-                completion(.failure(error: error.errorDescription ?? String(describing: error)))
+        userManager.getUser().sink(receiveCompletion: { compl in
+            if case .failure(let error) = compl {
+                completion(.failure(error: error.localizedDescription))
             }
-        }
+        }, receiveValue: { user in
+            let u = User(identifier: user.id, display: user.display_name!)
+            u.email = user.email
+            u.country = user.country
+            u.product = user.product
+            u.uri = user.uri
+            completion(.success(result: u))
+        }).store(in: &bag)
     }
 }
 

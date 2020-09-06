@@ -6,7 +6,7 @@ import Foundation
 
 public protocol WebApiError: Error {}
 
-public struct SpotifyRegularError: Decodable {
+public struct SpotifyRegularError: Codable {
     let status: Int
     let message: String
 }

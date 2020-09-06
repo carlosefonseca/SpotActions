@@ -3,6 +3,7 @@
 //
 
 import Foundation
+import Combine
 
 public extension SpotifyWebApi.Playlists {
     enum ListCurrentUserPlaylists {}
@@ -33,14 +34,13 @@ extension SpotifyWebApi.Playlists.ListCurrentUserPlaylists {
 }
 
 public protocol SpotifyPlaylistsGateway {
-    func listUserPlaylists(limit: Int, offset: Int, callback: @escaping (Result<SpotifyWebApi.Playlists.ListCurrentUserPlaylists.Response, SpotifyRequestError>) -> Void)
+    func listUserPlaylists(limit: Int, offset: Int) -> AnyPublisher<PagedPlaylistsJSON, Error>
 }
 
 public class SpotifyPlaylistsGatewayImplementation: BaseSpotifyGateway, SpotifyPlaylistsGateway {
-    public func listUserPlaylists(limit: Int = 50, offset: Int = 0, callback: @escaping (Result<SpotifyWebApi.Playlists.ListCurrentUserPlaylists.Response, SpotifyRequestError>) -> Void) {
+
+    public func listUserPlaylists(limit: Int = 50, offset: Int = 0) -> AnyPublisher<PagedPlaylistsJSON, Error> {
         let request = SpotifyWebApi.Playlists.ListCurrentUserPlaylists.Request(baseURL: baseURL, limit: limit, offset: offset)
-        requestManager.execute(request: request) { (result: Result<SpotifyWebApi.Playlists.ListCurrentUserPlaylists.Response, SpotifyRequestError>) in
-            callback(result)
-        }
+        return requestManager.execute(request: request)
     }
 }

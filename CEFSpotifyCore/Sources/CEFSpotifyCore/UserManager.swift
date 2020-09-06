@@ -9,7 +9,7 @@ public protocol UserManager {
     var user: UserJSON? { get }
     var userPublisher: AnyPublisher<UserJSON?, Never> { get }
 
-    func getUser(completion: @escaping (Result<UserJSON, SpotifyRequestError>) -> Void)
+    func getUser() -> AnyPublisher<UserJSON, Error>
 }
 
 public class UserManagerImplementation: UserManager, ObservableObject {
@@ -27,29 +27,26 @@ public class UserManagerImplementation: UserManager, ObservableObject {
         self.gateway = gateway
 
         auth.statePublisher
-            .print()
+            .print("UserManagerImplementation.init")
             .receive(on: RunLoop.main)
-            .sink { authState in
+            .map { authState -> AnyPublisher<UserJSON, Error> in
                 print("UserMngr.auth.statePublisher: \(authState)")
                 switch authState {
                 case .loggedIn:
-                    self.getUser(completion: { print($0) })
+                    return self.getUser()
                 case .notLoggedIn, .error:
                     self.user = nil
+                    return Empty<UserJSON, Error>(completeImmediately: true).eraseToAnyPublisher()
                 }
-            }.store(in: &bag)
+            }
+            .switchToLatest()
+            .print("UserManagerImplementation.init2")
+            .sink { _ in } receiveValue: { self.user = $0 }
+            .store(in: &bag)
     }
 
-    public func getUser(completion: @escaping (Result<UserJSON, SpotifyRequestError>) -> Void) {
-        gateway.user { result in
-            switch result {
-            case .success(let user):
-                self.user = user
-            case .failure(let error):
-                self.user = nil
-                print(error)
-            }
-            completion(result)
-        }
+    public func getUser() -> AnyPublisher<UserJSON, Error> {
+        return gateway.user().print("UserManager.getUser()")
+            .eraseToAnyPublisher()
     }
 }

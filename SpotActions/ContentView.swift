@@ -45,12 +45,15 @@ class Presenter: ObservableObject {
                 }
             }.store(in: &bag)
 
-        self.userManager.userPublisher
+        self.userManager.userPublisher.print("Presenter>userManager.userPublisher")
             .receive(on: RunLoop.main)
             .sink { self.user = $0 }
             .store(in: &bag)
 
-//        self.playlistManager.
+        self.playlistManager.publisher
+            .receive(on: RunLoop.main)
+            .sink { self.playlists = $0 }
+            .store(in: &bag)
     }
 }
 

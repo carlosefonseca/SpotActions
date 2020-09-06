@@ -33,18 +33,18 @@ class GetUserPlaylistsHandler: NSObject, GetUserPlaylistsIntentHandling {
         playlistsManager.getUserPlaylistsEach()
             .print()
             .map {
-                $0.items?.compactMap { (pJSON) -> Playlist in
+                $0.compactMap { (pJSON) -> Playlist in
                     let p = Playlist(identifier: pJSON.id!, display: pJSON.name!)
                     p.totalTracks = pJSON.tracks!.total! as NSNumber
 //                    p.tracks = pJSON.tracks!.items?.compactMap { (tJSON) -> Track in
 //                        Track(identifier: tJSON.id, display: tJSON.name!)
 //                    }
                     return p
-                } ?? []
+                }
             }.sink { it in
                 switch it {
                 case .failure(let error):
-                    completion(.failure(error: error.errorDescription ?? "Unknown error"))
+                    completion(.failure(error: error.localizedDescription))
                 case .finished:
                     break
                 }
