@@ -52,9 +52,9 @@ public class PlaylistsManagerImplementation: PlaylistsManager {
             // When the current value changes, checks if there are more pages to load and loads the next page
             subject
                 .compactMap { $0 }
-                .print("getAllPlaylistTracks.xx0")
+//                .print("getAllPlaylistTracks.xx0")
                 .prefix(while: { page in page.next != nil })
-                .print("getAllPlaylistTracks.xx1")
+//                .print("getAllPlaylistTracks.xx1")
                 .flatMap { page in
                     self.gateway.getNextPlaylistTracks(next: URL(string: page.next!)!)
                         .mapError { PlaylistsManagerError.requestError(error: $0) }
@@ -79,34 +79,34 @@ public class PlaylistsManagerImplementation: PlaylistsManager {
             // Initial request for the first page
             self.getPlaylistTracks(playlistId: playlistId, offset: 0)
                 .mapError { PlaylistsManagerError.requestError(error: $0) }
-                .print("getAllPlaylistTracks.FIRST1")
+//                .print("getAllPlaylistTracks.FIRST1")
                 .sink { completion in
                     // Emits error
                     if case .failure = completion {
                         subject.send(completion: completion)
                     }
                 } receiveValue: { page in
-                    print("getAllPlaylistTracks.FIRST2 subject playlist tracks setting on subject \(page)")
+//                    print("getAllPlaylistTracks.FIRST2 subject playlist tracks setting on subject \(page)")
                     subject.send(page)
                 }.store(in: &bag)
 
             // Waits until all pages have been loaded and outputs the track list
             return subject
                 .compactMap { $0 }
-                .print("getAllPlaylistTracks.x")
+//                .print("getAllPlaylistTracks.x")
                 .first { (page) -> Bool in page.next == nil }
                 .map { $0.items!.map { $0.track! } }
-                .print("getAllPlaylistTracks.Out")
+//                .print("getAllPlaylistTracks.Out")
                 .handleEvents(
-                    receiveOutput: { value in print("getAllPlaylistTracks.Out value \(value)") },
-                    receiveCompletion: {
+//                    receiveOutput: { value in print("getAllPlaylistTracks.Out value \(value)") },
+                    receiveCompletion: { _ in
                         // Clear the other cancelables
-                        print("getAllPlaylistTracks. completion removeAll \($0)")
+//                        print("getAllPlaylistTracks. completion removeAll \($0)")
                         bag.removeAll()
                     },
                     receiveCancel: {
                         // Clear the other cancelables
-                        print("getAllPlaylistTracks. cancel removeAll")
+//                        print("getAllPlaylistTracks. cancel removeAll")
                         bag.removeAll()
                     })
                 .eraseToAnyPublisher()
@@ -128,10 +128,50 @@ public class PlaylistsManagerImplementation: PlaylistsManager {
         try self.save(tracks: tracks.compactMap { $0.id }, on: playlist.id!)
     }
 
-    public func save(tracks: [String], on playlist: String) throws -> AnyPublisher<Never, PlaylistsManagerError> {
-        try self.gateway.save(tracks: tracks, on: playlist)
-            .mapError { PlaylistsManagerError.requestError(error: $0) }
-            .eraseToAnyPublisher()
+    public func save(tracks: [String], on playlist: String) -> AnyPublisher<Never, PlaylistsManagerError> {
+
+        return Deferred<AnyPublisher<Never, PlaylistsManagerError>> {
+            do {
+                if tracks.count > 100 {
+
+                    let chunks = tracks.chunked(into: 100)
+
+                    let publishers = chunks.enumerated().map { (index, tracks) -> AnyPublisher<Never, PlaylistsManagerError> in
+                        do {
+                            if index == 0 {
+                                return try self.gateway.replace(tracks: tracks, on: playlist)
+                                    .print("save.replace \(index)")
+                                    .mapError { PlaylistsManagerError.requestError(error: $0) }
+                                    .ignoreOutput()
+                                    .eraseToAnyPublisher()
+                            } else {
+
+                                return try self.gateway.add(tracks: tracks, to: playlist, at: nil)
+                                    .print("save.append \(index)")
+                                    .mapError { PlaylistsManagerError.requestError(error: $0) }
+                                    .ignoreOutput()
+                                    .eraseToAnyPublisher()
+                            }
+                        } catch {
+                            return Fail(error: PlaylistsManagerError.requestError(error: error)).eraseToAnyPublisher()
+                        }
+                    }
+
+                    let x: AnyPublisher<Never, PlaylistsManagerError> = Publishers.Sequence(sequence: publishers)
+                        .flatMap { $0 }
+                        .eraseToAnyPublisher()
+                    return x
+                } else {
+                    let x: AnyPublisher<Never, PlaylistsManagerError> = try self.gateway.replace(tracks: tracks, on: playlist)
+                        .print("save.replace once")
+                        .mapError { PlaylistsManagerError.requestError(error: $0) }
+                        .eraseToAnyPublisher()
+                    return x
+                }
+            } catch {
+                return Fail(error: PlaylistsManagerError.requestError(error: error)).eraseToAnyPublisher()
+            }
+        }.eraseToAnyPublisher()
     }
 }
 

@@ -54,10 +54,12 @@ public class AuthenticatedSpotifyRequestManager: RequestManager {
                 }
                 return try self.applyAccessTokenToRequest(urlRequest: urlRequest, token: tokenResponse)
 
-            }.flatMap { urlRequest -> AnyPublisher<Data, Error> in
+            }
+            .print("SpotifyRequestManager")
+            .flatMap { urlRequest -> AnyPublisher<Data, Error> in
 
                 self.requester.request(urlRequest: urlRequest)
-                    .print("SpotifyRequestManager")
+//                    .print("SpotifyRequestManager")
                     .catch { (error: UrlRequesterError) -> AnyPublisher<Data, Error> in
                         if case UrlRequesterError.apiError(let response, let data) = error {
                             print(String(data: data, encoding: .utf8) ?? "noData")

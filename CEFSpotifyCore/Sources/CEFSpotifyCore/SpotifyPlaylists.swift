@@ -10,6 +10,7 @@ public extension SpotifyWebApi.Playlists {
     enum GetPlaylistTracks {}
     enum GetPlayerRecentlyPlayed {}
     enum PutPlaylistItems {}
+    enum PostPlaylistItems {}
 
 //    enum GetPlaylist {}
 //    enum CreatePlaylist {}
@@ -58,7 +59,8 @@ extension SpotifyWebApi.Playlists.GetPlayerRecentlyPlayed {
         public var urlRequest: URLRequest
 
         init(baseURL: URL) {
-            let urlComponents = URLComponents(url: URL(string: "/v1/me/player/recently-played", relativeTo: baseURL)!, resolvingAgainstBaseURL: true)!
+            var urlComponents = URLComponents(url: URL(string: "/v1/me/player/recently-played", relativeTo: baseURL)!, resolvingAgainstBaseURL: true)!
+            urlComponents.queryItems = [URLQueryItem(name: "limit", value: "50")]
             urlRequest = URLRequest(url: urlComponents.url!)
         }
     }
@@ -71,6 +73,7 @@ extension SpotifyWebApi.Playlists.PutPlaylistItems {
         public var urlRequest: URLRequest
 
         init(baseURL: URL, playlist: SpotifyURI, tracks: URIListJSON) throws {
+            guard tracks.uris.count <= 100 else { throw SpotifyRequestError.otherError(message: "Can only set 100 items using this method!") }
             let urlComponents = URLComponents(url: URL(string: "/v1/playlists/\(playlist)/tracks", relativeTo: baseURL)!, resolvingAgainstBaseURL: true)!
             var request = URLRequest(url: urlComponents.url!)
             do {
@@ -85,12 +88,35 @@ extension SpotifyWebApi.Playlists.PutPlaylistItems {
     }
 }
 
+extension SpotifyWebApi.Playlists.PostPlaylistItems {
+    public typealias Response = Void
+
+    public struct Request: URLRequestable {
+        public var urlRequest: URLRequest
+
+        init(baseURL: URL, playlist: SpotifyURI, tracks: URIListJSON) throws {
+            guard tracks.uris.count <= 100 else { throw SpotifyRequestError.otherError(message: "Can only set 100 items using this method!") }
+            let urlComponents = URLComponents(url: URL(string: "/v1/playlists/\(playlist)/tracks", relativeTo: baseURL)!, resolvingAgainstBaseURL: true)!
+            var request = URLRequest(url: urlComponents.url!)
+            do {
+                let data = try JSONEncoder().encode(tracks)
+                request.httpBody = data
+                request.httpMethod = "POST"
+            } catch {
+                throw SpotifyRequestError.requestError(error: error)
+            }
+            urlRequest = request
+        }
+    }
+}
+
 public protocol SpotifyPlaylistsGateway {
     func getUserPlaylists(limit: Int, offset: Int) -> AnyPublisher<PagedPlaylistsJSON, Error>
     func getPlaylistTracks(playlistId: String, offset: Int) -> AnyPublisher<PagedTracksJSON, Error>
     func getNextPlaylistTracks(next: URL) -> AnyPublisher<PagedTracksJSON, Error>
     func getRecentlyPlayed() -> AnyPublisher<PagedTracksJSON, Error>
-    func save(tracks: [String], on playlistId: String) throws -> AnyPublisher<Never, Error>
+    func replace(tracks: [String], on playlistId: String) throws -> AnyPublisher<Never, Error>
+    func add(tracks: [SpotifyURI], to playlistId: String, at index: Int?) throws -> AnyPublisher<Never, Error>
 }
 
 public class SpotifyPlaylistsGatewayImplementation: BaseSpotifyGateway, SpotifyPlaylistsGateway {
@@ -122,10 +148,16 @@ public class SpotifyPlaylistsGatewayImplementation: BaseSpotifyGateway, SpotifyP
             .eraseToAnyPublisher()
     }
 
-    public func save(tracks: [SpotifyURI], on playlistId: String) throws -> AnyPublisher<Never, Error> {
+    public func replace(tracks: [SpotifyURI], on playlistId: String) throws -> AnyPublisher<Never, Error> {
         let request = try SpotifyWebApi.Playlists.PutPlaylistItems.Request(baseURL: baseURL, playlist: playlistId, tracks: URIListJSON(uris: tracks))
-        print("SpotifyPlaylists.save \(request.urlRequest)")
-        print("SpotifyPlaylists.save \(String(data: request.urlRequest.httpBody!, encoding: .utf8))")
         return requestManager.execute(request: request).print("SpotifyPlaylists.save").ignoreOutput().eraseToAnyPublisher()
+    }
+
+    public func add(tracks: [SpotifyURI], to playlistId: String, at index: Int?) throws -> AnyPublisher<Never, Error> {
+        let request = try SpotifyWebApi.Playlists.PostPlaylistItems.Request(baseURL: baseURL, playlist: playlistId, tracks: URIListJSON(uris: tracks, position: index))
+        return requestManager.execute(request: request)
+            .print("SpotifyPlaylists.add")
+            .ignoreOutput()
+            .eraseToAnyPublisher()
     }
 }

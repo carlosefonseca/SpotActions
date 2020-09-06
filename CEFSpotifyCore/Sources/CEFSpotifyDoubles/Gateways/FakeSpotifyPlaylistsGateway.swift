@@ -42,7 +42,11 @@ public class FakeSpotifyPlaylistsGateway: SpotifyPlaylistsGateway {
         return Fail(error: PlaylistsManagerError.missingData(message: "TODO!!")).eraseToAnyPublisher()
     }
 
-    public func save(tracks: [String], on playlistId: String) throws -> AnyPublisher<Never, Error> {
+    public func replace(tracks: [String], on playlistId: String) throws -> AnyPublisher<Never, Error> {
+        return Fail(error: PlaylistsManagerError.missingData(message: "TODO!!")).eraseToAnyPublisher()
+    }
+
+    public func add(tracks: [SpotifyURI], to playlistId: String, at index: Int?) throws -> AnyPublisher<Never, Error> {
         return Fail(error: PlaylistsManagerError.missingData(message: "TODO!!")).eraseToAnyPublisher()
     }
 }

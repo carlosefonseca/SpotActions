@@ -180,4 +180,5 @@ public struct AddedByJSON: Codable, Equatable {
 
 struct URIListJSON: Codable, Equatable {
     var uris: [SpotifyURI]
+    var position: Int?
 }

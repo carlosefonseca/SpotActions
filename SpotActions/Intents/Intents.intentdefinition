@@ -290,7 +290,7 @@
 			<key>INIntentKeyParameter</key>
 			<string>option</string>
 			<key>INIntentLastParameterTag</key>
-			<integer>4</integer>
+			<integer>6</integer>
 			<key>INIntentManagedParameterCombinations</key>
 			<dict>
 				<key>option</key>
@@ -300,7 +300,7 @@
 					<key>INIntentParameterCombinationTitle</key>
 					<string>Get ${option}</string>
 					<key>INIntentParameterCombinationTitleID</key>
-					<string>qB4LpK</string>
+					<string>aQbz6o</string>
 					<key>INIntentParameterCombinationUpdatesLinked</key>
 					<true/>
 				</dict>
