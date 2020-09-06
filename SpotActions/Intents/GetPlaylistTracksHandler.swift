@@ -27,19 +27,40 @@ class GetPlaylistTracksHandler: NSObject, GetPlaylistTracksIntentHandling {
             return
         }
 
-        guard let playlist = intent.playlist else {
-            completion(.failure(error: "Parameter 'playlist' is empty!"))
-            return
-        }
+        switch intent.option {
+        case .recentTracks:
 
-        playlistsManager.getAllPlaylistTracks(playlistId: playlist.identifier!)
-            .sink(receiveCompletion: { receiveCompletion in
-                if case .failure(let error) = receiveCompletion {
-                    completion(.failure(error: error.localizedDescription))
-                }
-            }, receiveValue: { tracks in
-                completion(.success(result: tracks.map { Track(from: $0) }))
-            }).store(in: &bag)
+            playlistsManager.getRecentlyPlayed()
+                .sink(receiveCompletion: { receiveCompletion in
+                    if case .failure(let error) = receiveCompletion {
+                        completion(.failure(error: error.localizedDescription))
+                    }
+                }, receiveValue: { tracks in
+                    completion(.success(result: tracks.map { Track(from: $0) }))
+                }).store(in: &bag)
+
+
+        case .allTracks:
+
+            guard let playlist = intent.playlist else {
+                completion(.failure(error: "Parameter 'playlist' is empty!"))
+                return
+            }
+
+            playlistsManager.getAllPlaylistTracks(playlistId: playlist.identifier!)
+                .sink(receiveCompletion: { receiveCompletion in
+                    if case .failure(let error) = receiveCompletion {
+                        completion(.failure(error: error.localizedDescription))
+                    }
+                }, receiveValue: { tracks in
+                    completion(.success(result: tracks.map { Track(from: $0) }))
+                }).store(in: &bag)
+
+
+        case .unknown:
+            // TODO
+            break
+        }
 
     }
 

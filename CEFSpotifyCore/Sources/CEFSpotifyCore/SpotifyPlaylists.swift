@@ -8,6 +8,7 @@ import Combine
 public extension SpotifyWebApi.Playlists {
     enum GetUserPlaylists {}
     enum GetPlaylistTracks {}
+    enum GetPlayerRecentlyPlayed {}
 
 //    enum GetPlaylist {}
 //    enum CreatePlaylist {}
@@ -49,10 +50,25 @@ extension SpotifyWebApi.Playlists.GetPlaylistTracks {
     }
 }
 
+extension SpotifyWebApi.Playlists.GetPlayerRecentlyPlayed {
+    public typealias Response = PagedTracksJSON
+
+    public struct Request: URLRequestable {
+        public var urlRequest: URLRequest
+
+        init(baseURL: URL) {
+            let urlComponents = URLComponents(url: URL(string: "/v1/me/player/recently-played", relativeTo: baseURL)!, resolvingAgainstBaseURL: true)!
+            urlRequest = URLRequest(url: urlComponents.url!)
+        }
+    }
+}
+
+
 public protocol SpotifyPlaylistsGateway {
     func getUserPlaylists(limit: Int, offset: Int) -> AnyPublisher<PagedPlaylistsJSON, Error>
     func getPlaylistTracks(playlistId: String, offset: Int) -> AnyPublisher<PagedTracksJSON, Error>
     func getNextPlaylistTracks(next:URL) -> AnyPublisher<PagedTracksJSON, Error>
+    func getRecentlyPlayed() -> AnyPublisher<PagedTracksJSON, Error>
 }
 
 public class SpotifyPlaylistsGatewayImplementation: BaseSpotifyGateway, SpotifyPlaylistsGateway {
@@ -69,5 +85,10 @@ public class SpotifyPlaylistsGatewayImplementation: BaseSpotifyGateway, SpotifyP
 
     public func getNextPlaylistTracks(next: URL) -> AnyPublisher<PagedTracksJSON, Error> {
         return requestManager.execute(urlRequest: URLRequest(url: next))
+    }
+
+    public func getRecentlyPlayed() -> AnyPublisher<PagedTracksJSON, Error> {
+        let request = SpotifyWebApi.Playlists.GetPlayerRecentlyPlayed.Request(baseURL: baseURL)
+        return requestManager.execute(request: request)
     }
 }

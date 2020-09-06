@@ -37,4 +37,8 @@ public class FakeSpotifyPlaylistsGateway: SpotifyPlaylistsGateway {
             }
         }.eraseToAnyPublisher()
     }
+
+    public func getRecentlyPlayed() -> AnyPublisher<PagedTracksJSON, Error> {
+        return Fail(error: PlaylistsManagerError.missingData(message: "TODO!!")).eraseToAnyPublisher()
+    }
 }

@@ -25,4 +25,7 @@ public class FakePlaylistsManager: PlaylistsManager {
         return Fail(error: PlaylistsManagerError.missingData(message: "TODO!!")).eraseToAnyPublisher()
     }
 
+    public func getRecentlyPlayed() -> AnyPublisher<[TrackJSON], PlaylistsManagerError> {
+        return Fail(error: PlaylistsManagerError.missingData(message: "TODO!!")).eraseToAnyPublisher()
+    }
 }

@@ -9,6 +9,7 @@ public protocol PlaylistsManager {
     var publisher: AnyPublisher<[PlaylistJSON], Never> { get }
     func getUserPlaylistsEach() -> AnyPublisher<[PlaylistJSON], Error>
     func getAllPlaylistTracks(playlistId: String) -> AnyPublisher<[TrackJSON], PlaylistsManagerError>
+    func getRecentlyPlayed() -> AnyPublisher<[TrackJSON], PlaylistsManagerError>
 }
 
 public class PlaylistsManagerImplementation: PlaylistsManager {
@@ -113,6 +114,15 @@ public class PlaylistsManagerImplementation: PlaylistsManager {
     public func getPlaylistTracks(playlistId: String, offset: Int) -> AnyPublisher<PagedTracksJSON, Error> {
         return self.gateway.getPlaylistTracks(playlistId: playlistId, offset: offset)
     }
+
+    public func getRecentlyPlayed() -> AnyPublisher<[TrackJSON], PlaylistsManagerError> {
+        gateway.getRecentlyPlayed()
+            .mapError { PlaylistsManagerError.requestError(error: $0) }
+            .map { $0.items!.map { $0.track! } }
+            .eraseToAnyPublisher()
+    }
+
+
 }
 
 public enum PlaylistsManagerError: Error {
