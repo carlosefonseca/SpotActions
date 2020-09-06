@@ -10,14 +10,12 @@ import Combine
 class GetPlaylistTracksHandler: NSObject, GetPlaylistTracksIntentHandling {
 
     let auth: SpotifyAuthManager
-    let userManager: UserManager
     let playlistsManager: PlaylistsManager
 
     var bag = Set<AnyCancellable>()
 
-    init(auth: SpotifyAuthManager, userManager: UserManager, playlistsManager: PlaylistsManager) {
+    init(auth: SpotifyAuthManager, playlistsManager: PlaylistsManager) {
         self.auth = auth
-        self.userManager = userManager
         self.playlistsManager = playlistsManager
     }
 

@@ -10,6 +10,8 @@ public protocol PlaylistsManager {
     func getUserPlaylistsEach() -> AnyPublisher<[PlaylistJSON], Error>
     func getAllPlaylistTracks(playlistId: String) -> AnyPublisher<[TrackJSON], PlaylistsManagerError>
     func getRecentlyPlayed() -> AnyPublisher<[TrackJSON], PlaylistsManagerError>
+    func save(tracks: [TrackJSON], on playlist: PlaylistJSON) throws -> AnyPublisher<Never, PlaylistsManagerError>
+    func save(tracks: [String], on playlistId: String) throws -> AnyPublisher<Never, PlaylistsManagerError>
 }
 
 public class PlaylistsManagerImplementation: PlaylistsManager {
@@ -116,13 +118,21 @@ public class PlaylistsManagerImplementation: PlaylistsManager {
     }
 
     public func getRecentlyPlayed() -> AnyPublisher<[TrackJSON], PlaylistsManagerError> {
-        gateway.getRecentlyPlayed()
+        self.gateway.getRecentlyPlayed()
             .mapError { PlaylistsManagerError.requestError(error: $0) }
             .map { $0.items!.map { $0.track! } }
             .eraseToAnyPublisher()
     }
 
+    public func save(tracks: [TrackJSON], on playlist: PlaylistJSON) throws -> AnyPublisher<Never, PlaylistsManagerError> {
+        try self.save(tracks: tracks.compactMap { $0.id }, on: playlist.id!)
+    }
 
+    public func save(tracks: [String], on playlist: String) throws -> AnyPublisher<Never, PlaylistsManagerError> {
+        try self.gateway.save(tracks: tracks, on: playlist)
+            .mapError { PlaylistsManagerError.requestError(error: $0) }
+            .eraseToAnyPublisher()
+    }
 }
 
 public enum PlaylistsManagerError: Error {

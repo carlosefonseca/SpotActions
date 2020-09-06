@@ -34,6 +34,7 @@
 		<string>GetUserProfileIntent</string>
 		<string>GetUserPlaylistsIntent</string>
 		<string>GetPlaylistTracksIntent</string>
+		<string>SaveTracksOnPlaylistIntent</string>
 	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
@@ -42,6 +43,7 @@
 		<string>GetPlaylistTracksIntent</string>
 		<string>GetUserPlaylistsIntent</string>
 		<string>GetUserProfileIntent</string>
+		<string>SaveTracksOnPlaylistIntent</string>
 	</array>
 	<key>UIApplicationSceneManifest</key>
 	<dict>

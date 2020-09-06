@@ -55,6 +55,7 @@ class UrlSessionRequesterTests: XCTestCase {
         let request = URLRequest(url: URL(string: "https://httpbin.org/json")!)
         UrlSessionRequester()
             .request(urlRequest: request)
+            .decode(type: TestData.self, decoder: JSONDecoder())
             .sink { completion in
                 print(completion)
                 requestExpectation.fulfill()

@@ -42,11 +42,11 @@ public class AuthenticatedSpotifyRequestManager: RequestManager {
         return urlRequest
     }
 
-    public func execute<T>(request: URLRequestable) -> AnyPublisher<T, Error> where T: Codable {
+    public func execute(request: URLRequestable) -> AnyPublisher<Data, Error>  {
         return execute(urlRequest: request.urlRequest)
     }
 
-    public func execute<T>(urlRequest: URLRequest) -> AnyPublisher<T, Error> where T: Codable {
+    public func execute(urlRequest: URLRequest) -> AnyPublisher<Data, Error>  {
         return auth.statePublisher.first()
             .tryMap { (auth: AuthState) throws -> URLRequest in
                 guard case .loggedIn(let tokenResponse) = auth else {
@@ -54,30 +54,31 @@ public class AuthenticatedSpotifyRequestManager: RequestManager {
                 }
                 return try self.applyAccessTokenToRequest(urlRequest: urlRequest, token: tokenResponse)
 
-            }.flatMap { urlRequest -> AnyPublisher<T, Error> in
+            }.flatMap { urlRequest -> AnyPublisher<Data, Error> in
 
                 self.requester.request(urlRequest: urlRequest)
                     .print("SpotifyRequestManager")
-                    .catch { (error: UrlRequesterError) -> AnyPublisher<T, Error> in
+                    .catch { (error: UrlRequesterError) -> AnyPublisher<Data, Error> in
                         if case UrlRequesterError.apiError(let response, let data) = error {
                             print(String(data: data, encoding: .utf8) ?? "noData")
                             if case .unauthorized = response.type {
                                 return self.refreshRetry(urlRequest: urlRequest)
                             }
                         }
-                        return Fail<T, Error>(error: error).eraseToAnyPublisher()
+                        return Fail<Data, Error>(error: error).eraseToAnyPublisher()
                     }
                     .eraseToAnyPublisher()
 
             }.eraseToAnyPublisher()
     }
 
-    func refreshRetry<T>(urlRequest: URLRequest) -> AnyPublisher<T, Error> where T: Codable {
+
+    func refreshRetry(urlRequest: URLRequest) -> AnyPublisher<Data, Error> {
         auth.refreshToken()
             .tryMap { (token: TokenResponse) -> URLRequest in
                 try self.applyAccessTokenToRequest(urlRequest: urlRequest, token: token)
             }.eraseToAnyPublisher()
-            .flatMap { (urlRequest: URLRequest) -> AnyPublisher<T, Error> in
+            .flatMap { (urlRequest: URLRequest) -> AnyPublisher<Data, Error> in
                 self.requester.request(urlRequest: urlRequest)
                     .mapError { (error: UrlRequesterError) -> Error in error as Error }
                     .eraseToAnyPublisher()

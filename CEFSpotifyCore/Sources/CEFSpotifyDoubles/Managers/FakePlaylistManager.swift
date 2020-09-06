@@ -21,11 +21,19 @@ public class FakePlaylistsManager: PlaylistsManager {
     }
 
     public func getAllPlaylistTracks(playlistId: String) -> AnyPublisher<[TrackJSON], PlaylistsManagerError> {
-        // TODO
+        // TODO:
         return Fail(error: PlaylistsManagerError.missingData(message: "TODO!!")).eraseToAnyPublisher()
     }
 
     public func getRecentlyPlayed() -> AnyPublisher<[TrackJSON], PlaylistsManagerError> {
+        return Fail(error: PlaylistsManagerError.missingData(message: "TODO!!")).eraseToAnyPublisher()
+    }
+
+    public func save(tracks: [TrackJSON], on playlist: PlaylistJSON) throws -> AnyPublisher<Never, PlaylistsManagerError> {
+        return Fail(error: PlaylistsManagerError.missingData(message: "TODO!!")).eraseToAnyPublisher()
+    }
+
+    public func save(tracks: [String], on playlistId: String) throws -> AnyPublisher<Never, PlaylistsManagerError> {
         return Fail(error: PlaylistsManagerError.missingData(message: "TODO!!")).eraseToAnyPublisher()
     }
 }

@@ -9,24 +9,18 @@ public class UrlSessionRequester: URLRequester {
 
     public init() {}
 
-    public func request<T>(urlRequest: URLRequest) -> AnyPublisher<T, UrlRequesterError> where T: Decodable {
+    public func request(urlRequest: URLRequest) -> AnyPublisher<Data, UrlRequesterError> {
         return URLSession.shared.dataTaskPublisher(for: urlRequest)
             .mapError { error -> UrlRequesterError in UrlRequesterError.systemError(error: error) }
-            .tryMap { (data, response) -> T in
+            .tryMap { (data, response) -> Data in
                 guard let httpResponse = response as? HTTPURLResponse else {
                     throw UrlRequesterError.genericError(description: "Failed to get response")
                 }
 
                 switch httpResponse.type {
                 case .success:
-                    do {
-                        print(String(data: data, encoding: .utf8)!)
-                        print(T.self)
-                        let decoded: T = try JSONDecoder().decode(T.self, from: data)
-                        return decoded
-                    } catch {
-                        throw UrlRequesterError.parseError(error: error)
-                    }
+                    print(String(data: data, encoding: .utf8)!)
+                    return data
                 default:
                     throw UrlRequesterError.apiError(response: httpResponse, data: data)
                 }
@@ -39,7 +33,6 @@ public class UrlSessionRequester: URLRequester {
             }.eraseToAnyPublisher()
     }
 }
-
 
 extension NSError {
     func isNetworkConnectionError() -> Bool {

@@ -18,7 +18,7 @@ public struct UserJSON: Codable, Equatable, CustomStringConvertible {
     //   public var images : String?
     public var product: String?
     public var type: String?
-    public var uri: String?
+    public var uri: SpotifyURI?
 
     public init() {}
 
@@ -52,7 +52,7 @@ public struct PlaylistJSON: Codable, Equatable {
     public var tracks: PagedTracksJSON?
     // var type:    String    The object type: “playlist”
     /// The Spotify URI for the playlist.
-    public var uri: String?
+    public var uri: SpotifyURI
 }
 
 public struct ImageJSON: Codable, Equatable {
@@ -77,7 +77,7 @@ public struct PublicUserJSON: Codable, Equatable {
     /// The object type: “user”
     public var type: String?
     /// The Spotify URI for this user.
-    public var uri: String?
+    public var uri: SpotifyURI
 }
 
 public struct PagingJSON<T>: Codable, Equatable where T: Codable, T: Equatable {
@@ -129,9 +129,15 @@ public struct TrackJSON: Codable, Equatable {
     /// The object type: “track”.
     public var type: String?
     /// The Spotify URI for the track.
-    public var uri: String?
+    public var uri: SpotifyURI?
     /// Whether or not the track is from a local file.
     public var is_local: Bool?
+}
+
+public extension TrackJSON {
+    init(id: String) {
+        self.id = id
+    }
 }
 
 public struct ArtistJSON: Codable, Equatable {
@@ -146,7 +152,7 @@ public struct ArtistJSON: Codable, Equatable {
     /// The object type: "artist"
     public var type: String?
     /// The Spotify URI for the artist.
-    public var uri: String?
+    public var uri: SpotifyURI
 }
 
 public typealias ExternalUrlJSON = [String: String]
@@ -154,6 +160,8 @@ public typealias ExternalUrlJSON = [String: String]
 public typealias PagedTracksJSON = PagingJSON<PageTrackJSON>
 
 public typealias PagedPlaylistsJSON = PagingJSON<PlaylistJSON>
+
+public typealias SpotifyURI = String
 
 public struct PageTrackJSON: Codable, Equatable {
     var added_at: String?
@@ -167,5 +175,9 @@ public struct AddedByJSON: Codable, Equatable {
     var href: String?
     var id: String?
     var type: String?
-    var uri: String?
+    var uri: SpotifyURI
+}
+
+struct URIListJSON: Codable, Equatable {
+    var uris: [SpotifyURI]
 }

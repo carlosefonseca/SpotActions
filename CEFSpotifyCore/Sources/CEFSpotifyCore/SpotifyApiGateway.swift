@@ -19,13 +19,13 @@ public enum SpotifyRequestError: WebApiError, LocalizedError {
     case apiError(error: ResponseType, data: SpotifyRegularError)
     case noLogin
     case unauthorized(error: ResponseType)
+    case otherError(message: String)
 }
 
 public enum SpotifyWebApi {
     public enum UserProfile {}
     public enum Playlists {}
 }
-
 
 public class BaseSpotifyGateway {
     let baseURL: URL

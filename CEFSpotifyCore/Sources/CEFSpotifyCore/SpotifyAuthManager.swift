@@ -128,6 +128,7 @@ public final class SpotifyAuthManagerImplementation: ObservableObject, SpotifyAu
         print(urlRequest)
 
         requester.request(urlRequest: urlRequest)
+            .decode(type: TokenResponse.self, decoder: JSONDecoder())
             .print()
             .sink { completion in
                 if case .failure(let error) = completion {
@@ -220,6 +221,8 @@ public final class SpotifyAuthManagerImplementation: ObservableObject, SpotifyAu
     private func requestRefreshToken(urlRequest: URLRequest) -> AnyPublisher<TokenResponse, RefreshTokenError> {
         requester.request(urlRequest: urlRequest)
             .mapError { RefreshTokenError.requestError(error: $0) }
+            .decode(type: TokenResponse.self, decoder: JSONDecoder()).eraseToAnyPublisher()
+            .mapError { $0 as? RefreshTokenError ?? RefreshTokenError.other(error: $0) }
             .eraseToAnyPublisher()
     }
 
