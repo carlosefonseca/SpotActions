@@ -7,6 +7,7 @@ import Combine
 import CEFSpotifyCore
 
 public class FakePlaylistsManager: PlaylistsManager {
+
     @Published public var playlists = [PlaylistJSON]()
 
     public init() {}
@@ -18,4 +19,10 @@ public class FakePlaylistsManager: PlaylistsManager {
     public func getUserPlaylistsEach() -> AnyPublisher<[PlaylistJSON], Error> {
         return $playlists.first().setFailureType(to: Error.self).eraseToAnyPublisher()
     }
+
+    public func getAllPlaylistTracks(playlistId: String) -> AnyPublisher<[TrackJSON], PlaylistsManagerError> {
+        // TODO
+        return Fail(error: PlaylistsManagerError.missingData(message: "TODO!!")).eraseToAnyPublisher()
+    }
+
 }

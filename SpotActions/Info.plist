@@ -33,11 +33,13 @@
 	<array>
 		<string>GetUserProfileIntent</string>
 		<string>GetUserPlaylistsIntent</string>
+		<string>GetPlaylistTracksIntent</string>
 	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSUserActivityTypes</key>
 	<array>
+		<string>GetPlaylistTracksIntent</string>
 		<string>GetUserPlaylistsIntent</string>
 		<string>GetUserProfileIntent</string>
 	</array>

@@ -151,7 +151,21 @@ public struct ArtistJSON: Codable, Equatable {
 
 public typealias ExternalUrlJSON = [String: String]
 
-public typealias PagedTracksJSON = PagingJSON<TrackJSON>
+public typealias PagedTracksJSON = PagingJSON<PageTrackJSON>
 
 public typealias PagedPlaylistsJSON = PagingJSON<PlaylistJSON>
 
+public struct PageTrackJSON: Codable, Equatable {
+    var added_at: String?
+    var added_by: AddedByJSON?
+    var is_local: Bool?
+    var track: TrackJSON?
+}
+
+public struct AddedByJSON: Codable, Equatable {
+    var external_urls: ExternalUrlJSON?
+    var href: String?
+    var id: String?
+    var type: String?
+    var uri: String?
+}

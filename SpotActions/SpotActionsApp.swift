@@ -60,12 +60,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var dependencies = Dependencies()
 
+    lazy var userProfileHandler: GetUserProfileHandler = { GetUserProfileHandler(auth: dependencies.auth, userManager: dependencies.userManager) }()
+    lazy var userPlaylistHandler: GetUserPlaylistsHandler = { GetUserPlaylistsHandler(auth: dependencies.auth, userManager: dependencies.userManager, playlistsManager: dependencies.playlistsManager) }()
+    lazy var playlistTracksHandler: GetPlaylistTracksHandler = { GetPlaylistTracksHandler(auth: dependencies.auth, userManager: dependencies.userManager, playlistsManager: dependencies.playlistsManager) }()
+
     func application(_ application: UIApplication, handlerFor intent: INIntent) -> Any? {
         switch intent {
         case is GetUserProfileIntent:
-            return GetUserProfileHandler(auth: dependencies.auth, userManager: dependencies.userManager)
+            return userProfileHandler
         case is GetUserPlaylistsIntent:
-            return GetUserPlaylistsHandler(auth: dependencies.auth, userManager: dependencies.userManager, playlistsManager: dependencies.playlistsManager)
+            return userPlaylistHandler
+        case is GetPlaylistTracksIntent:
+            return playlistTracksHandler
         default:
             fatalError("No handler for this intent")
         }

@@ -20,7 +20,10 @@ public class UrlSessionRequester: URLRequester {
                 switch httpResponse.type {
                 case .success:
                     do {
-                        return try JSONDecoder().decode(T.self, from: data)
+                        print(String(data: data, encoding: .utf8)!)
+                        print(T.self)
+                        let decoded: T = try JSONDecoder().decode(T.self, from: data)
+                        return decoded
                     } catch {
                         throw UrlRequesterError.parseError(error: error)
                     }
