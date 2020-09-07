@@ -38,6 +38,8 @@ class SaveTracksOnPlaylistHandler: NSObject, SaveTracksOnPlaylistIntentHandling 
         let trackUris = tracks.compactMap { $0.uri }
 
         do {
+            print("Will save on \(playlist) the tracks:\n\(trackUris.joined(separator: "\n"))")
+
             try playlistsManager.save(tracks: trackUris, on: playlist)
                 .sink(receiveCompletion: { receiveCompletion in
                     if case .failure(let error) = receiveCompletion {

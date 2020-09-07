@@ -35,11 +35,13 @@
 		<string>GetUserPlaylistsIntent</string>
 		<string>GetPlaylistTracksIntent</string>
 		<string>SaveTracksOnPlaylistIntent</string>
+		<string>FilterTracksIntent</string>
 	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSUserActivityTypes</key>
 	<array>
+		<string>FilterTracksIntent</string>
 		<string>GetPlaylistTracksIntent</string>
 		<string>GetUserPlaylistsIntent</string>
 		<string>GetUserProfileIntent</string>

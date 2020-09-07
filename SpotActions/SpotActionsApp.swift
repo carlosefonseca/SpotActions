@@ -75,6 +75,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             return playlistTracksHandler
         case is SaveTracksOnPlaylistIntent:
             return saveTracksOnPlaylistHandler
+        case is FilterTracksIntent:
+            return FilterTracksHandler()
 
         default:
             fatalError("No handler for this intent")

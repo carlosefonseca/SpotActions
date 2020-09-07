@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		2D324DC02504E63C00703432 /* GetPlaylistTracksHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D324DBF2504E63C00703432 /* GetPlaylistTracksHandler.swift */; };
 		2D324DC2250578B200703432 /* SaveTracksOnPlaylistHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D324DC1250578B200703432 /* SaveTracksOnPlaylistHandler.swift */; };
+		2D69014E2506E3580038F798 /* FilterTracksHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D69014D2506E3580038F798 /* FilterTracksHandler.swift */; };
 		2D6A966624F27D1800993587 /* GetUserPlaylistsHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D6A966524F27D1800993587 /* GetUserPlaylistsHandler.swift */; };
 		2D755B0424F5897B00800222 /* GetUserProfileHandlerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D755B0324F5897B00800222 /* GetUserProfileHandlerTests.swift */; };
 		2D755B0924F5922600800222 /* CEFSpotifyDoubles in Frameworks */ = {isa = PBXBuildFile; productRef = 2D755B0824F5922600800222 /* CEFSpotifyDoubles */; };
@@ -59,6 +60,7 @@
 /* Begin PBXFileReference section */
 		2D324DBF2504E63C00703432 /* GetPlaylistTracksHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetPlaylistTracksHandler.swift; sourceTree = "<group>"; };
 		2D324DC1250578B200703432 /* SaveTracksOnPlaylistHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveTracksOnPlaylistHandler.swift; sourceTree = "<group>"; };
+		2D69014D2506E3580038F798 /* FilterTracksHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterTracksHandler.swift; sourceTree = "<group>"; };
 		2D6A966524F27D1800993587 /* GetUserPlaylistsHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetUserPlaylistsHandler.swift; sourceTree = "<group>"; };
 		2D755B0324F5897B00800222 /* GetUserProfileHandlerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetUserProfileHandlerTests.swift; sourceTree = "<group>"; };
 		2DA5DE5124EE819A00E9BE87 /* SpotActions.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SpotActions.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -195,6 +197,7 @@
 				2D6A966524F27D1800993587 /* GetUserPlaylistsHandler.swift */,
 				2D324DBF2504E63C00703432 /* GetPlaylistTracksHandler.swift */,
 				2D324DC1250578B200703432 /* SaveTracksOnPlaylistHandler.swift */,
+				2D69014D2506E3580038F798 /* FilterTracksHandler.swift */,
 			);
 			path = Intents;
 			sourceTree = "<group>";
@@ -341,6 +344,7 @@
 				2DA5DE5724EE819A00E9BE87 /* ContentView.swift in Sources */,
 				2DAC399F24F1DC73003AC458 /* Intents.intentdefinition in Sources */,
 				2DAC39A324F1ED40003AC458 /* GetUserProfileHandler.swift in Sources */,
+				2D69014E2506E3580038F798 /* FilterTracksHandler.swift in Sources */,
 				2DA5DE5524EE819A00E9BE87 /* SpotActionsApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
