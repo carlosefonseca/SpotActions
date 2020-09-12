@@ -25,6 +25,7 @@ public enum SpotifyRequestError: WebApiError, LocalizedError {
 public enum SpotifyWebApi {
     public enum UserProfile {}
     public enum Playlists {}
+    public enum Player {}
 }
 
 public class BaseSpotifyGateway {

@@ -161,7 +161,20 @@ public typealias PagedTracksJSON = PagingJSON<PageTrackJSON>
 
 public typealias PagedPlaylistsJSON = PagingJSON<PlaylistJSON>
 
+public typealias SpotifyID = String
 public typealias SpotifyURI = String
+
+public extension SpotifyURI {
+    var splits: [String.SubSequence] { split(separator: ":") }
+
+    var category: String {
+        return String(splits[splits.count - 2 ])
+    }
+
+    var id: String {
+        String(splits.last!)
+    }
+}
 
 public struct PageTrackJSON: Codable, Equatable {
     var added_at: String?
@@ -181,4 +194,32 @@ public struct AddedByJSON: Codable, Equatable {
 struct URIListJSON: Codable, Equatable {
     var uris: [SpotifyURI]
     var position: Int?
+}
+
+public struct CurrentlyPlayingJSON: Codable, Equatable {
+    /// A Context Object. Can be null.
+    public var context: ContextJSON?
+    /// Unix Millisecond Timestamp when data was fetched
+    public var timestamp: Int
+    /// Progress into the currently playing track or episode. Can be null.
+    public var progress_ms: Int?
+    /// If something is currently playing.
+    public var is_playing: Bool
+    /// The currently playing track or episode. Can be null.
+    public var item: TrackJSON?
+    /// The object type of the currently playing item. Can be one of track, episode, ad or unknown.
+    public var currently_playing_type: String
+    /// Allows to update the user interface based on which playback actions are available within the current context
+    // public var actions: []
+}
+
+public struct ContextJSON: Codable, Equatable {
+    /// The uri of the context.
+    public var uri: SpotifyURI?
+    /// The href of the context, or null if not available.
+    public var href: String?
+    /// The external_urls of the context, or null if not available.
+    public var external_urls: ExternalUrlJSON
+    /// The object type of the item’s context. Can be one of album, artist or playlist.
+    public var type: String?
 }

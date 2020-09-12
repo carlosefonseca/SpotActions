@@ -8,9 +8,9 @@ import Combine
 public extension SpotifyWebApi.Playlists {
     enum GetUserPlaylists {}
     enum GetPlaylistTracks {}
-    enum GetPlayerRecentlyPlayed {}
     enum PutPlaylistItems {}
     enum PostPlaylistItems {}
+    enum GetPlaylist {}
 
 //    enum GetPlaylist {}
 //    enum CreatePlaylist {}
@@ -23,7 +23,6 @@ public extension SpotifyWebApi.Playlists {
 }
 
 extension SpotifyWebApi.Playlists.GetUserPlaylists {
-
     public typealias Response = PagedPlaylistsJSON
 
     public struct Request: URLRequestable {
@@ -47,20 +46,6 @@ extension SpotifyWebApi.Playlists.GetPlaylistTracks {
         init(baseURL: URL, playlistId: String, offset: Int = 0) {
             var urlComponents = URLComponents(url: URL(string: "/v1/playlists/\(playlistId)/tracks", relativeTo: baseURL)!, resolvingAgainstBaseURL: true)!
             urlComponents.queryItems = [URLQueryItem(name: "offset", value: "\(offset)")]
-            urlRequest = URLRequest(url: urlComponents.url!)
-        }
-    }
-}
-
-extension SpotifyWebApi.Playlists.GetPlayerRecentlyPlayed {
-    public typealias Response = PagedTracksJSON
-
-    public struct Request: URLRequestable {
-        public var urlRequest: URLRequest
-
-        init(baseURL: URL) {
-            var urlComponents = URLComponents(url: URL(string: "/v1/me/player/recently-played", relativeTo: baseURL)!, resolvingAgainstBaseURL: true)!
-            urlComponents.queryItems = [URLQueryItem(name: "limit", value: "50")]
             urlRequest = URLRequest(url: urlComponents.url!)
         }
     }
@@ -110,17 +95,29 @@ extension SpotifyWebApi.Playlists.PostPlaylistItems {
     }
 }
 
+extension SpotifyWebApi.Playlists.GetPlaylist {
+    public typealias Response = PlaylistJSON
+
+    public struct Request: URLRequestable {
+        public var urlRequest: URLRequest
+
+        init(baseURL: URL, playlistId: SpotifyID) {
+            let url = URL(string: "/v1/playlists/\(playlistId)", relativeTo: baseURL)!
+            urlRequest = URLRequest(url: url)
+        }
+    }
+}
+
 public protocol SpotifyPlaylistsGateway {
     func getUserPlaylists(limit: Int, offset: Int) -> AnyPublisher<PagedPlaylistsJSON, Error>
     func getPlaylistTracks(playlistId: String, offset: Int) -> AnyPublisher<PagedTracksJSON, Error>
     func getNextPlaylistTracks(next: URL) -> AnyPublisher<PagedTracksJSON, Error>
-    func getRecentlyPlayed() -> AnyPublisher<PagedTracksJSON, Error>
     func replace(tracks: [String], on playlistId: String) throws -> AnyPublisher<Never, Error>
     func add(tracks: [SpotifyURI], to playlistId: String, at index: Int?) throws -> AnyPublisher<Never, Error>
+    func getPlaylist(playlistId: SpotifyID) -> AnyPublisher<PlaylistJSON, Error>
 }
 
 public class SpotifyPlaylistsGatewayImplementation: BaseSpotifyGateway, SpotifyPlaylistsGateway {
-
     public func getUserPlaylists(limit: Int = 50, offset: Int = 0) -> AnyPublisher<PagedPlaylistsJSON, Error> {
         let request = SpotifyWebApi.Playlists.GetUserPlaylists.Request(baseURL: baseURL, limit: limit, offset: offset)
         return requestManager.execute(request: request)
@@ -141,13 +138,6 @@ public class SpotifyPlaylistsGatewayImplementation: BaseSpotifyGateway, SpotifyP
             .eraseToAnyPublisher()
     }
 
-    public func getRecentlyPlayed() -> AnyPublisher<PagedTracksJSON, Error> {
-        let request = SpotifyWebApi.Playlists.GetPlayerRecentlyPlayed.Request(baseURL: baseURL)
-        return requestManager.execute(request: request)
-            .decode(type: SpotifyWebApi.Playlists.GetPlayerRecentlyPlayed.Response.self, decoder: JSONDecoder())
-            .eraseToAnyPublisher()
-    }
-
     public func replace(tracks: [SpotifyURI], on playlistId: String) throws -> AnyPublisher<Never, Error> {
         let request = try SpotifyWebApi.Playlists.PutPlaylistItems.Request(baseURL: baseURL, playlist: playlistId, tracks: URIListJSON(uris: tracks))
         return requestManager.execute(request: request).print("SpotifyPlaylists.save").ignoreOutput().eraseToAnyPublisher()
@@ -158,6 +148,13 @@ public class SpotifyPlaylistsGatewayImplementation: BaseSpotifyGateway, SpotifyP
         return requestManager.execute(request: request)
             .print("SpotifyPlaylists.add")
             .ignoreOutput()
+            .eraseToAnyPublisher()
+    }
+
+    public func getPlaylist(playlistId: SpotifyID) -> AnyPublisher<PlaylistJSON, Error> {
+        let request = SpotifyWebApi.Playlists.GetPlaylist.Request(baseURL: baseURL, playlistId: playlistId)
+        return requestManager.execute(request: request)
+            .decode(type: SpotifyWebApi.Playlists.GetPlaylist.Response.self, decoder: JSONDecoder())
             .eraseToAnyPublisher()
     }
 }

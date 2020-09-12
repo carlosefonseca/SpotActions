@@ -9,10 +9,13 @@
 /* Begin PBXBuildFile section */
 		2D324DC02504E63C00703432 /* GetPlaylistTracksHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D324DBF2504E63C00703432 /* GetPlaylistTracksHandler.swift */; };
 		2D324DC2250578B200703432 /* SaveTracksOnPlaylistHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D324DC1250578B200703432 /* SaveTracksOnPlaylistHandler.swift */; };
+		2D4E15E9250D2E7200BED733 /* GetPlayingPlaylistHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D4E15E8250D2E7200BED733 /* GetPlayingPlaylistHandler.swift */; };
 		2D69014E2506E3580038F798 /* FilterTracksHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D69014D2506E3580038F798 /* FilterTracksHandler.swift */; };
+		2D69015025076B580038F798 /* GetPlayingTrackHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D69014F25076B580038F798 /* GetPlayingTrackHandler.swift */; };
 		2D6A966624F27D1800993587 /* GetUserPlaylistsHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D6A966524F27D1800993587 /* GetUserPlaylistsHandler.swift */; };
 		2D755B0424F5897B00800222 /* GetUserProfileHandlerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D755B0324F5897B00800222 /* GetUserProfileHandlerTests.swift */; };
 		2D755B0924F5922600800222 /* CEFSpotifyDoubles in Frameworks */ = {isa = PBXBuildFile; productRef = 2D755B0824F5922600800222 /* CEFSpotifyDoubles */; };
+		2D9272C7250D0C600052E4B6 /* ModelExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D9272C6250D0C600052E4B6 /* ModelExtensions.swift */; };
 		2DA5DE5524EE819A00E9BE87 /* SpotActionsApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DA5DE5424EE819A00E9BE87 /* SpotActionsApp.swift */; };
 		2DA5DE5724EE819A00E9BE87 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DA5DE5624EE819A00E9BE87 /* ContentView.swift */; };
 		2DA5DE5924EE819B00E9BE87 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2DA5DE5824EE819B00E9BE87 /* Assets.xcassets */; };
@@ -60,9 +63,12 @@
 /* Begin PBXFileReference section */
 		2D324DBF2504E63C00703432 /* GetPlaylistTracksHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetPlaylistTracksHandler.swift; sourceTree = "<group>"; };
 		2D324DC1250578B200703432 /* SaveTracksOnPlaylistHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveTracksOnPlaylistHandler.swift; sourceTree = "<group>"; };
+		2D4E15E8250D2E7200BED733 /* GetPlayingPlaylistHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetPlayingPlaylistHandler.swift; sourceTree = "<group>"; };
 		2D69014D2506E3580038F798 /* FilterTracksHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterTracksHandler.swift; sourceTree = "<group>"; };
+		2D69014F25076B580038F798 /* GetPlayingTrackHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetPlayingTrackHandler.swift; sourceTree = "<group>"; };
 		2D6A966524F27D1800993587 /* GetUserPlaylistsHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetUserPlaylistsHandler.swift; sourceTree = "<group>"; };
 		2D755B0324F5897B00800222 /* GetUserProfileHandlerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetUserProfileHandlerTests.swift; sourceTree = "<group>"; };
+		2D9272C6250D0C600052E4B6 /* ModelExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelExtensions.swift; sourceTree = "<group>"; };
 		2DA5DE5124EE819A00E9BE87 /* SpotActions.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SpotActions.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2DA5DE5424EE819A00E9BE87 /* SpotActionsApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotActionsApp.swift; sourceTree = "<group>"; };
 		2DA5DE5624EE819A00E9BE87 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -198,6 +204,9 @@
 				2D324DBF2504E63C00703432 /* GetPlaylistTracksHandler.swift */,
 				2D324DC1250578B200703432 /* SaveTracksOnPlaylistHandler.swift */,
 				2D69014D2506E3580038F798 /* FilterTracksHandler.swift */,
+				2D69014F25076B580038F798 /* GetPlayingTrackHandler.swift */,
+				2D4E15E8250D2E7200BED733 /* GetPlayingPlaylistHandler.swift */,
+				2D9272C6250D0C600052E4B6 /* ModelExtensions.swift */,
 			);
 			path = Intents;
 			sourceTree = "<group>";
@@ -337,6 +346,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2DD91AE024F119B50032D7C6 /* WebAuth.swift in Sources */,
+				2D9272C7250D0C600052E4B6 /* ModelExtensions.swift in Sources */,
 				2D324DC02504E63C00703432 /* GetPlaylistTracksHandler.swift in Sources */,
 				2DD91AE224F11ADF0032D7C6 /* Keychain.swift in Sources */,
 				2D324DC2250578B200703432 /* SaveTracksOnPlaylistHandler.swift in Sources */,
@@ -345,7 +355,9 @@
 				2DAC399F24F1DC73003AC458 /* Intents.intentdefinition in Sources */,
 				2DAC39A324F1ED40003AC458 /* GetUserProfileHandler.swift in Sources */,
 				2D69014E2506E3580038F798 /* FilterTracksHandler.swift in Sources */,
+				2D4E15E9250D2E7200BED733 /* GetPlayingPlaylistHandler.swift in Sources */,
 				2DA5DE5524EE819A00E9BE87 /* SpotActionsApp.swift in Sources */,
+				2D69015025076B580038F798 /* GetPlayingTrackHandler.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

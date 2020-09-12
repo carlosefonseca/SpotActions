@@ -8,7 +8,6 @@ import XCTest
 import Combine
 
 class UrlSessionRequesterTests: XCTestCase {
-
     struct TestData: Codable, Equatable {
         var slideshow: Slideshow
     }
@@ -34,7 +33,6 @@ class UrlSessionRequesterTests: XCTestCase {
     }
 
     func test_successful_request() {
-
         let requestExpectation = expectation(description: "request")
         var output: TestData?
 
@@ -84,19 +82,21 @@ class UrlSessionRequesterTests: XCTestCase {
                 print(completion)
                 output = completion
                 requestExpectation.fulfill()
-            } receiveValue: { (value: TestData) in
+            } receiveValue: { (value: Data) in
                 print(value)
                 valueExpectation.fulfill()
             }.store(in: &bag)
 
-        waitForExpectations(timeout: 1)
+        waitForExpectations(timeout: 10)
 
-        guard case Subscribers.Completion<UrlRequesterError>.failure(let error) = output!,
-            case UrlRequesterError.apiError(let response, _) = error else {
+        guard
+            let completionOutput = output,
+            case Subscribers.Completion<UrlRequesterError>.failure(let error) = completionOutput,
+            case .apiError(let response, _) = error else {
             XCTFail()
             return
         }
-        
+
         XCTAssertEqual(response.type, .unauthorized)
     }
 }

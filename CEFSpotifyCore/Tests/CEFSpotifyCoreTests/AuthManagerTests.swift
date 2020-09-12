@@ -30,7 +30,9 @@ class AuthManagerTests: XCTestCase {
             requestResult: .success(TokenResponse())
         )
 
-        fakeRequester.responses.append(Result.success(TokenResponse()))
+        let expected = try! JSONEncoder().encode(TokenResponse())
+
+        fakeRequester.responses.append(Result.success(expected))
 
         authManager = SpotifyAuthManagerImplementation(webAuthManager: webAuth,
                                                        credentialStore: credentialStore,
@@ -140,7 +142,9 @@ class AuthManagerTests: XCTestCase {
         newToken.refresh_token = "refresh_token"
         newToken.scope = "scope"
 
-        fakeRequester.responses.append(Result.success(newToken))
+        let expected = try! JSONEncoder().encode(newToken)
+
+        fakeRequester.responses.append(Result.success(expected))
 
         authManager = SpotifyAuthManagerImplementation(webAuthManager: webAuth,
                                                        credentialStore: credentialStore,

@@ -23,7 +23,6 @@ class AuthenticatedSpotifyRequestManagerTests: XCTestCase {
         bag.removeAll()
         auth = FakeSpotifyAuthManager(initialState: .loggedIn(token: dummyTokenResponse))
         requester = FakeUrlRequester()
-        requester.responses.append(.success(TestData()))
         requestManager = AuthenticatedSpotifyRequestManager(auth: auth, requester: requester)
     }
 
@@ -34,7 +33,11 @@ class AuthenticatedSpotifyRequestManagerTests: XCTestCase {
     func test_GIVEN_logged_in_WHEN_request_THEN_success() {
 
         let finishedExpectation = expectation(description: "finished")
-        var output: TestData?
+        var output: Data?
+
+        let expectedData = try! JSONEncoder().encode(TokenResponse())
+        requester.responses.append(.success(expectedData))
+
 
         let request = URLRequest(url: URL(string: "http://example.com/abc")!)
         requestManager.execute(urlRequest: request)
@@ -45,13 +48,13 @@ class AuthenticatedSpotifyRequestManagerTests: XCTestCase {
                     XCTFail()
                     return
                 }
-            } receiveValue: { (value: TestData) in
+            } receiveValue: { (value: Data) in
                 output = value
             }.store(in: &bag)
 
         waitForExpectations(timeout: 1)
 
-        XCTAssertEqual(output, TestData())
+        XCTAssertEqual(output, expectedData)
     }
 
     func test_GIVEN_not_logged_in_WHEN_request_THEN_fail_with_noLogin() {
@@ -71,7 +74,7 @@ class AuthenticatedSpotifyRequestManagerTests: XCTestCase {
                     return
                 }
                 output = error as? SpotifyRequestError
-            } receiveValue: { (_: TestData) in
+            } receiveValue: { (_: Data) in
                 XCTFail()
             }.store(in: &bag)
 
@@ -90,11 +93,14 @@ class AuthenticatedSpotifyRequestManagerTests: XCTestCase {
         let url = URL(string: "http://example.com/abc")!
         let unauthorizedResponse = HTTPURLResponse(url: url, statusCode: 401, httpVersion: nil, headerFields: nil)!
 
+        let expectedData = try! JSONEncoder().encode(TestData())
+        requester.responses.append(.success(expectedData))
+
         requester.responses.append(.failure(UrlRequesterError.apiError(response: unauthorizedResponse, data: "puff".data(using: .utf8)!)))
         auth.refreshTokenResponse = Result.success(dummyTokenResponse)
 
         let finishedExpectation = expectation(description: "finished")
-        var output: TestData?
+        var output: Data?
 
         let request = URLRequest(url: url)
         requestManager.execute(urlRequest: request)
@@ -105,12 +111,12 @@ class AuthenticatedSpotifyRequestManagerTests: XCTestCase {
                     XCTFail()
                     return
                 }
-            } receiveValue: { (value: TestData) in
+            } receiveValue: { (value: Data) in
                 output = value
             }.store(in: &bag)
 
         waitForExpectations(timeout: 1)
 
-        XCTAssertEqual(output, TestData())
+        XCTAssertEqual(output, expectedData)
     }
 }

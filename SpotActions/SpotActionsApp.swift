@@ -9,10 +9,12 @@ import CEFSpotifyCore
 struct Gateways {
     let userProfile: SpotifyUserProfileGateway
     let playlists: SpotifyPlaylistsGateway
+    let player: SpotifyPlayerGateway
 
     init(baseURL: URL, requestManager: RequestManager) {
         userProfile = SpotifyUserProfileGatewayImplementation(baseURL: baseURL, requestManager: requestManager)
         playlists = SpotifyPlaylistsGatewayImplementation(baseURL: baseURL, requestManager: requestManager)
+        player = SpotifyPlayerGatewayImplementation(baseURL: baseURL, requestManager: requestManager)
     }
 }
 
@@ -26,6 +28,7 @@ struct Dependencies {
 
     var userManager: UserManager
     var playlistsManager: PlaylistsManager
+    var playerManager: PlayerManager
 
     init() {
         keychain = Keychain()
@@ -36,12 +39,12 @@ struct Dependencies {
 
         userManager = UserManagerImplementation(auth: auth, gateway: gateways.userProfile)
         playlistsManager = PlaylistsManagerImplementation(auth: auth, gateway: gateways.playlists)
+        playerManager = PlayerManagerImplementation(gateway: gateways.player)
     }
 }
 
 @main
 struct SpotActionsApp: App {
-
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
 
     var dependencies: Dependencies { appDelegate.dependencies }
@@ -57,12 +60,11 @@ struct SpotActionsApp: App {
 
 // @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
-
     var dependencies = Dependencies()
 
     lazy var userProfileHandler: GetUserProfileHandler = { GetUserProfileHandler(auth: dependencies.auth, userManager: dependencies.userManager) }()
     lazy var userPlaylistHandler: GetUserPlaylistsHandler = { GetUserPlaylistsHandler(auth: dependencies.auth, userManager: dependencies.userManager, playlistsManager: dependencies.playlistsManager) }()
-    lazy var playlistTracksHandler: GetPlaylistTracksHandler = { GetPlaylistTracksHandler(auth: dependencies.auth, playlistsManager: dependencies.playlistsManager) }()
+    lazy var playlistTracksHandler: GetPlaylistTracksHandler = { GetPlaylistTracksHandler(auth: dependencies.auth, playlistsManager: dependencies.playlistsManager, playerManager: dependencies.playerManager) }()
     lazy var saveTracksOnPlaylistHandler = { SaveTracksOnPlaylistHandler(auth: dependencies.auth, playlistsManager: dependencies.playlistsManager) }()
 
     func application(_ application: UIApplication, handlerFor intent: INIntent) -> Any? {
@@ -77,7 +79,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             return saveTracksOnPlaylistHandler
         case is FilterTracksIntent:
             return FilterTracksHandler()
-
+        case is GetPlayingTrackIntent:
+            return GetPlayingTrackHandler(auth: dependencies.auth, playerManager: dependencies.playerManager)
+        case is GetPlayingPlaylistIntent:
+            return GetPlayingPlaylistHandler(auth: dependencies.auth, playerManager: dependencies.playerManager, playlistManager: dependencies.playlistsManager)
         default:
             fatalError("No handler for this intent")
         }

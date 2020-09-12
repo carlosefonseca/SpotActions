@@ -7,7 +7,6 @@ import CEFSpotifyCore
 import Combine
 
 public class FakeSpotifyPlaylistsGateway: SpotifyPlaylistsGateway {
-
     public var userPlaylistsResponses = [Result<PagedPlaylistsJSON, Error>]()
     public var playlistTracksResponses = [Result<PagedTracksJSON, Error>]()
     public var nextPlaylistTracksResponses = [Result<PagedTracksJSON, Error>]()
@@ -47,6 +46,10 @@ public class FakeSpotifyPlaylistsGateway: SpotifyPlaylistsGateway {
     }
 
     public func add(tracks: [SpotifyURI], to playlistId: String, at index: Int?) throws -> AnyPublisher<Never, Error> {
+        return Fail(error: PlaylistsManagerError.missingData(message: "TODO!!")).eraseToAnyPublisher()
+    }
+
+    public func getPlaylist(playlistId: SpotifyID) -> AnyPublisher<PlaylistJSON, Error> {
         return Fail(error: PlaylistsManagerError.missingData(message: "TODO!!")).eraseToAnyPublisher()
     }
 }

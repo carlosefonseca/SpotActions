@@ -7,6 +7,13 @@ import Combine
 import CEFSpotifyCore
 
 public class FakePlaylistsManager: PlaylistsManager {
+    public func getPlaylist(playlistId: SpotifyID) -> AnyPublisher<PlaylistJSON, PlaylistsManagerError> {
+        $playlists
+            .first()
+            .tryMap { array in array.first(where: { $0.id == playlistId })! }
+            .mapError { PlaylistsManagerError.missingData(message: $0.localizedDescription) }
+            .eraseToAnyPublisher()
+    }
 
     @Published public var playlists = [PlaylistJSON]()
 

@@ -7,14 +7,13 @@ import CEFSpotifyCore
 import Combine
 
 public class FakeUrlRequester: URLRequester {
-
     public init() {}
 
-    public var responses = [Result<Any, UrlRequesterError>]()
+    public var responses = [Result<Data, UrlRequesterError>]()
 
-    public func request<T>(urlRequest: URLRequest) -> AnyPublisher<T, UrlRequesterError> where T: Decodable {
+    public func request(urlRequest: URLRequest) -> AnyPublisher<Data, UrlRequesterError> {
         return Deferred {
-            Future<T, UrlRequesterError> { promise in
+            Future<Data, UrlRequesterError> { promise in
 
                 guard self.responses.isEmpty == false else {
                     promise(.failure(UrlRequesterError.genericError(description: "No data to send!")))
@@ -25,7 +24,7 @@ public class FakeUrlRequester: URLRequester {
 
                 switch response {
                 case .success(let value):
-                    promise(.success(value as! T))
+                    promise(.success(value))
                 case .failure(let error):
                     promise(.failure(error))
                 }

@@ -9,7 +9,6 @@ import Combine
 
 class FilterTracksHandler: NSObject, FilterTracksIntentHandling {
     func handle(intent: FilterTracksIntent, completion: @escaping (FilterTracksIntentResponse) -> Void) {
-
         guard let tracks = intent.tracks else {
             completion(.failure(error: "No tracks specified!"))
             return
@@ -21,7 +20,6 @@ class FilterTracksHandler: NSObject, FilterTracksIntentHandling {
         var modeIsSelect: Bool?
 
         switch intent.mode {
-
         case .unknown:
             break
         case .select:
@@ -91,8 +89,7 @@ private extension Track {
             matchArtist = (artists?.first(where: { artist in artist.displayString.contains(regex: artistRegex) }) != nil)
         }
 
-
-        print("\(self.displayString) title: \(matchTitle) && artist: \(matchArtist) = \(matchTitle && matchArtist) ")
+        print("\(displayString) title: \(matchTitle) && artist: \(matchArtist) = \(matchTitle && matchArtist) ")
 
         return matchTitle && matchArtist
     }

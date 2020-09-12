@@ -9,7 +9,7 @@ public protocol PlaylistsManager {
     var publisher: AnyPublisher<[PlaylistJSON], Never> { get }
     func getUserPlaylistsEach() -> AnyPublisher<[PlaylistJSON], Error>
     func getAllPlaylistTracks(playlistId: String) -> AnyPublisher<[TrackJSON], PlaylistsManagerError>
-    func getRecentlyPlayed() -> AnyPublisher<[TrackJSON], PlaylistsManagerError>
+    func getPlaylist(playlistId: SpotifyID) -> AnyPublisher<PlaylistJSON, PlaylistsManagerError>
     func save(tracks: [TrackJSON], on playlist: PlaylistJSON) throws -> AnyPublisher<Never, PlaylistsManagerError>
     func save(tracks: [String], on playlistId: String) throws -> AnyPublisher<Never, PlaylistsManagerError>
 }
@@ -117,23 +117,14 @@ public class PlaylistsManagerImplementation: PlaylistsManager {
         return self.gateway.getPlaylistTracks(playlistId: playlistId, offset: offset)
     }
 
-    public func getRecentlyPlayed() -> AnyPublisher<[TrackJSON], PlaylistsManagerError> {
-        self.gateway.getRecentlyPlayed()
-            .mapError { PlaylistsManagerError.requestError(error: $0) }
-            .map { $0.items!.map { $0.track! } }
-            .eraseToAnyPublisher()
-    }
-
     public func save(tracks: [TrackJSON], on playlist: PlaylistJSON) throws -> AnyPublisher<Never, PlaylistsManagerError> {
-        try self.save(tracks: tracks.compactMap { $0.id }, on: playlist.id!)
+        self.save(tracks: tracks.compactMap { $0.id }, on: playlist.id!)
     }
 
     public func save(tracks: [String], on playlist: String) -> AnyPublisher<Never, PlaylistsManagerError> {
-
         return Deferred<AnyPublisher<Never, PlaylistsManagerError>> {
             do {
                 if tracks.count > 100 {
-
                     let chunks = tracks.chunked(into: 100)
 
                     let publishers = chunks.enumerated().map { (index, tracks) -> AnyPublisher<Never, PlaylistsManagerError> in
@@ -145,7 +136,6 @@ public class PlaylistsManagerImplementation: PlaylistsManager {
                                     .ignoreOutput()
                                     .eraseToAnyPublisher()
                             } else {
-
                                 return try self.gateway.add(tracks: tracks, to: playlist, at: nil)
                                     .print("save.append \(index)")
                                     .mapError { PlaylistsManagerError.requestError(error: $0) }
@@ -172,6 +162,12 @@ public class PlaylistsManagerImplementation: PlaylistsManager {
                 return Fail(error: PlaylistsManagerError.requestError(error: error)).eraseToAnyPublisher()
             }
         }.eraseToAnyPublisher()
+    }
+
+    public func getPlaylist(playlistId: SpotifyID) -> AnyPublisher<PlaylistJSON, PlaylistsManagerError> {
+        return gateway.getPlaylist(playlistId: playlistId)
+            .mapError { PlaylistsManagerError.requestError(error: $0) }
+            .eraseToAnyPublisher()
     }
 }
 

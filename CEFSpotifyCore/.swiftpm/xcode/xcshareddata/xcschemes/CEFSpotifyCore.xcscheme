@@ -38,6 +38,11 @@
                BlueprintName = "CEFSpotifyCoreTests"
                ReferencedContainer = "container:">
             </BuildableReference>
+            <SkippedTests>
+               <Test
+                  Identifier = "UrlSessionRequesterTests">
+               </Test>
+            </SkippedTests>
          </TestableReference>
       </Testables>
    </TestAction>

@@ -11,12 +11,14 @@ class GetPlaylistTracksHandler: NSObject, GetPlaylistTracksIntentHandling {
 
     let auth: SpotifyAuthManager
     let playlistsManager: PlaylistsManager
+    let playerManager: PlayerManager
 
     var bag = Set<AnyCancellable>()
 
-    init(auth: SpotifyAuthManager, playlistsManager: PlaylistsManager) {
+    init(auth: SpotifyAuthManager, playlistsManager: PlaylistsManager, playerManager: PlayerManager) {
         self.auth = auth
         self.playlistsManager = playlistsManager
+        self.playerManager = playerManager
     }
 
     func handle(intent: GetPlaylistTracksIntent, completion: @escaping (GetPlaylistTracksIntentResponse) -> Void) {
@@ -28,7 +30,7 @@ class GetPlaylistTracksHandler: NSObject, GetPlaylistTracksIntentHandling {
         switch intent.option {
         case .recentTracks:
 
-            playlistsManager.getRecentlyPlayed()
+            playerManager.getRecentlyPlayed()
                 .sink(receiveCompletion: { receiveCompletion in
                     if case .failure(let error) = receiveCompletion {
                         completion(.failure(error: error.localizedDescription))

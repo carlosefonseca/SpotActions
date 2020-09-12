@@ -41,14 +41,3 @@ class GetUserProfileHandler: NSObject, GetUserProfileIntentHandling {
         }).store(in: &bag)
     }
 }
-
-extension User {
-
-    convenience init(from json: UserJSON) {
-        self.init(identifier: json.id, display: json.display_name!)
-        email = json.email
-        country = json.country
-        product = json.product
-        uri = json.uri
-    }
-}

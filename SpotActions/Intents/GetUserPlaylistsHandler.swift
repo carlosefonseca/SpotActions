@@ -54,26 +54,3 @@ class GetUserPlaylistsHandler: NSObject, GetUserPlaylistsIntentHandling {
     }
 }
 
-extension Artist {
-    convenience init(from json: ArtistJSON) {
-        self.init(identifier: json.id, display: json.name!)
-        self.uri = json.uri
-    }
-}
-
-extension Playlist {
-    convenience init(from json: PlaylistJSON) {
-        self.init(identifier: json.id, display: json.name!)
-        self.uri = json.uri
-    }
-}
-
-extension Track {
-    convenience init(from json: TrackJSON) {
-        self.init(identifier: json.id, display: "\(json.name!) - \(json.artists!.compactMap { $0.name }.joined(separator: ", "))")
-        self.trackName = json.name!
-        self.artists = json.artists?.compactMap { Artist(from: $0) } ?? []
-        self.durationMs = (json.duration_ms ?? -1) as NSNumber
-        self.uri = json.uri!
-    }
-}
