@@ -78,7 +78,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         case is SaveTracksOnPlaylistIntent:
             return saveTracksOnPlaylistHandler
         case is FilterTracksIntent:
-            return FilterTracksHandler()
+            return FilterTracksHandler(playlistsManager: dependencies.playlistsManager)
         case is GetPlayingTrackIntent:
             return GetPlayingTrackHandler(auth: dependencies.auth, playerManager: dependencies.playerManager)
         case is GetPlayingPlaylistIntent:

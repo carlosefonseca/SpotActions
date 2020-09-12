@@ -7,40 +7,87 @@ import Intents
 import CEFSpotifyCore
 import Combine
 
+typealias ErrorMessage = String
+extension ErrorMessage: Error {}
+
 class FilterTracksHandler: NSObject, FilterTracksIntentHandling {
+    let playlistsManager: PlaylistsManager
+    var bag = Set<AnyCancellable>()
+
+    init(playlistsManager: PlaylistsManager) {
+        self.playlistsManager = playlistsManager
+    }
+
     func handle(intent: FilterTracksIntent, completion: @escaping (FilterTracksIntentResponse) -> Void) {
         guard let tracks = intent.tracks else {
             completion(.failure(error: "No tracks specified!"))
             return
         }
 
-        let titles = intent.titles
-        let artists = intent.artists
-
-        var modeIsSelect: Bool?
+        var select: Bool!
 
         switch intent.mode {
         case .unknown:
-            break
-        case .select:
-            modeIsSelect = true
-        case .reject:
-            modeIsSelect = false
-        }
-
-        guard modeIsSelect != nil else {
-            completion(.failure(error: "No filter mode specified!"))
+            completion(.failure(error: "No select/reject specified!"))
             return
+        case .select:
+            select = true
+        case .reject:
+            select = false
         }
 
-        let isRegex: Bool = intent.isRegex?.boolValue ?? false
+        var result: Result<[Track], ErrorMessage>?
+
+        switch intent.filter {
+        case .unknown:
+            completion(.failure(error: "No filter specified!"))
+            return
+
+        case .titleAndArtist:
+            result = filterByTitleArtist(modeIsSelect: select,
+                                         tracks: tracks,
+                                         titles: intent.andTitles,
+                                         artists: intent.andArtists,
+                                         and: true,
+                                         isRegex: intent.andIsRegex?.boolValue ?? false)
+        case .titleOrArtist:
+            result = filterByTitleArtist(modeIsSelect: select,
+                                         tracks: tracks,
+                                         titles: intent.orTitles,
+                                         artists: intent.orArtists,
+                                         and: false,
+                                         isRegex: intent.orIsRegex?.boolValue ?? false)
+
+        case .existInPlaylist:
+            break
+        case .dedup:
+            break
+        case .existInTracks:
+            break
+        case .first:
+            break
+        case .last:
+            break
+        }
+
+        switch result {
+        case .success(let output):
+            completion(.success(result: output))
+        case .failure(let error):
+            completion(.failure(error: error))
+        case .none:
+            completion(.failure(error: "Error! Maybe not implemented."))
+        }
+    }
+
+    func filterByTitleArtist(modeIsSelect: Bool, tracks: [Track], titles: [String]?, artists: [String]?, and: Bool, isRegex: Bool) -> Result<[Track], ErrorMessage> {
         var titleRegex: NSRegularExpression?
         if let titles = titles {
             do {
                 titleRegex = try createRegexFrom(strings: titles, escaped: !isRegex)
+                print("Title Regex: \(titleRegex)")
             } catch {
-                completion(.failure(error: "Failed to parse titles regex!"))
-                return
+                return Result.failure("Failed to parse titles regex!")
             }
         }
 
@@ -48,23 +95,44 @@ class FilterTracksHandler: NSObject, FilterTracksIntentHandling {
         if let artists = artists {
             do {
                 artistRegex = try createRegexFrom(strings: artists, escaped: !isRegex)
+                print("Artist Regex: \(artistRegex)")
             } catch {
-                completion(.failure(error: "Failed to parse artists regex!"))
-                return
+                return .failure("Failed to parse artists regex!")
             }
         }
 
         let filtered: [Track]
-        if modeIsSelect! {
-            filtered = tracks.filter { $0.matches(titleRegex: titleRegex, artistRegex: artistRegex) }
+        if modeIsSelect {
+            if and {
+                filtered = tracks.filter { $0.matches(title: titleRegex, andArtist: artistRegex) }
+            } else {
+                filtered = tracks.filter { $0.matches(title: titleRegex, orArtist: artistRegex) }
+            }
         } else {
-            filtered = tracks.filter { !$0.matches(titleRegex: titleRegex, artistRegex: artistRegex) }
+            if and {
+                filtered = tracks.filter { !$0.matches(title: titleRegex, andArtist: artistRegex) }
+            } else {
+                filtered = tracks.filter { !$0.matches(title: titleRegex, orArtist: artistRegex) }
+            }
         }
-
-        completion(.success(result: filtered))
+        return .success(filtered)
     }
 
-    func createRegexFrom(strings: [String], escaped: Bool) throws -> NSRegularExpression {
+    func provideOtherPlaylistOptionsCollection(for intent: FilterTracksIntent, with completion: @escaping (INObjectCollection<Playlist>?, Error?) -> Void) {
+        playlistsManager.getUserPlaylistsEach()
+            .sink(
+                receiveCompletion: { receiveCompletion in
+                    if case .failure(let error) = receiveCompletion {
+                        completion(nil, error)
+                    }
+                },
+                receiveValue: { value in
+                    completion(INObjectCollection(items: value.map { Playlist(from: $0) }), nil)
+                }
+            ).store(in: &bag)
+    }
+
+    private func createRegexFrom(strings: [String], escaped: Bool) throws -> NSRegularExpression {
         let join = strings.map { escaped ? NSRegularExpression.escapedPattern(for: $0) : $0 }.joined(separator: ")|(")
         return try NSRegularExpression(pattern: "(\(join))")
     }
@@ -78,7 +146,7 @@ extension String {
 }
 
 private extension Track {
-    func matches(titleRegex: NSRegularExpression?, artistRegex: NSRegularExpression?) -> Bool {
+    func matches(title titleRegex: NSRegularExpression?, andArtist artistRegex: NSRegularExpression?) -> Bool {
         var matchTitle: Bool = true
         if let titleRegex = titleRegex {
             matchTitle = trackName?.contains(regex: titleRegex) ?? true
@@ -92,5 +160,22 @@ private extension Track {
         print("\(displayString) title: \(matchTitle) && artist: \(matchArtist) = \(matchTitle && matchArtist) ")
 
         return matchTitle && matchArtist
+    }
+
+    func matches(title titleRegex: NSRegularExpression?, orArtist artistRegex: NSRegularExpression?) -> Bool {
+        if let titleRegex = titleRegex,
+            trackName?.contains(regex: titleRegex) == true {
+            print("\(displayString) title: true")
+            return true
+        }
+
+        if let artistRegex = artistRegex,
+            artists?.first(where: { artist in artist.displayString.contains(regex: artistRegex) }) != nil {
+            print("\(displayString) title: false || artist: true = true ")
+            return true
+        }
+
+        print("\(displayString) title: false || artist: false = false ")
+        return false
     }
 }
