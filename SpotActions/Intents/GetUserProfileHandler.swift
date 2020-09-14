@@ -32,7 +32,7 @@ class GetUserProfileHandler: NSObject, GetUserProfileIntentHandling {
                 completion(.failure(error: error.localizedDescription))
             }
         }, receiveValue: { user in
-            let u = User(identifier: user.id, display: user.display_name!)
+            let u = INUser(identifier: user.id, display: user.display_name!)
             u.email = user.email
             u.country = user.country
             u.product = user.product

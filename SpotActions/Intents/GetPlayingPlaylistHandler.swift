@@ -24,10 +24,10 @@ class GetPlayingPlaylistHandler: NSObject, GetPlayingPlaylistIntentHandling {
         self.playlistManager = playlistManager
     }
 
-    private func processForPlaylist() -> AnyPublisher<Playlist, GetPlayingPlaylistHandlerError> {
+    private func processForPlaylist() -> AnyPublisher<INPlaylist, GetPlayingPlaylistHandlerError> {
         playerManager.getCurrentlyPlaying()
             .mapError { GetPlayingPlaylistHandlerError.message($0.localizedDescription) }
-            .flatMap { (playing: CurrentlyPlayingJSON) -> AnyPublisher<Playlist, GetPlayingPlaylistHandlerError> in
+            .flatMap { (playing: CurrentlyPlayingJSON) -> AnyPublisher<INPlaylist, GetPlayingPlaylistHandlerError> in
                 guard
                     let context = playing.context,
                     context.type == "playlist",
@@ -39,7 +39,7 @@ class GetPlayingPlaylistHandler: NSObject, GetPlayingPlaylistIntentHandling {
 
                 return self.playlistManager.getPlaylist(playlistId: uri.id)
                     .mapError { GetPlayingPlaylistHandlerError.message($0.localizedDescription) }
-                    .map { playlist in Playlist(from: playlist) }
+                    .map { playlist in INPlaylist(from: playlist) }
                     .eraseToAnyPublisher()
             }
             .eraseToAnyPublisher()

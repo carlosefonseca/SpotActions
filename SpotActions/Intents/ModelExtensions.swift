@@ -5,7 +5,7 @@
 import Foundation
 import CEFSpotifyCore
 
-extension User {
+extension INUser {
     convenience init(from json: UserJSON) {
         self.init(identifier: json.id, display: json.display_name!)
         email = json.email
@@ -15,43 +15,43 @@ extension User {
     }
 }
 
-extension Artist {
+extension INArtist {
     convenience init(from json: ArtistJSON) {
         self.init(identifier: json.id, display: json.name!)
         self.uri = json.uri
     }
 }
 
-extension Playlist {
+extension INPlaylist {
     convenience init(from json: PlaylistJSON) {
         self.init(identifier: json.id, display: json.name!)
         self.uri = json.uri
     }
 }
 
-extension Track {
+extension INTrack {
     convenience init(from json: TrackJSON) {
         self.init(identifier: json.id, display: "\(json.name!) - \(json.artists!.compactMap { $0.name }.joined(separator: ", "))")
         self.trackName = json.name!
-        self.artists = json.artists?.compactMap { Artist(from: $0) } ?? []
+        self.artists = json.artists?.compactMap { INArtist(from: $0) } ?? []
         self.durationMs = (json.duration_ms ?? -1) as NSNumber
         self.uri = json.uri!
     }
 }
 
-extension CurrentlyPlaying {
+extension INCurrentlyPlaying {
     convenience init?(trackFrom json: CurrentlyPlayingJSON) {
         guard let trackJson = json.item else {
             return nil
         }
-        let track = Track(from: trackJson)
+        let track = INTrack(from: trackJson)
         self.init(identifier: nil, display: track.displayString)
         self.track = track
     }
 
     convenience init(from json: CurrentlyPlayingJSON, playlist playlistJSON: PlaylistJSON) {
-        let track = (json.item != nil) ? Track(from: json.item!) : nil
-        let playlist = Playlist(from: playlistJSON)
+        let track = (json.item != nil) ? INTrack(from: json.item!) : nil
+        let playlist = INPlaylist(from: playlistJSON)
         let trackName = track?.displayString
         let playlistName = playlist.displayString
         let name = [trackName, playlistName].compactMap { $0 }.joined(separator: " on ")

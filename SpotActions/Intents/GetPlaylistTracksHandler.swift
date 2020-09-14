@@ -36,7 +36,7 @@ class GetPlaylistTracksHandler: NSObject, GetPlaylistTracksIntentHandling {
                         completion(.failure(error: error.localizedDescription))
                     }
                 }, receiveValue: { tracks in
-                    completion(.success(result: tracks.map { Track(from: $0) }))
+                    completion(.success(result: tracks.map { INTrack(from: $0) }))
                 }).store(in: &bag)
 
 
@@ -53,7 +53,7 @@ class GetPlaylistTracksHandler: NSObject, GetPlaylistTracksIntentHandling {
                         completion(.failure(error: error.localizedDescription))
                     }
                 }, receiveValue: { tracks in
-                    completion(.success(result: tracks.map { Track(from: $0) }))
+                    completion(.success(result: tracks.map { INTrack(from: $0) }))
                 }).store(in: &bag)
 
 
@@ -64,15 +64,15 @@ class GetPlaylistTracksHandler: NSObject, GetPlaylistTracksIntentHandling {
 
     }
 
-    func resolvePlaylist(for intent: GetPlaylistTracksIntent, with completion: @escaping (PlaylistResolutionResult) -> Void) {
+    func resolvePlaylist(for intent: GetPlaylistTracksIntent, with completion: @escaping (INPlaylistResolutionResult) -> Void) {
         guard let playlist = intent.playlist else {
-            completion(PlaylistResolutionResult.unsupported())
+            completion(INPlaylistResolutionResult.unsupported())
             return
         }
-        completion(PlaylistResolutionResult.success(with: playlist))
+        completion(INPlaylistResolutionResult.success(with: playlist))
     }
 
-    func providePlaylistOptionsCollection(for intent: GetPlaylistTracksIntent, with completion: @escaping (INObjectCollection<Playlist>?, Error?) -> Void) {
+    func providePlaylistOptionsCollection(for intent: GetPlaylistTracksIntent, with completion: @escaping (INObjectCollection<INPlaylist>?, Error?) -> Void) {
         playlistsManager.getUserPlaylistsEach()
             .sink(
                 receiveCompletion: { receiveCompletion in
@@ -81,7 +81,7 @@ class GetPlaylistTracksHandler: NSObject, GetPlaylistTracksIntentHandling {
                     }
                 },
                 receiveValue: { value in
-                    completion(INObjectCollection(items: value.map { Playlist(from: $0) }), nil)
+                    completion(INObjectCollection(items: value.map { INPlaylist(from: $0) }), nil)
                 }
             ).store(in: &bag)
     }

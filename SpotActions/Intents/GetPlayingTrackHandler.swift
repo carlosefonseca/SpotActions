@@ -46,7 +46,7 @@ class GetPlayingTrackHandler: NSObject, GetPlayingTrackIntentHandling {
                         completion(.init(code: .nothingPlaying, userActivity: nil))
                         return
                     }
-                    let result = Track(from: trackJson)
+                    let result = INTrack(from: trackJson)
                     completion(.success(result: result))
                 }
             )

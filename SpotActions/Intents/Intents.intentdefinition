@@ -368,7 +368,7 @@
 						<key>INIntentResponseParameterName</key>
 						<string>result</string>
 						<key>INIntentResponseParameterObjectType</key>
-						<string>User</string>
+						<string>INUser</string>
 						<key>INIntentResponseParameterObjectTypeNamespace</key>
 						<string>3vrzzw</string>
 						<key>INIntentResponseParameterTag</key>
@@ -475,7 +475,7 @@
 						<key>INIntentResponseParameterName</key>
 						<string>result</string>
 						<key>INIntentResponseParameterObjectType</key>
-						<string>Playlist</string>
+						<string>INPlaylist</string>
 						<key>INIntentResponseParameterObjectTypeNamespace</key>
 						<string>3vrzzw</string>
 						<key>INIntentResponseParameterSupportsMultipleValues</key>
@@ -624,7 +624,7 @@
 					<key>INIntentParameterName</key>
 					<string>playlist</string>
 					<key>INIntentParameterObjectType</key>
-					<string>Playlist</string>
+					<string>INPlaylist</string>
 					<key>INIntentParameterObjectTypeNamespace</key>
 					<string>3vrzzw</string>
 					<key>INIntentParameterPromptDialogs</key>
@@ -706,7 +706,7 @@
 						<key>INIntentResponseParameterName</key>
 						<string>result</string>
 						<key>INIntentResponseParameterObjectType</key>
-						<string>Track</string>
+						<string>INTrack</string>
 						<key>INIntentResponseParameterObjectTypeNamespace</key>
 						<string>3vrzzw</string>
 						<key>INIntentResponseParameterSupportsMultipleValues</key>
@@ -786,7 +786,7 @@
 					<key>INIntentParameterName</key>
 					<string>playlist</string>
 					<key>INIntentParameterObjectType</key>
-					<string>Playlist</string>
+					<string>INPlaylist</string>
 					<key>INIntentParameterObjectTypeNamespace</key>
 					<string>3vrzzw</string>
 					<key>INIntentParameterPromptDialogs</key>
@@ -823,7 +823,7 @@
 					<key>INIntentParameterName</key>
 					<string>tracks</string>
 					<key>INIntentParameterObjectType</key>
-					<string>Track</string>
+					<string>INTrack</string>
 					<key>INIntentParameterObjectTypeNamespace</key>
 					<string>3vrzzw</string>
 					<key>INIntentParameterPromptDialogs</key>
@@ -888,7 +888,7 @@
 						<key>INIntentResponseParameterName</key>
 						<string>tracks</string>
 						<key>INIntentResponseParameterObjectType</key>
-						<string>Track</string>
+						<string>INTrack</string>
 						<key>INIntentResponseParameterObjectTypeNamespace</key>
 						<string>3vrzzw</string>
 						<key>INIntentResponseParameterSupportsMultipleValues</key>
@@ -1078,7 +1078,7 @@
 					<key>INIntentParameterName</key>
 					<string>tracks</string>
 					<key>INIntentParameterObjectType</key>
-					<string>Track</string>
+					<string>INTrack</string>
 					<key>INIntentParameterObjectTypeNamespace</key>
 					<string>3vrzzw</string>
 					<key>INIntentParameterPromptDialogs</key>
@@ -1319,7 +1319,7 @@
 					<key>INIntentParameterName</key>
 					<string>otherPlaylist</string>
 					<key>INIntentParameterObjectType</key>
-					<string>Playlist</string>
+					<string>INPlaylist</string>
 					<key>INIntentParameterObjectTypeNamespace</key>
 					<string>3vrzzw</string>
 					<key>INIntentParameterPromptDialogs</key>
@@ -1369,7 +1369,7 @@
 					<key>INIntentParameterName</key>
 					<string>otherTracks</string>
 					<key>INIntentParameterObjectType</key>
-					<string>Track</string>
+					<string>INTrack</string>
 					<key>INIntentParameterObjectTypeNamespace</key>
 					<string>3vrzzw</string>
 					<key>INIntentParameterPromptDialogs</key>
@@ -1716,7 +1716,7 @@
 						<key>INIntentResponseParameterName</key>
 						<string>result</string>
 						<key>INIntentResponseParameterObjectType</key>
-						<string>Track</string>
+						<string>INTrack</string>
 						<key>INIntentResponseParameterObjectTypeNamespace</key>
 						<string>3vrzzw</string>
 						<key>INIntentResponseParameterSupportsMultipleValues</key>
@@ -1827,7 +1827,7 @@
 						<key>INIntentResponseParameterName</key>
 						<string>result</string>
 						<key>INIntentResponseParameterObjectType</key>
-						<string>Track</string>
+						<string>INTrack</string>
 						<key>INIntentResponseParameterObjectTypeNamespace</key>
 						<string>3vrzzw</string>
 						<key>INIntentResponseParameterTag</key>
@@ -1930,7 +1930,7 @@
 						<key>INIntentResponseParameterName</key>
 						<string>result</string>
 						<key>INIntentResponseParameterObjectType</key>
-						<string>Playlist</string>
+						<string>INPlaylist</string>
 						<key>INIntentResponseParameterObjectTypeNamespace</key>
 						<string>3vrzzw</string>
 						<key>INIntentResponseParameterTag</key>
@@ -1974,7 +1974,7 @@
 			<key>INTypeLastPropertyTag</key>
 			<integer>103</integer>
 			<key>INTypeName</key>
-			<string>User</string>
+			<string>INUser</string>
 			<key>INTypeProperties</key>
 			<array>
 				<dict>
@@ -2093,7 +2093,7 @@
 			<key>INTypeLastPropertyTag</key>
 			<integer>105</integer>
 			<key>INTypeName</key>
-			<string>Playlist</string>
+			<string>INPlaylist</string>
 			<key>INTypeProperties</key>
 			<array>
 				<dict>
@@ -2184,7 +2184,7 @@
 			<key>INTypeLastPropertyTag</key>
 			<integer>106</integer>
 			<key>INTypeName</key>
-			<string>Track</string>
+			<string>INTrack</string>
 			<key>INTypeProperties</key>
 			<array>
 				<dict>
@@ -2247,7 +2247,7 @@
 					<key>INTypePropertyName</key>
 					<string>artists</string>
 					<key>INTypePropertyObjectType</key>
-					<string>Artist</string>
+					<string>INArtist</string>
 					<key>INTypePropertyObjectTypeNamespace</key>
 					<string>3vrzzw</string>
 					<key>INTypePropertySupportsMultipleValues</key>
@@ -2309,7 +2309,7 @@
 			<key>INTypeLastPropertyTag</key>
 			<integer>100</integer>
 			<key>INTypeName</key>
-			<string>Artist</string>
+			<string>INArtist</string>
 			<key>INTypeProperties</key>
 			<array>
 				<dict>
@@ -2386,7 +2386,7 @@
 			<key>INTypeLastPropertyTag</key>
 			<integer>104</integer>
 			<key>INTypeName</key>
-			<string>CurrentlyPlaying</string>
+			<string>INCurrentlyPlaying</string>
 			<key>INTypeProperties</key>
 			<array>
 				<dict>
@@ -2449,7 +2449,7 @@
 					<key>INTypePropertyName</key>
 					<string>track</string>
 					<key>INTypePropertyObjectType</key>
-					<string>Track</string>
+					<string>INTrack</string>
 					<key>INTypePropertyObjectTypeNamespace</key>
 					<string>3vrzzw</string>
 					<key>INTypePropertyTag</key>
@@ -2467,7 +2467,7 @@
 					<key>INTypePropertyName</key>
 					<string>playlist</string>
 					<key>INTypePropertyObjectType</key>
-					<string>Playlist</string>
+					<string>INPlaylist</string>
 					<key>INTypePropertyObjectTypeNamespace</key>
 					<string>3vrzzw</string>
 					<key>INTypePropertyTag</key>

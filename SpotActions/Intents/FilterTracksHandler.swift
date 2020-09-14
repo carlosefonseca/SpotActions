@@ -36,7 +36,7 @@ class FilterTracksHandler: NSObject, FilterTracksIntentHandling {
             select = false
         }
 
-        var result: Result<[Track], ErrorMessage>?
+        var result: Result<[INTrack], ErrorMessage>?
 
         switch intent.filter {
         case .unknown:
@@ -80,7 +80,7 @@ class FilterTracksHandler: NSObject, FilterTracksIntentHandling {
         }
     }
 
-    func filterByTitleArtist(modeIsSelect: Bool, tracks: [Track], titles: [String]?, artists: [String]?, and: Bool, isRegex: Bool) -> Result<[Track], ErrorMessage> {
+    func filterByTitleArtist(modeIsSelect: Bool, tracks: [INTrack], titles: [String]?, artists: [String]?, and: Bool, isRegex: Bool) -> Result<[INTrack], ErrorMessage> {
         var titleRegex: NSRegularExpression?
         if let titles = titles {
             do {
@@ -101,7 +101,7 @@ class FilterTracksHandler: NSObject, FilterTracksIntentHandling {
             }
         }
 
-        let filtered: [Track]
+        let filtered: [INTrack]
         if modeIsSelect {
             if and {
                 filtered = tracks.filter { $0.matches(title: titleRegex, andArtist: artistRegex) }
@@ -118,7 +118,7 @@ class FilterTracksHandler: NSObject, FilterTracksIntentHandling {
         return .success(filtered)
     }
 
-    func provideOtherPlaylistOptionsCollection(for intent: FilterTracksIntent, with completion: @escaping (INObjectCollection<Playlist>?, Error?) -> Void) {
+    func provideOtherPlaylistOptionsCollection(for intent: FilterTracksIntent, with completion: @escaping (INObjectCollection<INPlaylist>?, Error?) -> Void) {
         playlistsManager.getUserPlaylistsEach()
             .sink(
                 receiveCompletion: { receiveCompletion in
@@ -127,7 +127,7 @@ class FilterTracksHandler: NSObject, FilterTracksIntentHandling {
                     }
                 },
                 receiveValue: { value in
-                    completion(INObjectCollection(items: value.map { Playlist(from: $0) }), nil)
+                    completion(INObjectCollection(items: value.map { INPlaylist(from: $0) }), nil)
                 }
             ).store(in: &bag)
     }
@@ -145,7 +145,7 @@ extension String {
     }
 }
 
-private extension Track {
+private extension INTrack {
     func matches(title titleRegex: NSRegularExpression?, andArtist artistRegex: NSRegularExpression?) -> Bool {
         var matchTitle: Bool = true
         if let titleRegex = titleRegex {
