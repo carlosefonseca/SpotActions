@@ -35,7 +35,7 @@ class GetUserPlaylistsHandler: NSObject, GetUserPlaylistsIntentHandling {
             .map {
                 $0.compactMap { (pJSON) -> INPlaylist in
                     let p = INPlaylist(identifier: pJSON.id!, display: pJSON.name!)
-                    p.totalTracks = pJSON.tracks!.total! as NSNumber
+                    p.trackCount = pJSON.tracks!.total! as NSNumber
 //                    p.tracks = pJSON.tracks!.items?.compactMap { (tJSON) -> Track in
 //                        Track(identifier: tJSON.id, display: tJSON.name!)
 //                    }

@@ -434,11 +434,11 @@
 				<array>
 					<dict>
 						<key>INIntentResponseCodeConciseFormatString</key>
-						<string>${result.totalTracks}</string>
+						<string>${result.trackCount}</string>
 						<key>INIntentResponseCodeConciseFormatStringID</key>
 						<string>4ulk92</string>
 						<key>INIntentResponseCodeFormatString</key>
-						<string>${result.totalTracks}</string>
+						<string>${result.trackCount}</string>
 						<key>INIntentResponseCodeFormatStringID</key>
 						<string>M4SEy3</string>
 						<key>INIntentResponseCodeName</key>
@@ -2148,13 +2148,13 @@
 				</dict>
 				<dict>
 					<key>INTypePropertyDisplayName</key>
-					<string>Total Tracks</string>
+					<string>Track Count</string>
 					<key>INTypePropertyDisplayNameID</key>
 					<string>2VEe6L</string>
 					<key>INTypePropertyDisplayPriority</key>
 					<integer>5</integer>
 					<key>INTypePropertyName</key>
-					<string>totalTracks</string>
+					<string>trackCount</string>
 					<key>INTypePropertyTag</key>
 					<integer>101</integer>
 					<key>INTypePropertyType</key>
@@ -2182,7 +2182,7 @@
 			<key>INTypeDisplayNameID</key>
 			<string>E3x3xy</string>
 			<key>INTypeLastPropertyTag</key>
-			<integer>106</integer>
+			<integer>109</integer>
 			<key>INTypeName</key>
 			<string>INTrack</string>
 			<key>INTypeProperties</key>
@@ -2259,27 +2259,27 @@
 				</dict>
 				<dict>
 					<key>INTypePropertyDisplayName</key>
-					<string>Duration Ms</string>
+					<string>Duration</string>
 					<key>INTypePropertyDisplayNameID</key>
 					<string>p6JY0k</string>
 					<key>INTypePropertyDisplayPriority</key>
 					<integer>6</integer>
 					<key>INTypePropertyName</key>
-					<string>durationMs</string>
+					<string>duration</string>
 					<key>INTypePropertyTag</key>
-					<integer>104</integer>
+					<integer>109</integer>
 					<key>INTypePropertyType</key>
-					<string>Integer</string>
+					<string>String</string>
 				</dict>
 				<dict>
 					<key>INTypePropertyDisplayName</key>
-					<string>Track Name</string>
+					<string>Title</string>
 					<key>INTypePropertyDisplayNameID</key>
 					<string>mMwRfi</string>
 					<key>INTypePropertyDisplayPriority</key>
 					<integer>7</integer>
 					<key>INTypePropertyName</key>
-					<string>trackName</string>
+					<string>title</string>
 					<key>INTypePropertyTag</key>
 					<integer>105</integer>
 					<key>INTypePropertyType</key>
@@ -2298,6 +2298,20 @@
 					<integer>106</integer>
 					<key>INTypePropertyType</key>
 					<string>String</string>
+				</dict>
+				<dict>
+					<key>INTypePropertyDisplayName</key>
+					<string>Duration (ms)</string>
+					<key>INTypePropertyDisplayNameID</key>
+					<string>kp2E4w</string>
+					<key>INTypePropertyDisplayPriority</key>
+					<integer>9</integer>
+					<key>INTypePropertyName</key>
+					<string>durationMillis</string>
+					<key>INTypePropertyTag</key>
+					<integer>108</integer>
+					<key>INTypePropertyType</key>
+					<string>Integer</string>
 				</dict>
 			</array>
 		</dict>

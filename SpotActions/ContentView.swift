@@ -66,7 +66,7 @@ struct ContentView: View {
         VStack {
             Text("Hello, world!").padding()
             if presenter.isAuthenticated {
-                Text("Ola \(presenter.user?.display_name ?? "<?>")").padding()
+                Text("Ola \(presenter.user?.displayName ?? "<?>")").padding()
                 Button("Logout", action: { presenter.auth.logout() })
             } else {
                 Button("Login", action: { presenter.auth.login() })

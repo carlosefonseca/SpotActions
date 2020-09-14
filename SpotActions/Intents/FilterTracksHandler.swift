@@ -149,7 +149,7 @@ private extension INTrack {
     func matches(title titleRegex: NSRegularExpression?, andArtist artistRegex: NSRegularExpression?) -> Bool {
         var matchTitle: Bool = true
         if let titleRegex = titleRegex {
-            matchTitle = trackName?.contains(regex: titleRegex) ?? true
+            matchTitle = title?.contains(regex: titleRegex) ?? true
         }
 
         var matchArtist = true
@@ -164,7 +164,7 @@ private extension INTrack {
 
     func matches(title titleRegex: NSRegularExpression?, orArtist artistRegex: NSRegularExpression?) -> Bool {
         if let titleRegex = titleRegex,
-            trackName?.contains(regex: titleRegex) == true {
+            title?.contains(regex: titleRegex) == true {
             print("\(displayString) title: true")
             return true
         }
@@ -179,3 +179,4 @@ private extension INTrack {
         return false
     }
 }
+

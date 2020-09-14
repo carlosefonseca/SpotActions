@@ -5,37 +5,50 @@
 import Foundation
 import CEFSpotifyCore
 
-extension INUser {
+extension INUser: User {
     convenience init(from json: UserJSON) {
-        self.init(identifier: json.id, display: json.display_name!)
+        self.init(identifier: json.id, display: json.displayName!)
         email = json.email
         country = json.country
         product = json.product
         uri = json.uri
     }
+
+    public var displayName: String? { self.displayString }
 }
 
-extension INArtist {
+extension INArtist: Artist {
+    public var name: String { displayString }
     convenience init(from json: ArtistJSON) {
         self.init(identifier: json.id, display: json.name!)
         self.uri = json.uri
     }
 }
 
-extension INPlaylist {
+extension INPlaylist: Playlist {
+    public var totalTracks: Int? { self.trackCount?.intValue }
     convenience init(from json: PlaylistJSON) {
         self.init(identifier: json.id, display: json.name!)
         self.uri = json.uri
     }
 }
 
-extension INTrack {
+extension INTrack: Track {
+
     convenience init(from json: TrackJSON) {
         self.init(identifier: json.id, display: "\(json.name!) - \(json.artists!.compactMap { $0.name }.joined(separator: ", "))")
-        self.trackName = json.name!
+        self.title = json.name!
         self.artists = json.artists?.compactMap { INArtist(from: $0) } ?? []
-        self.durationMs = (json.duration_ms ?? -1) as NSNumber
         self.uri = json.uri!
+
+        if let millis = json.durationMs {
+            self.durationMillis = millis as NSNumber
+            self.duration = "\(millis / 1000 / 60):\(millis % 60)"
+        }
+    }
+
+    public var durationMs: Int? {
+        self.durationMillis?.intValue
     }
 }
 
