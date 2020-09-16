@@ -27,7 +27,7 @@ public class SpotifyUserProfileGatewayImplementation: BaseSpotifyGateway, Spotif
     public func user() -> AnyPublisher<UserJSON, Error> {
         let request = SpotifyWebApi.UserProfile.Request(baseURL: baseURL)
         return requestManager.execute(request: request)
-            .decode(type: SpotifyWebApi.UserProfile.Response.self, decoder: JSONDecoder())
+            .decode(type: SpotifyWebApi.UserProfile.Response.self, decoder: decoder)
             .eraseToAnyPublisher()
     }
 }

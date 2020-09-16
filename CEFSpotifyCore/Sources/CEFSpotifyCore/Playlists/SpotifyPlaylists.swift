@@ -62,7 +62,9 @@ extension SpotifyWebApi.Playlists.PutPlaylistItems {
             let urlComponents = URLComponents(url: URL(string: "/v1/playlists/\(playlist)/tracks", relativeTo: baseURL)!, resolvingAgainstBaseURL: true)!
             var request = URLRequest(url: urlComponents.url!)
             do {
-                let data = try JSONEncoder().encode(tracks)
+                let jsonEncoder = JSONEncoder()
+                jsonEncoder.keyEncodingStrategy = .convertToSnakeCase
+                let data = try jsonEncoder.encode(tracks)
                 request.httpBody = data
                 request.httpMethod = "PUT"
             } catch {
@@ -84,7 +86,9 @@ extension SpotifyWebApi.Playlists.PostPlaylistItems {
             let urlComponents = URLComponents(url: URL(string: "/v1/playlists/\(playlist)/tracks", relativeTo: baseURL)!, resolvingAgainstBaseURL: true)!
             var request = URLRequest(url: urlComponents.url!)
             do {
-                let data = try JSONEncoder().encode(tracks)
+                let jsonEncoder = JSONEncoder()
+                jsonEncoder.keyEncodingStrategy = .convertToSnakeCase
+                let data = try jsonEncoder.encode(tracks)
                 request.httpBody = data
                 request.httpMethod = "POST"
             } catch {
@@ -121,20 +125,20 @@ public class SpotifyPlaylistsGatewayImplementation: BaseSpotifyGateway, SpotifyP
     public func getUserPlaylists(limit: Int = 50, offset: Int = 0) -> AnyPublisher<PagedPlaylistsJSON, Error> {
         let request = SpotifyWebApi.Playlists.GetUserPlaylists.Request(baseURL: baseURL, limit: limit, offset: offset)
         return requestManager.execute(request: request)
-            .decode(type: SpotifyWebApi.Playlists.GetUserPlaylists.Response.self, decoder: JSONDecoder())
+            .decode(type: SpotifyWebApi.Playlists.GetUserPlaylists.Response.self, decoder: decoder)
             .eraseToAnyPublisher()
     }
 
     public func getPlaylistTracks(playlistId: String, offset: Int = 0) -> AnyPublisher<PagedTracksJSON, Error> {
         let request = SpotifyWebApi.Playlists.GetPlaylistTracks.Request(baseURL: baseURL, playlistId: playlistId, offset: offset)
         return requestManager.execute(request: request)
-            .decode(type: SpotifyWebApi.Playlists.GetPlaylistTracks.Response.self, decoder: JSONDecoder())
+            .decode(type: SpotifyWebApi.Playlists.GetPlaylistTracks.Response.self, decoder: decoder)
             .eraseToAnyPublisher()
     }
 
     public func getNextPlaylistTracks(next: URL) -> AnyPublisher<PagedTracksJSON, Error> {
         return requestManager.execute(urlRequest: URLRequest(url: next))
-            .decode(type: SpotifyWebApi.Playlists.GetPlaylistTracks.Response.self, decoder: JSONDecoder())
+            .decode(type: SpotifyWebApi.Playlists.GetPlaylistTracks.Response.self, decoder: decoder)
             .eraseToAnyPublisher()
     }
 
@@ -154,7 +158,7 @@ public class SpotifyPlaylistsGatewayImplementation: BaseSpotifyGateway, SpotifyP
     public func getPlaylist(playlistId: SpotifyID) -> AnyPublisher<PlaylistJSON, Error> {
         let request = SpotifyWebApi.Playlists.GetPlaylist.Request(baseURL: baseURL, playlistId: playlistId)
         return requestManager.execute(request: request)
-            .decode(type: SpotifyWebApi.Playlists.GetPlaylist.Response.self, decoder: JSONDecoder())
+            .decode(type: SpotifyWebApi.Playlists.GetPlaylist.Response.self, decoder: decoder)
             .eraseToAnyPublisher()
     }
 }

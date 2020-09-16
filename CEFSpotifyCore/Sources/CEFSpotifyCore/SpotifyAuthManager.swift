@@ -24,11 +24,25 @@ public enum AuthState: Equatable {
     case error(_ error: String?)
 }
 
-public enum RefreshTokenError: Error {
+public enum RefreshTokenError: Error, LocalizedError {
     case noLogin
     case requestError(error: UrlRequesterError)
-    case other(error: Error)
+    case otherError(_ error: Error)
     case other(message: String)
+
+    public var errorDescription: String? {
+        switch self {
+        case .noLogin:
+            return "No Login"
+        case .requestError(let error):
+            return "Request Error (\(error))"
+        case .otherError(let error):
+            return "Error (\(error))"
+        case .other(let message):
+            return "Error (\(message))"
+
+        }
+    }
 }
 
 public final class SpotifyAuthManagerImplementation: ObservableObject, SpotifyAuthManager {
@@ -68,10 +82,14 @@ public final class SpotifyAuthManagerImplementation: ObservableObject, SpotifyAu
     var credentialStore: CredentialStore
     let requester: URLRequester
 
+    let decoder: JSONDecoder
+
     public init(webAuthManager: WebAuth, credentialStore: CredentialStore, requester: URLRequester) {
         self.webAuthManager = webAuthManager
         self.credentialStore = credentialStore
         self.requester = requester
+        decoder = JSONDecoder()
+        decoder.keyDecodingStrategy = .convertFromSnakeCase
         guard let token = getToken() else { return }
         state = .loggedIn(token: token)
     }
@@ -128,7 +146,7 @@ public final class SpotifyAuthManagerImplementation: ObservableObject, SpotifyAu
         print(urlRequest)
 
         requester.request(urlRequest: urlRequest)
-            .decode(type: TokenResponse.self, decoder: JSONDecoder())
+            .decode(type: TokenResponse.self, decoder: decoder)
             .print()
             .sink { completion in
                 if case .failure(let error) = completion {
@@ -136,7 +154,9 @@ public final class SpotifyAuthManagerImplementation: ObservableObject, SpotifyAu
                 }
             } receiveValue: { (value: TokenResponse) in
                 do {
-                    let encodedValue = try JSONEncoder().encode(value)
+                    let jsonEncoder = JSONEncoder()
+                    jsonEncoder.keyEncodingStrategy = .convertToSnakeCase
+                    let encodedValue = try jsonEncoder.encode(value)
                     self.storeToken(data: encodedValue)
                     self.state = .loggedIn(token: value)
                 } catch {
@@ -165,8 +185,8 @@ public final class SpotifyAuthManagerImplementation: ObservableObject, SpotifyAu
         guard let existingData = data else { return nil }
 
         do {
-            let parsedData = try JSONDecoder().decode(TokenResponse.self, from: existingData)
-            guard parsedData.access_token != nil else { return nil }
+            let parsedData = try decoder.decode(TokenResponse.self, from: existingData)
+            guard parsedData.accessToken != nil else { return nil }
             return parsedData
         } catch {
             print(error)
@@ -181,7 +201,7 @@ public final class SpotifyAuthManagerImplementation: ObservableObject, SpotifyAu
 
                 guard
                     case .loggedIn(let token) = existingToken,
-                    let refreshToken = token.refresh_token
+                    let refreshToken = token.refreshToken
                 else {
                     print("no refresh token!")
                     self.state = .notLoggedIn
@@ -211,7 +231,7 @@ public final class SpotifyAuthManagerImplementation: ObservableObject, SpotifyAu
                 if let refreshTokenError = error as? RefreshTokenError {
                     return refreshTokenError
                 } else {
-                    return RefreshTokenError.other(error: error)
+                    return RefreshTokenError.otherError(error)
                 }
             }
             .print("SpotifyAuthManager.createRefreshTokenUrlRequest")
@@ -221,8 +241,8 @@ public final class SpotifyAuthManagerImplementation: ObservableObject, SpotifyAu
     private func requestRefreshToken(urlRequest: URLRequest) -> AnyPublisher<TokenResponse, RefreshTokenError> {
         requester.request(urlRequest: urlRequest)
             .mapError { RefreshTokenError.requestError(error: $0) }
-            .decode(type: TokenResponse.self, decoder: JSONDecoder()).eraseToAnyPublisher()
-            .mapError { $0 as? RefreshTokenError ?? RefreshTokenError.other(error: $0) }
+            .decode(type: TokenResponse.self, decoder: decoder).eraseToAnyPublisher()
+            .mapError { $0 as? RefreshTokenError ?? RefreshTokenError.otherError($0) }
             .eraseToAnyPublisher()
     }
 
@@ -243,11 +263,11 @@ public final class SpotifyAuthManagerImplementation: ObservableObject, SpotifyAu
 }
 
 public struct TokenResponse: Codable, Equatable {
-    var access_token: String?
-    var token_type: String?
+    var accessToken: String?
+    var tokenType: String?
     var scope: String?
-    var expires_in: Int?
-    var refresh_token: String?
+    var expiresIn: Int?
+    var refreshToken: String?
 
     public init() {}
 }

@@ -16,9 +16,15 @@ class AuthenticatedSpotifyRequestManagerTests: XCTestCase {
     var bag = Set<AnyCancellable>()
     var dummyTokenResponse = TokenResponse()
 
+    let jsonEncoder: JSONEncoder = {
+        let jsonEncoder = JSONEncoder()
+        jsonEncoder.keyEncodingStrategy = .convertToSnakeCase
+        return jsonEncoder
+    }()
+
     override func setUp() {
-        dummyTokenResponse.access_token = "access_token"
-        dummyTokenResponse.refresh_token = "refresh_token"
+        dummyTokenResponse.accessToken = "access_token"
+        dummyTokenResponse.refreshToken = "refresh_token"
 
         bag.removeAll()
         auth = FakeSpotifyAuthManager(initialState: .loggedIn(token: dummyTokenResponse))
@@ -35,7 +41,7 @@ class AuthenticatedSpotifyRequestManagerTests: XCTestCase {
         let finishedExpectation = expectation(description: "finished")
         var output: Data?
 
-        let expectedData = try! JSONEncoder().encode(TokenResponse())
+        let expectedData = try! jsonEncoder.encode(TokenResponse())
         requester.responses.append(.success(expectedData))
 
 
@@ -93,7 +99,7 @@ class AuthenticatedSpotifyRequestManagerTests: XCTestCase {
         let url = URL(string: "http://example.com/abc")!
         let unauthorizedResponse = HTTPURLResponse(url: url, statusCode: 401, httpVersion: nil, headerFields: nil)!
 
-        let expectedData = try! JSONEncoder().encode(TestData())
+        let expectedData = try! jsonEncoder.encode(TestData())
         requester.responses.append(.success(expectedData))
 
         requester.responses.append(.failure(UrlRequesterError.apiError(response: unauthorizedResponse, data: "puff".data(using: .utf8)!)))

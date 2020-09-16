@@ -27,6 +27,12 @@ class UrlSessionRequesterTests: XCTestCase {
 
     var bag = Set<AnyCancellable>()
 
+    let jsonDecoder: JSONDecoder = {
+        let jsonDecoder = JSONDecoder()
+        jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
+        return jsonDecoder
+    }()
+
     override func setUp() {
         super.setUp()
         bag.removeAll()
@@ -53,7 +59,7 @@ class UrlSessionRequesterTests: XCTestCase {
         let request = URLRequest(url: URL(string: "https://httpbin.org/json")!)
         UrlSessionRequester()
             .request(urlRequest: request)
-            .decode(type: TestData.self, decoder: JSONDecoder())
+            .decode(type: TestData.self, decoder: jsonDecoder)
             .sink { completion in
                 print(completion)
                 requestExpectation.fulfill()

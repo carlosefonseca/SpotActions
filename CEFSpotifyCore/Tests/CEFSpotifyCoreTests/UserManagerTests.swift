@@ -12,7 +12,7 @@ class UserManagerTests: XCTestCase {
     let testUser1: UserJSON = {
         var testUser = UserJSON()
         testUser.id = "1"
-        testUser.display_name = "Test User 1"
+        testUser.displayName = "Test User 1"
         return testUser
     }()
 

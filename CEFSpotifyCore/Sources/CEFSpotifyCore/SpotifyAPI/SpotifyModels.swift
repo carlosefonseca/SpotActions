@@ -53,6 +53,8 @@ public struct PlaylistJSON: Codable, Equatable {
     // var type:    String    The object type: “playlist”
     /// The Spotify URI for the playlist.
     public var uri: String?
+
+    public init() {}
 }
 
 extension PlaylistJSON: Playlist {
@@ -99,6 +101,8 @@ public struct PagingJSON<T>: Codable, Equatable where T: Codable, T: Equatable {
     public var previous: String?
     /// The maximum number of items available to return.
     public var total: Int?
+
+    public init() {}
 }
 
 public struct TrackJSON: Codable, Equatable {

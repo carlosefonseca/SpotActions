@@ -17,14 +17,14 @@ class GetUserProfileHandlerTests: XCTestCase {
     var handler: GetUserProfileHandler!
 
     var testUser: UserJSON!
-    var testIntentUser: User!
+    var testIntentUser: INUser!
 
-    override func setUpWithError() throws {
+    override func setUp() {
         testUser = UserJSON()
         testUser.id = "1"
-        testUser.display_name = "Test User 1"
+        testUser.displayName = "Test User 1"
 
-        testIntentUser = User(from: testUser)
+        testIntentUser = INUser(from: testUser)
 
         userManager = FakeUserManager(fakeUser: testUser)
         authManager = FakeSpotifyAuthManager(initialState: .loggedIn(token: TokenResponse()))

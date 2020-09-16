@@ -17,6 +17,12 @@ class AuthManagerTests: XCTestCase {
 
     var bag = Set<AnyCancellable>()
 
+    let jsonEncoder: JSONEncoder = {
+        let jsonEncoder = JSONEncoder()
+        jsonEncoder.keyEncodingStrategy = .convertToSnakeCase
+        return jsonEncoder
+    }()
+
     override func setUp() {
         bag.removeAll()
         credentialStore = FakeCredentialStore()
@@ -30,7 +36,7 @@ class AuthManagerTests: XCTestCase {
             requestResult: .success(TokenResponse())
         )
 
-        let expected = try! JSONEncoder().encode(TokenResponse())
+        let expected = try! jsonEncoder.encode(TokenResponse())
 
         fakeRequester.responses.append(Result.success(expected))
 
@@ -92,12 +98,12 @@ class AuthManagerTests: XCTestCase {
         )
 
         var x = TokenResponse()
-        x.access_token = "access_token1"
-        x.expires_in = 0
-        x.refresh_token = "refresh_token"
+        x.accessToken = "access_token1"
+        x.expiresIn = 0
+        x.refreshToken = "refresh_token"
         x.scope = "scope"
 
-        let encodedValue = try! JSONEncoder().encode(x)
+        let encodedValue = try! jsonEncoder.encode(x)
 
         try! credentialStore.set(value: encodedValue, account: "defaultAccount")
 
@@ -108,10 +114,15 @@ class AuthManagerTests: XCTestCase {
         var output: URLRequest?
 
         authManager.createRefreshTokenUrlRequest().sink { completion in
-            guard case .finished = completion else {
-                XCTFail()
+
+            switch completion {
+            case .failure(let error):
+                XCTFail(error.localizedDescription)
                 return
+            default:
+                break
             }
+
         } receiveValue: { value in
             output = value
         }.store(in: &bag)
@@ -129,20 +140,20 @@ class AuthManagerTests: XCTestCase {
         )
 
         var oldToken = TokenResponse()
-        oldToken.access_token = "access_token1"
-        oldToken.expires_in = 0
-        oldToken.refresh_token = "refresh_token"
+        oldToken.accessToken = "access_token1"
+        oldToken.expiresIn = 0
+        oldToken.refreshToken = "refresh_token"
         oldToken.scope = "scope"
-        let oldTokenAsData = try! JSONEncoder().encode(oldToken)
+        let oldTokenAsData = try! jsonEncoder.encode(oldToken)
         try! credentialStore.set(value: oldTokenAsData, account: "defaultAccount")
 
         var newToken = TokenResponse()
-        newToken.access_token = "access_token2"
-        newToken.expires_in = 0
-        newToken.refresh_token = "refresh_token"
+        newToken.accessToken = "access_token2"
+        newToken.expiresIn = 0
+        newToken.refreshToken = "refresh_token"
         newToken.scope = "scope"
 
-        let expected = try! JSONEncoder().encode(newToken)
+        let expected = try! jsonEncoder.encode(newToken)
 
         fakeRequester.responses.append(Result.success(expected))
 

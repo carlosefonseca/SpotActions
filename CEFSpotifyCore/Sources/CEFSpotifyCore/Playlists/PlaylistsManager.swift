@@ -50,31 +50,37 @@ public class PlaylistsManagerImplementation: PlaylistsManager {
             let subject = CurrentValueSubject<PagedTracksJSON?, PlaylistsManagerError>(nil)
 
             // When the current value changes, checks if there are more pages to load and loads the next page
-            subject
+            let x: AnyPublisher<PagedTracksJSON, PlaylistsManagerError> = subject
                 .compactMap { $0 }
 //                .print("getAllPlaylistTracks.xx0")
                 .prefix(while: { page in page.next != nil })
 //                .print("getAllPlaylistTracks.xx1")
-                .flatMap { page in
-                    self.gateway.getNextPlaylistTracks(next: URL(string: page.next!)!)
-                        .mapError { PlaylistsManagerError.requestError(error: $0) }
-                        .map { newPage in
-                            PagedTracksJSON(href: nil,
-                                            items: page.items! + newPage.items!,
-                                            limit: newPage.limit,
-                                            next: newPage.next,
-                                            offset: newPage.offset,
-                                            previous: nil,
-                                            total: newPage.total)
-                        }
-                }.sink { completion in
-                    // Emits error
-                    if case .failure = completion {
-                        subject.send(completion: completion)
+                .eraseToAnyPublisher()
+
+            let y: AnyPublisher<PagedTracksJSON, Error> = x.flatMap { page in
+                self.gateway.getNextPlaylistTracks(next: URL(string: page.next!)!)
+//                    .mapError { PlaylistsManagerError.requestError(error: $0) }
+                    .map { newPage in
+                        PagedTracksJSON(href: nil,
+                                        items: page.items! + newPage.items!,
+                                        limit: newPage.limit,
+                                        next: newPage.next,
+                                        offset: newPage.offset,
+                                        previous: nil,
+                                        total: newPage.total)
                     }
-                } receiveValue: { page in
-                    subject.send(page)
-                }.store(in: &bag)
+            }
+
+            let yy = y.mapError { $0 as? PlaylistsManagerError ?? PlaylistsManagerError.requestError(error: $0) }
+
+            yy.sink { completion in
+                // Emits error
+                if case .failure = completion {
+                    subject.send(completion: completion)
+                }
+            } receiveValue: { page in
+                subject.send(page)
+            }.store(in: &bag)
 
             // Initial request for the first page
             self.getPlaylistTracks(playlistId: playlistId, offset: 0)
@@ -165,7 +171,7 @@ public class PlaylistsManagerImplementation: PlaylistsManager {
     }
 
     public func getPlaylist(playlistId: SpotifyID) -> AnyPublisher<PlaylistJSON, PlaylistsManagerError> {
-        return gateway.getPlaylist(playlistId: playlistId)
+        return self.gateway.getPlaylist(playlistId: playlistId)
             .mapError { PlaylistsManagerError.requestError(error: $0) }
             .eraseToAnyPublisher()
     }

@@ -7,7 +7,7 @@ import Combine
 
 public class AuthenticatedSpotifyRequestManager: RequestManager {
 
-    let jsonDecoder = JSONDecoder()
+    let jsonDecoder: JSONDecoder
     let urlSession = URLSession.shared // TODO: REMOVE
 
     let auth: SpotifyAuthManager
@@ -20,6 +20,8 @@ public class AuthenticatedSpotifyRequestManager: RequestManager {
     public init(auth: SpotifyAuthManager, requester: URLRequester) {
         self.auth = auth
         self.requester = requester
+        self.jsonDecoder = JSONDecoder()
+        jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
 
         self.auth.statePublisher.sink { authState in
             switch authState {
@@ -32,7 +34,7 @@ public class AuthenticatedSpotifyRequestManager: RequestManager {
     }
 
     func applyAccessTokenToRequest(urlRequest: URLRequest, token: TokenResponse) throws -> URLRequest {
-        guard let accessToken = token.access_token else {
+        guard let accessToken = token.accessToken else {
             throw SpotifyRequestError.noLogin
         }
 
@@ -42,18 +44,17 @@ public class AuthenticatedSpotifyRequestManager: RequestManager {
         return urlRequest
     }
 
-    public func execute(request: URLRequestable) -> AnyPublisher<Data, Error>  {
+    public func execute(request: URLRequestable) -> AnyPublisher<Data, Error> {
         return execute(urlRequest: request.urlRequest)
     }
 
-    public func execute(urlRequest: URLRequest) -> AnyPublisher<Data, Error>  {
+    public func execute(urlRequest: URLRequest) -> AnyPublisher<Data, Error> {
         return auth.statePublisher.first()
             .tryMap { (auth: AuthState) throws -> URLRequest in
                 guard case .loggedIn(let tokenResponse) = auth else {
                     throw SpotifyRequestError.noLogin
                 }
                 return try self.applyAccessTokenToRequest(urlRequest: urlRequest, token: tokenResponse)
-
             }
             .print("SpotifyRequestManager")
             .flatMap { urlRequest -> AnyPublisher<Data, Error> in
@@ -73,7 +74,6 @@ public class AuthenticatedSpotifyRequestManager: RequestManager {
 
             }.eraseToAnyPublisher()
     }
-
 
     func refreshRetry(urlRequest: URLRequest) -> AnyPublisher<Data, Error> {
         auth.refreshToken()

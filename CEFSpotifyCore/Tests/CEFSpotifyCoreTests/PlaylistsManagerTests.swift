@@ -15,20 +15,20 @@ class PlaylistsManagerTests: XCTestCase {
     var fakeGateway: FakeSpotifyPlaylistsGateway!
     var playlistsManager: PlaylistsManager!
 
-    let artist1 = ArtistJSON(external_urls: nil, href: nil, id: "artist1", name: "Artist 1", type: nil, uri: "spotify:artist:0gxyHStUsqpMadRV0Di1Qt")
-    let artist2 = ArtistJSON(external_urls: nil, href: nil, id: "artist2", name: "Artist 2", type: nil, uri: "spotify:artist:2jzc5TC5TVFLXQlBNiIUzE")
-    let artist3 = ArtistJSON(external_urls: nil, href: nil, id: "artist3", name: "Artist 3", type: nil, uri: "spotify:artist:7Bah8E0kCETqEpAHI6CPzQ")
-    let artist4 = ArtistJSON(external_urls: nil, href: nil, id: "artist4", name: "Artist 4", type: nil, uri: "spotify:artist:0grdhNhiRLFBaFVyybqsj6")
+    let artist1 = ArtistJSON(externalUrls: nil, href: nil, id: "artist1", name: "Artist 1", type: nil, uri: "spotify:artist:0gxyHStUsqpMadRV0Di1Qt")
+    let artist2 = ArtistJSON(externalUrls: nil, href: nil, id: "artist2", name: "Artist 2", type: nil, uri: "spotify:artist:2jzc5TC5TVFLXQlBNiIUzE")
+    let artist3 = ArtistJSON(externalUrls: nil, href: nil, id: "artist3", name: "Artist 3", type: nil, uri: "spotify:artist:7Bah8E0kCETqEpAHI6CPzQ")
+    let artist4 = ArtistJSON(externalUrls: nil, href: nil, id: "artist4", name: "Artist 4", type: nil, uri: "spotify:artist:0grdhNhiRLFBaFVyybqsj6")
 
-    lazy var track1 = { TrackJSON(artists: [artist1], available_markets: nil, disc_number: nil, duration_ms: nil, explicit: nil, external_urls: nil, href: nil, id: "track1", is_playable: nil, name: "Track 1", preview_url: nil, track_number: nil, type: nil, uri: nil, is_local: nil) }()
-    lazy var track2 = { TrackJSON(artists: [artist2], available_markets: nil, disc_number: nil, duration_ms: nil, explicit: nil, external_urls: nil, href: nil, id: "track2", is_playable: nil, name: "Track 2", preview_url: nil, track_number: nil, type: nil, uri: nil, is_local: nil) }()
-    lazy var track3 = { TrackJSON(artists: [artist3], available_markets: nil, disc_number: nil, duration_ms: nil, explicit: nil, external_urls: nil, href: nil, id: "track3", is_playable: nil, name: "Track 3", preview_url: nil, track_number: nil, type: nil, uri: nil, is_local: nil) }()
-    lazy var track4 = { TrackJSON(artists: [artist4], available_markets: nil, disc_number: nil, duration_ms: nil, explicit: nil, external_urls: nil, href: nil, id: "track4", is_playable: nil, name: "Track 4", preview_url: nil, track_number: nil, type: nil, uri: nil, is_local: nil) }()
+    lazy var track1 = { TrackJSON(artists: [artist1], availableMarkets: nil, discNumber: nil, durationMs: nil, explicit: nil, externalUrls: nil, href: nil, id: "track1", isPlayable: nil, name: "Track 1", previewUrl: nil, trackNumber: nil, type: nil, uri: nil, isLocal: nil) }()
+    lazy var track2 = { TrackJSON(artists: [artist2], availableMarkets: nil, discNumber: nil, durationMs: nil, explicit: nil, externalUrls: nil, href: nil, id: "track2", isPlayable: nil, name: "Track 2", previewUrl: nil, trackNumber: nil, type: nil, uri: nil, isLocal: nil) }()
+    lazy var track3 = { TrackJSON(artists: [artist3], availableMarkets: nil, discNumber: nil, durationMs: nil, explicit: nil, externalUrls: nil, href: nil, id: "track3", isPlayable: nil, name: "Track 3", previewUrl: nil, trackNumber: nil, type: nil, uri: nil, isLocal: nil) }()
+    lazy var track4 = { TrackJSON(artists: [artist4], availableMarkets: nil, discNumber: nil, durationMs: nil, explicit: nil, externalUrls: nil, href: nil, id: "track4", isPlayable: nil, name: "Track 4", previewUrl: nil, trackNumber: nil, type: nil, uri: nil, isLocal: nil) }()
 
-    lazy var pageTrack1 = { PageTrackJSON(added_at: nil, added_by: nil, is_local: nil, track: track1) }()
-    lazy var pageTrack2 = { PageTrackJSON(added_at: nil, added_by: nil, is_local: nil, track: track2) }()
-    lazy var pageTrack3 = { PageTrackJSON(added_at: nil, added_by: nil, is_local: nil, track: track3) }()
-    lazy var pageTrack4 = { PageTrackJSON(added_at: nil, added_by: nil, is_local: nil, track: track4) }()
+    lazy var pageTrack1 = { PageTrackJSON(addedAt: nil, addedBy: nil, isLocal: nil, track: track1) }()
+    lazy var pageTrack2 = { PageTrackJSON(addedAt: nil, addedBy: nil, isLocal: nil, track: track2) }()
+    lazy var pageTrack3 = { PageTrackJSON(addedAt: nil, addedBy: nil, isLocal: nil, track: track3) }()
+    lazy var pageTrack4 = { PageTrackJSON(addedAt: nil, addedBy: nil, isLocal: nil, track: track4) }()
 
     override func setUp() {
         bag.removeAll()
@@ -122,7 +122,7 @@ class PlaylistsManagerTests: XCTestCase {
     }
 
     func test_blah() {
-        let json =
+        _ =
             """
             {
               "href" : "https://api.spotify.com/v1/playlists/2llsWuBdZxeBxumSun0scv/tracks?offset=0&limit=100",

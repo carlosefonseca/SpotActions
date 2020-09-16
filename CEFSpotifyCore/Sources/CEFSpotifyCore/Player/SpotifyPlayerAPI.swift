@@ -46,14 +46,14 @@ public class SpotifyPlayerGatewayImplementation: BaseSpotifyGateway, SpotifyPlay
     public func getRecentlyPlayed() -> AnyPublisher<PagedTracksJSON, Error> {
         let request = SpotifyWebApi.Player.GetRecentlyPlayed.Request(baseURL: baseURL)
         return requestManager.execute(request: request)
-            .decode(type: SpotifyWebApi.Player.GetRecentlyPlayed.Response.self, decoder: JSONDecoder())
+            .decode(type: SpotifyWebApi.Player.GetRecentlyPlayed.Response.self, decoder: decoder)
             .eraseToAnyPublisher()
     }
 
     public func getCurrentlyPlaying() -> AnyPublisher<CurrentlyPlayingJSON, Error> {
         let request = SpotifyWebApi.Player.GetCurrentlyPlaying.Request(baseURL: baseURL)
         return requestManager.execute(request: request)
-            .decode(type: SpotifyWebApi.Player.GetCurrentlyPlaying.Response.self, decoder: JSONDecoder())
+            .decode(type: SpotifyWebApi.Player.GetCurrentlyPlaying.Response.self, decoder: decoder)
             .eraseToAnyPublisher()
     }
 }

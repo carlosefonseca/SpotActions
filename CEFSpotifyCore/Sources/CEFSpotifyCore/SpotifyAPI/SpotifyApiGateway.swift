@@ -52,9 +52,12 @@ public enum SpotifyWebApi {
 public class BaseSpotifyGateway {
     let baseURL: URL
     let requestManager: RequestManager
+    let decoder: JSONDecoder
 
     public init(baseURL: URL, requestManager: RequestManager) {
         self.baseURL = baseURL
         self.requestManager = requestManager
+        self.decoder = JSONDecoder()
+        self.decoder.keyDecodingStrategy = .convertFromSnakeCase
     }
 }
