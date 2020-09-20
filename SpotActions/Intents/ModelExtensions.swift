@@ -18,11 +18,12 @@ extension INUser: User {
 }
 
 extension INArtist: Artist {
-    public var name: String { displayString }
     convenience init(from json: ArtistJSON) {
         self.init(identifier: json.id, display: json.name!)
         self.uri = json.uri
     }
+
+    public var name: String? { displayString }
 }
 
 extension INPlaylist: Playlist {
@@ -41,14 +42,24 @@ extension INTrack: Track {
         self.artists = json.artists?.compactMap { INArtist(from: $0) } ?? []
         self.uri = json.uri!
 
+        self.externalIds = json.externalIds?.map { key, value in
+            INExternalId(key: key, value: value)
+        }
+
         if let millis = json.durationMs {
             self.durationMillis = millis as NSNumber
             self.duration = "\(millis / 1000 / 60):\(millis % 60)"
         }
     }
 
+    public var id: SpotifyID { identifier! }
+
     public var durationMs: Int? {
         self.durationMillis?.intValue
+    }
+
+    public var externalIdsStr: [String]? {
+        externalIds?.compactMap { $0.identifier }
     }
 }
 
@@ -71,5 +82,13 @@ extension INCurrentlyPlaying {
         self.init(identifier: nil, display: name)
         self.track = track
         self.playlist = playlist
+    }
+}
+
+extension INExternalId {
+    convenience init(key: String, value: String) {
+        self.init(identifier: "\(key):\(value)", display: "\(key):\(value)")
+        self.key = key
+        self.value = value
     }
 }

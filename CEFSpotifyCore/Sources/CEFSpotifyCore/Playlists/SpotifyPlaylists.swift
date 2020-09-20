@@ -45,7 +45,10 @@ extension SpotifyWebApi.Playlists.GetPlaylistTracks {
 
         init(baseURL: URL, playlistId: String, offset: Int = 0) {
             var urlComponents = URLComponents(url: URL(string: "/v1/playlists/\(playlistId)/tracks", relativeTo: baseURL)!, resolvingAgainstBaseURL: true)!
-            urlComponents.queryItems = [URLQueryItem(name: "offset", value: "\(offset)")]
+            urlComponents.queryItems = [
+                URLQueryItem(name: "offset", value: "\(offset)"),
+                URLQueryItem(name: "market", value: "from_token"),
+            ]
             urlRequest = URLRequest(url: urlComponents.url!)
         }
     }
@@ -107,7 +110,9 @@ extension SpotifyWebApi.Playlists.GetPlaylist {
 
         init(baseURL: URL, playlistId: SpotifyID) {
             let url = URL(string: "/v1/playlists/\(playlistId)", relativeTo: baseURL)!
-            urlRequest = URLRequest(url: url)
+            var urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: true)!
+            urlComponents.queryItems = [URLQueryItem(name: "market", value: "from_token")]
+            urlRequest = URLRequest(url: urlComponents.url!)
         }
     }
 }
@@ -137,7 +142,7 @@ public class SpotifyPlaylistsGatewayImplementation: BaseSpotifyGateway, SpotifyP
             .eraseToAnyPublisher()
     }
 
-    private func getNext<T>(next: URL) -> AnyPublisher<PagingJSON<T>, Error> where T : Decodable, T : Encodable, T : Equatable {
+    private func getNext<T>(next: URL) -> AnyPublisher<PagingJSON<T>, Error> where T: Decodable, T: Encodable, T: Equatable {
         return requestManager.execute(urlRequest: URLRequest(url: next))
             .decode(type: PagingJSON<T>.self, decoder: decoder)
             .eraseToAnyPublisher()

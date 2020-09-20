@@ -195,7 +195,16 @@ public class PlaylistsManagerImplementation: PlaylistsManager {
     }
 }
 
-public enum PlaylistsManagerError: Error {
+public enum PlaylistsManagerError: Error, LocalizedError {
     case missingData(message: String)
     case requestError(error: Error)
+
+    public var errorDescription: String? {
+        switch self {
+        case .missingData(let message):
+            return message
+        case .requestError(let error):
+            return error.localizedDescription
+        }
+    }
 }

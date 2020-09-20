@@ -2334,7 +2334,7 @@
 			<key>INTypeDisplayNameID</key>
 			<string>E3x3xy</string>
 			<key>INTypeLastPropertyTag</key>
-			<integer>109</integer>
+			<integer>114</integer>
 			<key>INTypeName</key>
 			<string>INTrack</string>
 			<key>INTypeProperties</key>
@@ -2447,7 +2447,7 @@
 					<key>INTypePropertyName</key>
 					<string>uri</string>
 					<key>INTypePropertyTag</key>
-					<integer>106</integer>
+					<integer>114</integer>
 					<key>INTypePropertyType</key>
 					<string>String</string>
 				</dict>
@@ -2464,6 +2464,26 @@
 					<integer>108</integer>
 					<key>INTypePropertyType</key>
 					<string>Integer</string>
+				</dict>
+				<dict>
+					<key>INTypePropertyDisplayName</key>
+					<string>External Ids</string>
+					<key>INTypePropertyDisplayNameID</key>
+					<string>IWzprl</string>
+					<key>INTypePropertyDisplayPriority</key>
+					<integer>10</integer>
+					<key>INTypePropertyName</key>
+					<string>externalIds</string>
+					<key>INTypePropertyObjectType</key>
+					<string>INExternalId</string>
+					<key>INTypePropertyObjectTypeNamespace</key>
+					<string>3vrzzw</string>
+					<key>INTypePropertySupportsMultipleValues</key>
+					<true/>
+					<key>INTypePropertyTag</key>
+					<integer>113</integer>
+					<key>INTypePropertyType</key>
+					<string>Object</string>
 				</dict>
 			</array>
 		</dict>
@@ -2640,6 +2660,97 @@
 					<integer>104</integer>
 					<key>INTypePropertyType</key>
 					<string>Object</string>
+				</dict>
+			</array>
+		</dict>
+		<dict>
+			<key>INTypeDisplayName</key>
+			<string>External Id</string>
+			<key>INTypeDisplayNameID</key>
+			<string>yBNgdV</string>
+			<key>INTypeLastPropertyTag</key>
+			<integer>101</integer>
+			<key>INTypeName</key>
+			<string>INExternalId</string>
+			<key>INTypeProperties</key>
+			<array>
+				<dict>
+					<key>INTypePropertyDefault</key>
+					<true/>
+					<key>INTypePropertyDisplayPriority</key>
+					<integer>1</integer>
+					<key>INTypePropertyName</key>
+					<string>identifier</string>
+					<key>INTypePropertyTag</key>
+					<integer>1</integer>
+					<key>INTypePropertyType</key>
+					<string>String</string>
+				</dict>
+				<dict>
+					<key>INTypePropertyDefault</key>
+					<true/>
+					<key>INTypePropertyDisplayPriority</key>
+					<integer>2</integer>
+					<key>INTypePropertyName</key>
+					<string>displayString</string>
+					<key>INTypePropertyTag</key>
+					<integer>2</integer>
+					<key>INTypePropertyType</key>
+					<string>String</string>
+				</dict>
+				<dict>
+					<key>INTypePropertyDefault</key>
+					<true/>
+					<key>INTypePropertyDisplayPriority</key>
+					<integer>3</integer>
+					<key>INTypePropertyName</key>
+					<string>pronunciationHint</string>
+					<key>INTypePropertyTag</key>
+					<integer>3</integer>
+					<key>INTypePropertyType</key>
+					<string>String</string>
+				</dict>
+				<dict>
+					<key>INTypePropertyDefault</key>
+					<true/>
+					<key>INTypePropertyDisplayPriority</key>
+					<integer>4</integer>
+					<key>INTypePropertyName</key>
+					<string>alternativeSpeakableMatches</string>
+					<key>INTypePropertySupportsMultipleValues</key>
+					<true/>
+					<key>INTypePropertyTag</key>
+					<integer>4</integer>
+					<key>INTypePropertyType</key>
+					<string>SpeakableString</string>
+				</dict>
+				<dict>
+					<key>INTypePropertyDisplayName</key>
+					<string>Type</string>
+					<key>INTypePropertyDisplayNameID</key>
+					<string>8GDPQo</string>
+					<key>INTypePropertyDisplayPriority</key>
+					<integer>5</integer>
+					<key>INTypePropertyName</key>
+					<string>key</string>
+					<key>INTypePropertyTag</key>
+					<integer>100</integer>
+					<key>INTypePropertyType</key>
+					<string>String</string>
+				</dict>
+				<dict>
+					<key>INTypePropertyDisplayName</key>
+					<string>Value</string>
+					<key>INTypePropertyDisplayNameID</key>
+					<string>1jZJz9</string>
+					<key>INTypePropertyDisplayPriority</key>
+					<integer>6</integer>
+					<key>INTypePropertyName</key>
+					<string>value</string>
+					<key>INTypePropertyTag</key>
+					<integer>101</integer>
+					<key>INTypePropertyType</key>
+					<string>String</string>
 				</dict>
 			</array>
 		</dict>

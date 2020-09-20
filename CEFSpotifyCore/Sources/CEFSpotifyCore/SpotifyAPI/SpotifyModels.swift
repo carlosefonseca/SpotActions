@@ -5,9 +5,9 @@
 
 import Foundation
 
-public protocol ModelJSON : Codable, Equatable {}
+public protocol ModelJSON: Codable, Equatable {}
 
-public struct UserJSON: Codable, Equatable, CustomStringConvertible, User, ModelJSON {
+public struct UserJSON: ModelJSON, CustomStringConvertible, User {
     public var id: String?
     public var displayName: String?
     public var email: String?
@@ -73,13 +73,13 @@ extension PlaylistJSON: Playlist {
     public var totalTracks: Int? { tracks?.total }
 }
 
-public struct ImageJSON: Codable, Equatable {
+public struct ImageJSON: ModelJSON {
     public var url: String?
     public var height: Int?
     public var width: Int?
 }
 
-public struct PublicUserJSON: Codable, Equatable {
+public struct PublicUserJSON: ModelJSON {
     /// The name displayed on the user’s profile. null if not available.
     public var displayName: String?
     /// Known public external URLs for this user.
@@ -98,7 +98,7 @@ public struct PublicUserJSON: Codable, Equatable {
     public var uri: String?
 }
 
-public struct PagingJSON<T>: Codable, Equatable where T: ModelJSON {
+public struct PagingJSON<T>: ModelJSON where T: ModelJSON {
 
     /// A link to the Web API endpoint returning the full result of the request.
     public var href: String?
@@ -126,7 +126,7 @@ public struct PagingJSON<T>: Codable, Equatable where T: ModelJSON {
     }
 }
 
-public struct TrackJSON: Codable, Equatable {
+public struct TrackJSON: Track, ModelJSON {
     /// The artists who performed the track. Each artist object includes a link in href to more detailed information about the artist.
     public var artists: [ArtistJSON]?
     /// A list of the countries in which the track can be played, identified by their ISO 3166-1 alpha-2 code.
@@ -137,18 +137,20 @@ public struct TrackJSON: Codable, Equatable {
     public var durationMs: Int?
     /// Whether or not the track has explicit lyrics ( true = yes it does; false = no it does not OR unknown).
     public var explicit: Bool?
+    /// Known external IDs for the track.
+    public var externalIds: ExternalIdsJSON?
     /// External URLs for this track.
     public var externalUrls: ExternalUrlJSON?
     /// A link to the Web API endpoint providing full details of the track.
     public var href: String?
     /// The Spotify ID for the track.
-    public var id: String?
+    public var id: SpotifyID
     /// Part of the response when Track Relinking is applied. If true , the track is playable in the given market. Otherwise false.
     public var isPlayable: Bool?
-    //    /// Part of the response when Track Relinking is applied and is only part of the response if the track linking, in fact, exists. The requested track has been replaced with a different track. The track in the linkedFrom object contains information about the originally requested track.
-    //    public var linkedFrom:a linked track object?
-    //    /// Part of the response when Track Relinking is applied, the original track is not available in the given market, and Spotify did not have any tracks to relink it with. The track response will still contain metadata for the original track, and a restrictions object containing the reason why the track is not available: "restrictions" : {"reason" : "market"}
-    //    public var restrictions:a restrictions object?
+    /// Part of the response when Track Relinking is applied and is only part of the response if the track linking, in fact, exists. The requested track has been replaced with a different track. The track in the linkedFrom object contains information about the originally requested track.
+    public var linkedFrom: TrackLinkJSON?
+    /// Part of the response when Track Relinking is applied, the original track is not available in the given market, and Spotify did not have any tracks to relink it with. The track response will still contain metadata for the original track, and a restrictions object containing the reason why the track is not available: "restrictions" : {"reason" : "market"}
+    public var restrictions: RestrictionsJSON?
     /// The name of the track.
     public var name: String?
     /// A URL to a 30 second preview (MP3 format) of the track.
@@ -161,6 +163,9 @@ public struct TrackJSON: Codable, Equatable {
     public var uri: String?
     /// Whether or not the track is from a local file.
     public var isLocal: Bool?
+
+    public var title: String? { name }
+    public var externalIdsStr: [String]? { externalIds?.compactMap { type, value in "\(type):\(value)" } }
 }
 
 public extension TrackJSON {
@@ -169,7 +174,7 @@ public extension TrackJSON {
     }
 }
 
-public struct ArtistJSON: Codable, Equatable {
+public struct ArtistJSON: Artist, ModelJSON {
     /// Known external URLs for this artist.
     public var externalUrls: ExternalUrlJSON?
     /// A link to the Web API endpoint providing full details of the artist.
@@ -185,6 +190,8 @@ public struct ArtistJSON: Codable, Equatable {
 }
 
 public typealias ExternalUrlJSON = [String: String]
+
+public typealias ExternalIdsJSON = [String: String]
 
 public typealias PagedTracksJSON = PagingJSON<PageTrackJSON>
 
@@ -251,4 +258,22 @@ public struct ContextJSON: ModelJSON {
     public var externalUrls: ExternalUrlJSON
     /// The object type of the item’s context. Can be one of album, artist or playlist.
     public var type: String?
+}
+
+public struct TrackLinkJSON: ModelJSON {
+    /// Known external URLs for this track.
+    public var externalUrls: ExternalUrlJSON
+    /// A link to the Web API endpoint providing full details of the track.
+    public var href: String?
+    /// The Spotify ID for the track.
+    public var id: SpotifyID?
+    /// The object type: “track”.
+    public var type: String?
+    /// The Spotify URI for the track.
+    public var uri: SpotifyURI?
+}
+
+public struct RestrictionsJSON: ModelJSON {
+    /// The reason why the track is not available
+    public var reason: String?
 }

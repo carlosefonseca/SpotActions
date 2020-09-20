@@ -13,7 +13,7 @@ public extension HasUri {
 }
 
 public protocol Artist: HasUri {
-    var name: String { get }
+    var name: String? { get }
 }
 
 public protocol Track: HasUri {
@@ -21,6 +21,8 @@ public protocol Track: HasUri {
     var artists: [SomeArtist]? { get }
     var title: String? { get }
     var durationMs: Int? { get }
+    var id: SpotifyID { get }
+    var externalIdsStr : [String]? { get }
 }
 
 public protocol Playlist: HasUri {
