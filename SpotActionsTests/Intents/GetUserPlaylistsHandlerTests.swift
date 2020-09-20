@@ -41,19 +41,32 @@ class GetUserPlaylistsHandlerTests: XCTestCase {
             INPlaylist(identifier: "p2", display: "P2"),
         ]
 
-        let r = PagedPlaylistsJSON(
+        let r1 = PagedPlaylistsJSON(
             items: [
                 PlaylistJSON(id: "p1", name: "P1"),
                 PlaylistJSON(id: "p2", name: "P2"),
-            ], total: 2)
+            ],
+            next: "page2",
+            total: 4)
 
-        fakeGateway.userPlaylistsResponses.append(.success(r))
+        let r2 = PagedPlaylistsJSON(
+            items: [
+                PlaylistJSON(id: "p3", name: "P3"),
+                PlaylistJSON(id: "p4", name: "P4"),
+            ],
+            next: "page3",
+            total: 2)
+
+        fakeGateway.userPlaylistsResponses.append(contentsOf: [.success(r1), .success(r2)])
 
         let completionExpectation = expectation(description: "completionCalled")
 
         var response: GetUserPlaylistsIntentResponse?
 
-        handler.handle(intent: GetUserPlaylistsIntent()) { completion in
+        let intent: GetUserPlaylistsIntent = GetUserPlaylistsIntent()
+        intent.fetchPageMode = .first
+
+        handler.handle(intent: intent) { completion in
             response = completion
             completionExpectation.fulfill()
         }
@@ -100,7 +113,10 @@ class GetUserPlaylistsHandlerTests: XCTestCase {
 
         var response: GetUserPlaylistsIntentResponse?
 
-        handler.handle(intent: GetUserPlaylistsIntent()) { completion in
+        let intent: GetUserPlaylistsIntent = GetUserPlaylistsIntent()
+        intent.fetchPageMode = .all
+
+        handler.handle(intent: intent) { completion in
             response = completion
             completionExpectation.fulfill()
         }

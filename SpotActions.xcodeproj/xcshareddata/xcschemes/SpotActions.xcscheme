@@ -49,6 +49,9 @@
             </BuildableReference>
             <SkippedTests>
                <Test
+                  Identifier = "SpotActionsUITests/testExample()">
+               </Test>
+               <Test
                   Identifier = "SpotActionsUITests/testLaunchPerformance()">
                </Test>
             </SkippedTests>

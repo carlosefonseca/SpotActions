@@ -28,7 +28,7 @@ public class FakePlaylistsManager: PlaylistsManager {
             .eraseToAnyPublisher()
     }
 
-    public func getUserPlaylistsEach() -> AnyPublisher<[PlaylistJSON], Error> {
+    public func getFirstPageUserPlaylists() -> AnyPublisher<[PlaylistJSON], Error> {
         return $playlists.first().setFailureType(to: Error.self).eraseToAnyPublisher()
     }
 

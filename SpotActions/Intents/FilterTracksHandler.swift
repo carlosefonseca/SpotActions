@@ -119,7 +119,7 @@ class FilterTracksHandler: NSObject, FilterTracksIntentHandling {
     }
 
     func provideOtherPlaylistOptionsCollection(for intent: FilterTracksIntent, with completion: @escaping (INObjectCollection<INPlaylist>?, Error?) -> Void) {
-        playlistsManager.getUserPlaylistsEach()
+        playlistsManager.getFirstPageUserPlaylists()
             .sink(
                 receiveCompletion: { receiveCompletion in
                     if case .failure(let error) = receiveCompletion {

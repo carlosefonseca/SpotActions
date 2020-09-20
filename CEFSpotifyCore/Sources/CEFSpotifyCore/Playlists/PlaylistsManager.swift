@@ -8,7 +8,7 @@ import Combine
 public protocol PlaylistsManager {
     var publisher: AnyPublisher<[PlaylistJSON], Never> { get }
     func getAllUserPlaylists() -> AnyPublisher<[PlaylistJSON], Error>
-    func getUserPlaylistsEach() -> AnyPublisher<[PlaylistJSON], Error>
+    func getFirstPageUserPlaylists() -> AnyPublisher<[PlaylistJSON], Error>
     func getAllPlaylistTracks(playlistId: String) -> AnyPublisher<[TrackJSON], PlaylistsManagerError>
     func getPlaylist(playlistId: SpotifyID) -> AnyPublisher<PlaylistJSON, PlaylistsManagerError>
     func save(tracks: [TrackJSON], on playlist: PlaylistJSON) throws -> AnyPublisher<Never, PlaylistsManagerError>
@@ -41,7 +41,7 @@ public class PlaylistsManagerImplementation: PlaylistsManager {
             .eraseToAnyPublisher()
     }
 
-    public func getUserPlaylistsEach() -> AnyPublisher<[PlaylistJSON], Error> {
+    public func getFirstPageUserPlaylists() -> AnyPublisher<[PlaylistJSON], Error> {
         return self.gateway.getUserPlaylists(limit: 50, offset: 0).map { (data: PagedPlaylistsJSON) -> [PlaylistJSON] in
             self.playlists = data.items ?? []
             if let nextStr = data.next, let nextURL = URL(string: nextStr) {
