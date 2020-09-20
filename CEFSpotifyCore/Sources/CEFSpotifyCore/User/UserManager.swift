@@ -27,6 +27,7 @@ public class UserManagerImplementation: UserManager, ObservableObject {
         self.gateway = gateway
 
         auth.statePublisher
+            .setFailureType(to: Error.self)
             .print("UserManagerImplementation.init")
             .receive(on: RunLoop.main)
             .map { authState -> AnyPublisher<UserJSON, Error> in

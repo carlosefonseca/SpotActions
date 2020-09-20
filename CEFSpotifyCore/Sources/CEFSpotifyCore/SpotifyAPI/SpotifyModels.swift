@@ -1,13 +1,13 @@
 //
-//  File.swift
-//
-//
-//  Created by carlos.fonseca on 23/08/2020.
+//  SpotifyModels.swift
+//  CEFSpotifyCore
 //
 
 import Foundation
 
-public struct UserJSON: Codable, Equatable, CustomStringConvertible, User {
+public protocol ModelJSON : Codable, Equatable {}
+
+public struct UserJSON: Codable, Equatable, CustomStringConvertible, User, ModelJSON {
     public var id: String?
     public var displayName: String?
     public var email: String?
@@ -27,7 +27,7 @@ public struct UserJSON: Codable, Equatable, CustomStringConvertible, User {
     }
 }
 
-public struct PlaylistJSON: Codable, Equatable {
+public struct PlaylistJSON: ModelJSON {
     /// Returns true if context is not search and the owner allows other users to modify the playlist. Otherwise returns false.
     public var collaborative: Bool?
     /// The playlist description. Only returned for modified, verified playlists, otherwise null.
@@ -54,7 +54,19 @@ public struct PlaylistJSON: Codable, Equatable {
     /// The Spotify URI for the playlist.
     public var uri: String?
 
-    public init() {}
+    public init(collaborative: Bool? = nil, description: String? = nil, externalUrls: ExternalUrlJSON? = nil, href: String? = nil, id: String? = nil, images: [ImageJSON]?? = nil, name: String? = nil, owner: PublicUserJSON? = nil, snapshotId: String? = nil, tracks: PagedTracksJSON? = nil, uri: String? = nil) {
+        self.collaborative = collaborative
+        self.description = description
+        self.externalUrls = externalUrls
+        self.href = href
+        self.id = id
+        self.images = images
+        self.name = name
+        self.owner = owner
+        self.snapshotId = snapshotId
+        self.tracks = tracks
+        self.uri = uri
+    }
 }
 
 extension PlaylistJSON: Playlist {
@@ -86,7 +98,8 @@ public struct PublicUserJSON: Codable, Equatable {
     public var uri: String?
 }
 
-public struct PagingJSON<T>: Codable, Equatable where T: Codable, T: Equatable {
+public struct PagingJSON<T>: Codable, Equatable where T: ModelJSON {
+
     /// A link to the Web API endpoint returning the full result of the request.
     public var href: String?
     /// The requested data.
@@ -102,7 +115,15 @@ public struct PagingJSON<T>: Codable, Equatable where T: Codable, T: Equatable {
     /// The maximum number of items available to return.
     public var total: Int?
 
-    public init() {}
+    public init(href: String? = nil, items: [T]? = nil, limit: Int? = nil, next: String? = nil, offset: Int? = nil, previous: String? = nil, total: Int? = nil) {
+        self.href = href
+        self.items = items
+        self.limit = limit
+        self.next = next
+        self.offset = offset
+        self.previous = previous
+        self.total = total
+    }
 }
 
 public struct TrackJSON: Codable, Equatable {
@@ -184,14 +205,14 @@ public extension SpotifyURI {
     }
 }
 
-public struct PageTrackJSON: Codable, Equatable {
+public struct PageTrackJSON: ModelJSON {
     var addedAt: String?
     var addedBy: AddedByJSON?
     var isLocal: Bool?
     var track: TrackJSON?
 }
 
-public struct AddedByJSON: Codable, Equatable {
+public struct AddedByJSON: ModelJSON {
     var externalUrls: ExternalUrlJSON?
     var href: String?
     var id: String?
@@ -199,12 +220,12 @@ public struct AddedByJSON: Codable, Equatable {
     var uri: String
 }
 
-struct URIListJSON: Codable, Equatable {
+struct URIListJSON: ModelJSON {
     var uris: [SpotifyURI]
     var position: Int?
 }
 
-public struct CurrentlyPlayingJSON: Codable, Equatable {
+public struct CurrentlyPlayingJSON: ModelJSON {
     /// A Context Object. Can be null.
     public var context: ContextJSON?
     /// Unix Millisecond Timestamp when data was fetched
@@ -221,7 +242,7 @@ public struct CurrentlyPlayingJSON: Codable, Equatable {
     // public var actions: []
 }
 
-public struct ContextJSON: Codable, Equatable {
+public struct ContextJSON: ModelJSON {
     /// The uri of the context.
     public var uri: String?
     /// The href of the context, or null if not available.

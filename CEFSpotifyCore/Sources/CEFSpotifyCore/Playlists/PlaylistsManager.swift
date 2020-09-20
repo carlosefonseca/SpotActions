@@ -7,6 +7,7 @@ import Combine
 
 public protocol PlaylistsManager {
     var publisher: AnyPublisher<[PlaylistJSON], Never> { get }
+    func getAllUserPlaylists() -> AnyPublisher<[PlaylistJSON], Error>
     func getUserPlaylistsEach() -> AnyPublisher<[PlaylistJSON], Error>
     func getAllPlaylistTracks(playlistId: String) -> AnyPublisher<[TrackJSON], PlaylistsManagerError>
     func getPlaylist(playlistId: SpotifyID) -> AnyPublisher<PlaylistJSON, PlaylistsManagerError>
@@ -24,10 +25,20 @@ public class PlaylistsManagerImplementation: PlaylistsManager {
 
     let auth: SpotifyAuthManager
     let gateway: SpotifyPlaylistsGateway
+    let maxTracksToSaveAtOnce: Int
 
-    public init(auth: SpotifyAuthManager, gateway: SpotifyPlaylistsGateway) {
+    public init(auth: SpotifyAuthManager, gateway: SpotifyPlaylistsGateway, maxTracksToSaveAtOnce: Int = 100) {
         self.auth = auth
         self.gateway = gateway
+        self.maxTracksToSaveAtOnce = maxTracksToSaveAtOnce
+    }
+
+    public func getAllUserPlaylists() -> AnyPublisher<[PlaylistJSON], Error> {
+        let x: AnyPublisher<PagedPlaylistsJSON, Error> = self.gateway.getUserPlaylists(limit: 50, offset: 0)
+        let y = self.loadNext(x: x) { self.gateway.getNextUserPlaylists(next: $0) }.print()
+        return y.map { page in page.items! }
+            .reduce([PlaylistJSON]()) { accumulator, items -> [PlaylistJSON] in accumulator + items }
+            .eraseToAnyPublisher()
     }
 
     public func getUserPlaylistsEach() -> AnyPublisher<[PlaylistJSON], Error> {
@@ -50,71 +61,48 @@ public class PlaylistsManagerImplementation: PlaylistsManager {
             let subject = CurrentValueSubject<PagedTracksJSON?, PlaylistsManagerError>(nil)
 
             // When the current value changes, checks if there are more pages to load and loads the next page
-            let x: AnyPublisher<PagedTracksJSON, PlaylistsManagerError> = subject
+            subject
                 .compactMap { $0 }
-//                .print("getAllPlaylistTracks.xx0")
                 .prefix(while: { page in page.next != nil })
-//                .print("getAllPlaylistTracks.xx1")
                 .eraseToAnyPublisher()
-
-            let y: AnyPublisher<PagedTracksJSON, Error> = x.flatMap { page in
-                self.gateway.getNextPlaylistTracks(next: URL(string: page.next!)!)
-//                    .mapError { PlaylistsManagerError.requestError(error: $0) }
-                    .map { newPage in
-                        PagedTracksJSON(href: nil,
-                                        items: page.items! + newPage.items!,
-                                        limit: newPage.limit,
-                                        next: newPage.next,
-                                        offset: newPage.offset,
-                                        previous: nil,
-                                        total: newPage.total)
-                    }
-            }
-
-            let yy = y.mapError { $0 as? PlaylistsManagerError ?? PlaylistsManagerError.requestError(error: $0) }
-
-            yy.sink { completion in
-                // Emits error
-                if case .failure = completion {
-                    subject.send(completion: completion)
-                }
-            } receiveValue: { page in
-                subject.send(page)
-            }.store(in: &bag)
-
-            // Initial request for the first page
-            self.getPlaylistTracks(playlistId: playlistId, offset: 0)
-                .mapError { PlaylistsManagerError.requestError(error: $0) }
-//                .print("getAllPlaylistTracks.FIRST1")
+                .flatMap { page in self.fetchAndMerge(page) }
+                .eraseToAnyPublisher()
                 .sink { completion in
                     // Emits error
                     if case .failure = completion {
                         subject.send(completion: completion)
                     }
                 } receiveValue: { page in
-//                    print("getAllPlaylistTracks.FIRST2 subject playlist tracks setting on subject \(page)")
+                    subject.send(page)
+                }.store(in: &bag)
+
+            // Initial request for the first page
+            self.getPlaylistTracks(playlistId: playlistId, offset: 0)
+                .mapError { PlaylistsManagerError.requestError(error: $0) }
+                .sink { completion in
+                    // Emits error
+                    if case .failure = completion {
+                        subject.send(completion: completion)
+                    }
+                } receiveValue: { page in
                     subject.send(page)
                 }.store(in: &bag)
 
             // Waits until all pages have been loaded and outputs the track list
             return subject
                 .compactMap { $0 }
-//                .print("getAllPlaylistTracks.x")
                 .first { (page) -> Bool in page.next == nil }
                 .map { $0.items!.map { $0.track! } }
-//                .print("getAllPlaylistTracks.Out")
                 .handleEvents(
-//                    receiveOutput: { value in print("getAllPlaylistTracks.Out value \(value)") },
                     receiveCompletion: { _ in
                         // Clear the other cancelables
-//                        print("getAllPlaylistTracks. completion removeAll \($0)")
                         bag.removeAll()
                     },
                     receiveCancel: {
                         // Clear the other cancelables
-//                        print("getAllPlaylistTracks. cancel removeAll")
                         bag.removeAll()
-                    })
+                    }
+                )
                 .eraseToAnyPublisher()
         }.eraseToAnyPublisher()
     }
@@ -130,8 +118,8 @@ public class PlaylistsManagerImplementation: PlaylistsManager {
     public func save(tracks: [String], on playlist: String) -> AnyPublisher<Never, PlaylistsManagerError> {
         return Deferred<AnyPublisher<Never, PlaylistsManagerError>> {
             do {
-                if tracks.count > 100 {
-                    let chunks = tracks.chunked(into: 100)
+                if tracks.count > self.maxTracksToSaveAtOnce {
+                    let chunks = tracks.chunked(into: self.maxTracksToSaveAtOnce)
 
                     let publishers = chunks.enumerated().map { (index, tracks) -> AnyPublisher<Never, PlaylistsManagerError> in
                         do {
@@ -174,6 +162,36 @@ public class PlaylistsManagerImplementation: PlaylistsManager {
         return self.gateway.getPlaylist(playlistId: playlistId)
             .mapError { PlaylistsManagerError.requestError(error: $0) }
             .eraseToAnyPublisher()
+    }
+
+    // MARK: - Private
+
+    private func fetchAndMerge(_ page: PagedTracksJSON) -> AnyPublisher<PagedTracksJSON, PlaylistsManagerError> {
+        return self.gateway.getNextPlaylistTracks(next: URL(string: page.next!)!)
+            .map { newPage -> PagedTracksJSON in
+                PagedTracksJSON(href: nil,
+                                items: page.items! + newPage.items!,
+                                limit: newPage.limit,
+                                next: newPage.next,
+                                offset: newPage.offset,
+                                previous: nil,
+                                total: newPage.total)
+            }
+            .mapError { PlaylistsManagerError.requestError(error: $0) }
+            .eraseToAnyPublisher()
+    }
+
+    private func loadNext<T>(x: AnyPublisher<PagingJSON<T>, Error>, fetch: @escaping (URL) -> AnyPublisher<PagingJSON<T>, Error>) -> AnyPublisher<PagingJSON<T>, Error> where T: Codable, T: Equatable {
+        return x.flatMap { (page) -> AnyPublisher<PagingJSON<T>, Error> in
+            if let next = page.next {
+                let y: AnyPublisher<PagingJSON<T>, Error> = fetch(URL(string: next)!)
+                return Just(page).setFailureType(to: Error.self).append(
+                    self.loadNext(x: y, fetch: fetch)
+                ).eraseToAnyPublisher()
+            } else {
+                return Just(page).setFailureType(to: Error.self).eraseToAnyPublisher()
+            }
+        }.eraseToAnyPublisher()
     }
 }
 

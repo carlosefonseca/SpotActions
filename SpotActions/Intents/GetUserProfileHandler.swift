@@ -1,8 +1,6 @@
 //
 //  GetUserProfileHandler.swift
-//  SAIntent
-//
-//  Created by carlos.fonseca on 23/08/2020.
+//  SpotActions
 //
 
 import Intents

@@ -8,6 +8,8 @@ import XCTest
 @testable import CEFSpotifyCore
 import CEFSpotifyDoubles
 
+struct TestError: Error, Equatable {}
+
 class PlaylistsManagerTests: XCTestCase {
     var bag = Set<AnyCancellable>()
 
@@ -30,6 +32,15 @@ class PlaylistsManagerTests: XCTestCase {
     lazy var pageTrack3 = { PageTrackJSON(addedAt: nil, addedBy: nil, isLocal: nil, track: track3) }()
     lazy var pageTrack4 = { PageTrackJSON(addedAt: nil, addedBy: nil, isLocal: nil, track: track4) }()
 
+    let playlist1 = PlaylistJSON(id: "playlist1")
+    let playlist2 = PlaylistJSON(id: "playlist2")
+    let playlist3 = PlaylistJSON(id: "playlist3")
+    let playlist4 = PlaylistJSON(id: "playlist4")
+
+    lazy var pagePlaylistsAll = { PagedPlaylistsJSON(items: [playlist1, playlist2, playlist3, playlist4], next: nil, offset: 0, total: 4) }()
+    lazy var pagePlaylists1 = { PagedPlaylistsJSON(items: [playlist1, playlist2], next: "nextPlaylists", offset: 0, total: 4) }()
+    lazy var pagePlaylists2 = { PagedPlaylistsJSON(items: [playlist3, playlist4], next: nil, offset: 2, total: 4) }()
+
     override func setUp() {
         bag.removeAll()
 
@@ -38,7 +49,66 @@ class PlaylistsManagerTests: XCTestCase {
         fakeGateway = FakeSpotifyPlaylistsGateway()
 
         playlistsManager = PlaylistsManagerImplementation(auth: fakeAuth,
-                                                          gateway: fakeGateway)
+                                                          gateway: fakeGateway,
+                                                          maxTracksToSaveAtOnce: 2)
+    }
+
+    func test_fetch_single_page_of_user_playlists() {
+        fakeGateway.userPlaylistsResponses.append(Result.success(pagePlaylistsAll))
+
+        let finishedExpectation = expectation(description: "finished")
+        var output: [PlaylistJSON]?
+
+        playlistsManager.getAllUserPlaylists()
+            .sink { completion in
+                finishedExpectation.fulfill()
+                guard case .finished = completion else {
+                    XCTFail()
+                    return
+                }
+            } receiveValue: { value in
+                output = value
+            }.store(in: &bag)
+
+        waitForExpectations(timeout: 1)
+
+        XCTAssertEqual(output, [playlist1, playlist2, playlist3, playlist4])
+
+        let expectedCalls: [FakeSpotifyPlaylistsGateway.Methods] = [
+            .getUserPlaylists(limit: 50, offset: 0),
+        ]
+
+        XCTAssertEqual(fakeGateway.calls, expectedCalls)
+    }
+
+    func test_fetch_multiple_page_of_user_playlists() {
+        fakeGateway.userPlaylistsResponses.append(Result.success(pagePlaylists1))
+        fakeGateway.nextUserPlaylistsResponses.append(Result.success(pagePlaylists2))
+
+        let finishedExpectation = expectation(description: "finished")
+        var output: [PlaylistJSON]?
+
+        playlistsManager.getAllUserPlaylists()
+            .sink { completion in
+                finishedExpectation.fulfill()
+                guard case .finished = completion else {
+                    XCTFail()
+                    return
+                }
+            } receiveValue: { value in
+                output = value
+            }.store(in: &bag)
+
+        waitForExpectations(timeout: 1)
+
+        XCTAssertEqual(output, [playlist1, playlist2, playlist3, playlist4])
+
+        let expectedCalls: [FakeSpotifyPlaylistsGateway.Methods] = [
+            .getUserPlaylists(limit: 50, offset: 0),
+            .getNextUserPlaylists(next: URL(string: "nextPlaylists")!),
+        ]
+
+        XCTAssertEqual(fakeGateway.calls, expectedCalls)
     }
 
     func test_fetch_single_page_of_tracks() {
@@ -63,6 +133,12 @@ class PlaylistsManagerTests: XCTestCase {
         waitForExpectations(timeout: 1)
 
         XCTAssertEqual(output, [track1, track2, track3, track4])
+
+        let expectedCalls: [FakeSpotifyPlaylistsGateway.Methods] = [
+            .getPlaylistTracks(playlistId: "playlist1", offset: 0),
+        ]
+
+        XCTAssertEqual(fakeGateway.calls, expectedCalls)
     }
 
     func test_fetch_multiple_pages_of_tracks() {
@@ -91,6 +167,15 @@ class PlaylistsManagerTests: XCTestCase {
         waitForExpectations(timeout: 1)
 
         XCTAssertEqual(output, [track1, track2, track3, track4])
+
+        let expectedCalls: [FakeSpotifyPlaylistsGateway.Methods] = [
+            .getPlaylistTracks(playlistId: "playlist1", offset: 0),
+            .getNextPlaylistTracks(next: URL(string: "offset1")),
+            .getNextPlaylistTracks(next: URL(string: "offset2")),
+            .getNextPlaylistTracks(next: URL(string: "offset3")),
+        ]
+
+        XCTAssertEqual(fakeGateway.calls, expectedCalls)
     }
 
     func test_fetch_single_page_of_tracks_fails() {
@@ -119,6 +204,62 @@ class PlaylistsManagerTests: XCTestCase {
         default:
             XCTFail()
         }
+
+        let expectedCalls: [FakeSpotifyPlaylistsGateway.Methods] = [
+            .getPlaylistTracks(playlistId: "playlist1", offset: 0),
+        ]
+
+        XCTAssertEqual(fakeGateway.calls, expectedCalls)
+    }
+
+    func test_single_page_save() {
+        fakeGateway.replaceResponses.append(nil)
+
+        let finishedExpectation = expectation(description: "finished")
+
+        try! playlistsManager.save(tracks: [track1, track2], on: playlist1)
+            .sink { completion in
+                finishedExpectation.fulfill()
+                guard case .finished = completion else {
+                    XCTFail()
+                    return
+                }
+            } receiveValue: { _ in
+                XCTFail()
+            }.store(in: &bag)
+
+        waitForExpectations(timeout: 1)
+
+        let expectedCalls: [FakeSpotifyPlaylistsGateway.Methods] = [
+            .replace(tracks: ["track1", "track2"], playlistId: "playlist1"),
+        ]
+        XCTAssertEqual(fakeGateway.calls, expectedCalls)
+    }
+
+    func test_multi_page_save() {
+        fakeGateway.replaceResponses.append(nil)
+        fakeGateway.addResponses.append(nil)
+
+        let finishedExpectation = expectation(description: "finished")
+
+        try! playlistsManager.save(tracks: [track1, track2, track3, track4], on: playlist1)
+            .sink { completion in
+                finishedExpectation.fulfill()
+                guard case .finished = completion else {
+                    XCTFail()
+                    return
+                }
+            } receiveValue: { _ in
+                XCTFail()
+            }.store(in: &bag)
+
+        waitForExpectations(timeout: 1)
+
+        let expectedCalls: [FakeSpotifyPlaylistsGateway.Methods] = [
+            .replace(tracks: ["track1", "track2"], playlistId: "playlist1"),
+            .add(tracks: ["track3", "track4"], playlistId: "playlist1", index: nil),
+        ]
+        XCTAssertEqual(fakeGateway.calls, expectedCalls)
     }
 
     func test_blah() {
@@ -308,11 +449,5 @@ class PlaylistsManagerTests: XCTestCase {
               "total" : 50
             }
             """
-
-//        Paged
-//
-//        self.fakeGateway.playlistTracksResponses.append(PagedTracksJSON()
     }
 }
-
-struct TestError: Error, Equatable {}

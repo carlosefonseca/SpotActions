@@ -7,13 +7,6 @@ import Combine
 import CEFSpotifyCore
 
 public class FakePlaylistsManager: PlaylistsManager {
-    public func getPlaylist(playlistId: SpotifyID) -> AnyPublisher<PlaylistJSON, PlaylistsManagerError> {
-        $playlists
-            .first()
-            .tryMap { array in array.first(where: { $0.id == playlistId })! }
-            .mapError { PlaylistsManagerError.missingData(message: $0.localizedDescription) }
-            .eraseToAnyPublisher()
-    }
 
     @Published public var playlists = [PlaylistJSON]()
 
@@ -21,6 +14,18 @@ public class FakePlaylistsManager: PlaylistsManager {
 
     public var publisher: AnyPublisher<[PlaylistJSON], Never> {
         $playlists.eraseToAnyPublisher()
+    }
+
+    public func getAllUserPlaylists() -> AnyPublisher<[PlaylistJSON], Error> {
+        return $playlists.first().setFailureType(to: Error.self).eraseToAnyPublisher()
+    }
+
+    public func getPlaylist(playlistId: SpotifyID) -> AnyPublisher<PlaylistJSON, PlaylistsManagerError> {
+        $playlists
+            .first()
+            .tryMap { array in array.first(where: { $0.id == playlistId })! }
+            .mapError { PlaylistsManagerError.missingData(message: $0.localizedDescription) }
+            .eraseToAnyPublisher()
     }
 
     public func getUserPlaylistsEach() -> AnyPublisher<[PlaylistJSON], Error> {

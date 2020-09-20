@@ -25,6 +25,7 @@
 		2DA5DE8124EE845100E9BE87 /* AuthenticationServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2DA5DE8024EE845100E9BE87 /* AuthenticationServices.framework */; };
 		2DAC399F24F1DC73003AC458 /* Intents.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = 2DAC399D24F1DC45003AC458 /* Intents.intentdefinition */; };
 		2DAC39A324F1ED40003AC458 /* GetUserProfileHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DAC39A024F1DDD1003AC458 /* GetUserProfileHandler.swift */; };
+		2DB21346250FFB6400517C9D /* GetUserPlaylistsHandlerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DB21345250FFB6400517C9D /* GetUserPlaylistsHandlerTests.swift */; };
 		2DD91ADE24F117620032D7C6 /* CEFSpotifyCore in Frameworks */ = {isa = PBXBuildFile; productRef = 2DD91ADD24F117620032D7C6 /* CEFSpotifyCore */; };
 		2DD91AE024F119B50032D7C6 /* WebAuth.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DD91ADF24F119B50032D7C6 /* WebAuth.swift */; };
 		2DD91AE224F11ADF0032D7C6 /* Keychain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DD91AE124F11ADF0032D7C6 /* Keychain.swift */; };
@@ -84,6 +85,7 @@
 		2DA5DE8024EE845100E9BE87 /* AuthenticationServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AuthenticationServices.framework; path = System/Library/Frameworks/AuthenticationServices.framework; sourceTree = SDKROOT; };
 		2DAC399D24F1DC45003AC458 /* Intents.intentdefinition */ = {isa = PBXFileReference; lastKnownFileType = file.intentdefinition; path = Intents.intentdefinition; sourceTree = "<group>"; };
 		2DAC39A024F1DDD1003AC458 /* GetUserProfileHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetUserProfileHandler.swift; sourceTree = "<group>"; };
+		2DB21345250FFB6400517C9D /* GetUserPlaylistsHandlerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetUserPlaylistsHandlerTests.swift; sourceTree = "<group>"; };
 		2DD91ADF24F119B50032D7C6 /* WebAuth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebAuth.swift; sourceTree = "<group>"; };
 		2DD91AE124F11ADF0032D7C6 /* Keychain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Keychain.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -120,6 +122,7 @@
 			isa = PBXGroup;
 			children = (
 				2D755B0324F5897B00800222 /* GetUserProfileHandlerTests.swift */,
+				2DB21345250FFB6400517C9D /* GetUserPlaylistsHandlerTests.swift */,
 			);
 			path = Intents;
 			sourceTree = "<group>";
@@ -366,6 +369,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2D755B0424F5897B00800222 /* GetUserProfileHandlerTests.swift in Sources */,
+				2DB21346250FFB6400517C9D /* GetUserPlaylistsHandlerTests.swift in Sources */,
 				2DA5DE6724EE819B00E9BE87 /* SpotActionsTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

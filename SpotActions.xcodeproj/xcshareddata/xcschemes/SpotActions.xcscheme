@@ -47,6 +47,11 @@
                BlueprintName = "SpotActionsUITests"
                ReferencedContainer = "container:SpotActions.xcodeproj">
             </BuildableReference>
+            <SkippedTests>
+               <Test
+                  Identifier = "SpotActionsUITests/testLaunchPerformance()">
+               </Test>
+            </SkippedTests>
          </TestableReference>
       </Testables>
    </TestAction>

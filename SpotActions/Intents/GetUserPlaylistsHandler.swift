@@ -2,8 +2,6 @@
 //  GetUserPlaylistsIntent.swift
 //  SpotActions
 //
-//  Created by carlos.fonseca on 23/08/2020.
-//
 
 import Foundation
 import Intents
@@ -30,16 +28,11 @@ class GetUserPlaylistsHandler: NSObject, GetUserPlaylistsIntentHandling {
             return
         }
 
-        playlistsManager.getUserPlaylistsEach()
+        playlistsManager.getAllUserPlaylists()
             .print()
             .map {
                 $0.compactMap { (pJSON) -> INPlaylist in
-                    let p = INPlaylist(identifier: pJSON.id!, display: pJSON.name!)
-                    p.trackCount = pJSON.tracks!.total! as NSNumber
-//                    p.tracks = pJSON.tracks!.items?.compactMap { (tJSON) -> Track in
-//                        Track(identifier: tJSON.id, display: tJSON.name!)
-//                    }
-                    return p
+                    return INPlaylist(identifier: pJSON.id!, display: pJSON.name!)
                 }
             }.sink { it in
                 switch it {

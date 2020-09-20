@@ -114,6 +114,7 @@ extension SpotifyWebApi.Playlists.GetPlaylist {
 
 public protocol SpotifyPlaylistsGateway {
     func getUserPlaylists(limit: Int, offset: Int) -> AnyPublisher<PagedPlaylistsJSON, Error>
+    func getNextUserPlaylists(next: URL) -> AnyPublisher<PagedPlaylistsJSON, Error>
     func getPlaylistTracks(playlistId: String, offset: Int) -> AnyPublisher<PagedTracksJSON, Error>
     func getNextPlaylistTracks(next: URL) -> AnyPublisher<PagedTracksJSON, Error>
     func replace(tracks: [String], on playlistId: String) throws -> AnyPublisher<Never, Error>
@@ -136,10 +137,18 @@ public class SpotifyPlaylistsGatewayImplementation: BaseSpotifyGateway, SpotifyP
             .eraseToAnyPublisher()
     }
 
-    public func getNextPlaylistTracks(next: URL) -> AnyPublisher<PagedTracksJSON, Error> {
+    private func getNext<T>(next: URL) -> AnyPublisher<PagingJSON<T>, Error> where T : Decodable, T : Encodable, T : Equatable {
         return requestManager.execute(urlRequest: URLRequest(url: next))
-            .decode(type: SpotifyWebApi.Playlists.GetPlaylistTracks.Response.self, decoder: decoder)
+            .decode(type: PagingJSON<T>.self, decoder: decoder)
             .eraseToAnyPublisher()
+    }
+
+    public func getNextUserPlaylists(next: URL) -> AnyPublisher<PagedPlaylistsJSON, Error> {
+        return getNext(next: next)
+    }
+
+    public func getNextPlaylistTracks(next: URL) -> AnyPublisher<PagedTracksJSON, Error> {
+        return getNext(next: next)
     }
 
     public func replace(tracks: [SpotifyURI], on playlistId: String) throws -> AnyPublisher<Never, Error> {
