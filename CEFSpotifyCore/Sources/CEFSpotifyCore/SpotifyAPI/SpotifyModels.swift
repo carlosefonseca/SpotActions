@@ -126,7 +126,7 @@ public struct PagingJSON<T>: ModelJSON where T: ModelJSON {
     }
 }
 
-public struct TrackJSON: Track, ModelJSON {
+public struct TrackJSON: ModelJSON {
     /// The artists who performed the track. Each artist object includes a link in href to more detailed information about the artist.
     public var artists: [ArtistJSON]?
     /// A list of the countries in which the track can be played, identified by their ISO 3166-1 alpha-2 code.
@@ -163,9 +163,12 @@ public struct TrackJSON: Track, ModelJSON {
     public var uri: String?
     /// Whether or not the track is from a local file.
     public var isLocal: Bool?
+}
 
+extension TrackJSON: Track {
     public var title: String? { name }
     public var externalIdsStr: [String]? { externalIds?.compactMap { type, value in "\(type):\(value)" } }
+    public var linkedTrackId: String? { linkedFrom?.id }
 }
 
 public extension TrackJSON {
@@ -262,7 +265,7 @@ public struct ContextJSON: ModelJSON {
 
 public struct TrackLinkJSON: ModelJSON {
     /// Known external URLs for this track.
-    public var externalUrls: ExternalUrlJSON
+    public var externalUrls: ExternalUrlJSON?
     /// A link to the Web API endpoint providing full details of the track.
     public var href: String?
     /// The Spotify ID for the track.

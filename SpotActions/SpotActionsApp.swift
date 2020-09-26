@@ -30,6 +30,8 @@ struct Dependencies {
     var playlistsManager: PlaylistsManager
     var playerManager: PlayerManager
 
+    var trackFilterService : TrackFilterService
+
     init() {
         keychain = Keychain()
         requester = UrlSessionRequester()
@@ -40,6 +42,8 @@ struct Dependencies {
         userManager = UserManagerImplementation(auth: auth, gateway: gateways.userProfile)
         playlistsManager = PlaylistsManagerImplementation(auth: auth, gateway: gateways.playlists)
         playerManager = PlayerManagerImplementation(gateway: gateways.player)
+
+        trackFilterService = TrackFilterServiceImplementation(playlistsManager: playlistsManager)
     }
 }
 
@@ -78,7 +82,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         case is SaveTracksOnPlaylistIntent:
             return saveTracksOnPlaylistHandler
         case is FilterTracksIntent:
-            return FilterTracksHandler(playlistsManager: dependencies.playlistsManager)
+            return FilterTracksHandler(playlistsManager: dependencies.playlistsManager, trackFilterService: dependencies.trackFilterService)
         case is GetPlayingTrackIntent:
             return GetPlayingTrackHandler(auth: dependencies.auth, playerManager: dependencies.playerManager)
         case is GetPlayingPlaylistIntent:

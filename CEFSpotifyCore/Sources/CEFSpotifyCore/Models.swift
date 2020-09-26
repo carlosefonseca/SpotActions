@@ -22,7 +22,8 @@ public protocol Track: HasUri {
     var title: String? { get }
     var durationMs: Int? { get }
     var id: SpotifyID { get }
-    var externalIdsStr : [String]? { get }
+    var externalIdsStr: [String]? { get }
+    var linkedTrackId: String? { get }
 }
 
 public protocol Playlist: HasUri {
@@ -34,4 +35,11 @@ public protocol User: HasUri {
     var email: String? { get }
     var country: String? { get }
     var product: String? { get }
+}
+
+public typealias ErrorMessage = String
+extension ErrorMessage: Error {}
+extension ErrorMessage: LocalizedError {
+    public var errorDescription: String? { self }
+    public var failureReason: String? { self }
 }

@@ -20,3 +20,11 @@ public func errorToPublisher<E, O>(error: E?, outputType: O.Type) -> AnyPublishe
 
     return Fail(outputType: outputType, failure: error).eraseToAnyPublisher()
 }
+
+public extension String {
+    func contains(regex: NSRegularExpression) -> Bool {
+        let range = NSRange(location: 0, length: utf16.count)
+        return regex.firstMatch(in: self, options: [], range: range) != nil
+    }
+}
+

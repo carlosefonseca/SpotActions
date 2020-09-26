@@ -27,18 +27,14 @@ class GetPlaylistTracksHandler: NSObject, GetPlaylistTracksIntentHandling {
             return
         }
 
+        var publisher: AnyPublisher<[INTrack], ErrorMessage>
         switch intent.option {
         case .recentTracks:
 
-            playerManager.getRecentlyPlayed()
-                .sink(receiveCompletion: { receiveCompletion in
-                    if case .failure(let error) = receiveCompletion {
-                        completion(.failure(error: error.localizedDescription))
-                    }
-                }, receiveValue: { tracks in
-                    completion(.success(result: tracks.map { INTrack(from: $0) }))
-                }).store(in: &bag)
-
+            publisher = playerManager.getRecentlyPlayed()
+                .map { tracks in tracks.map { INTrack(from: $0) } }
+                .mapError { error in error.localizedDescription }
+                .eraseToAnyPublisher()
 
         case .allTracks:
 
@@ -47,21 +43,24 @@ class GetPlaylistTracksHandler: NSObject, GetPlaylistTracksIntentHandling {
                 return
             }
 
-            playlistsManager.getAllPlaylistTracks(playlistId: playlist.identifier!)
-                .sink(receiveCompletion: { receiveCompletion in
-                    if case .failure(let error) = receiveCompletion {
-                        completion(.failure(error: error.localizedDescription))
-                    }
-                }, receiveValue: { tracks in
-                    completion(.success(result: tracks.map { INTrack(from: $0) }))
-                }).store(in: &bag)
-
+            publisher = playlistsManager.getAllPlaylistTracks(playlistId: playlist.identifier!)
+                .map { tracks in tracks.map { INTrack(from: $0) } }
+                .mapError { error in error.localizedDescription }
+                .eraseToAnyPublisher()
 
         case .unknown:
-            // TODO
-            break
+            completion(.failure(error: "Option Unknown"))
+            return
         }
 
+        publisher
+            .sink(receiveCompletion: { receiveCompletion in
+                if case .failure(let error) = receiveCompletion {
+                    completion(.failure(error: error))
+                }
+            }, receiveValue: { tracks in
+                completion(.success(result: tracks))
+            }).store(in: &bag)
     }
 
     func resolvePlaylist(for intent: GetPlaylistTracksIntent, with completion: @escaping (INPlaylistResolutionResult) -> Void) {
@@ -73,6 +72,11 @@ class GetPlaylistTracksHandler: NSObject, GetPlaylistTracksIntentHandling {
     }
 
     func providePlaylistOptionsCollection(for intent: GetPlaylistTracksIntent, with completion: @escaping (INObjectCollection<INPlaylist>?, Error?) -> Void) {
+        guard case .loggedIn = auth.state else {
+            completion(nil, "Not logged in!")
+            return
+        }
+
         playlistsManager.getFirstPageUserPlaylists()
             .sink(
                 receiveCompletion: { receiveCompletion in

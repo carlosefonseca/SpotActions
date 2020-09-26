@@ -35,7 +35,6 @@ extension INPlaylist: Playlist {
 }
 
 extension INTrack: Track {
-
     convenience init(from json: TrackJSON) {
         self.init(identifier: json.id, display: "\(json.name!) - \(json.artists!.compactMap { $0.name }.joined(separator: ", "))")
         self.title = json.name!

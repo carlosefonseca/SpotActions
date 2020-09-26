@@ -330,9 +330,9 @@
 	<key>INIntentDefinitionSystemVersion</key>
 	<string>19G2021</string>
 	<key>INIntentDefinitionToolsBuildVersion</key>
-	<string>12B5018i</string>
+	<string>12A7209</string>
 	<key>INIntentDefinitionToolsVersion</key>
-	<string>12.2</string>
+	<string>12.0</string>
 	<key>INIntents</key>
 	<array>
 		<dict>
@@ -2334,7 +2334,7 @@
 			<key>INTypeDisplayNameID</key>
 			<string>E3x3xy</string>
 			<key>INTypeLastPropertyTag</key>
-			<integer>114</integer>
+			<integer>115</integer>
 			<key>INTypeName</key>
 			<string>INTrack</string>
 			<key>INTypeProperties</key>
@@ -2484,6 +2484,20 @@
 					<integer>113</integer>
 					<key>INTypePropertyType</key>
 					<string>Object</string>
+				</dict>
+				<dict>
+					<key>INTypePropertyDisplayName</key>
+					<string>Linked Track Identifier</string>
+					<key>INTypePropertyDisplayNameID</key>
+					<string>9QhJ3s</string>
+					<key>INTypePropertyDisplayPriority</key>
+					<integer>11</integer>
+					<key>INTypePropertyName</key>
+					<string>linkedTrackId</string>
+					<key>INTypePropertyTag</key>
+					<integer>115</integer>
+					<key>INTypePropertyType</key>
+					<string>String</string>
 				</dict>
 			</array>
 		</dict>
