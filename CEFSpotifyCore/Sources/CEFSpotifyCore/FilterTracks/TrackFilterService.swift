@@ -9,6 +9,7 @@ public protocol TrackFilterService {
     func filterByTitleArtist<T: Track>(modeIsSelect: Bool, tracks: [T], titles: [String]?, artists: [String]?, and: Bool, isRegex: Bool) -> Result<[T], ErrorMessage>
     func existsInPlaylist<T: Track>(modeIsSelect: Bool, tracks: [T], otherPlaylistId: String) -> AnyPublisher<[T], ErrorMessage>
     func filterTracksWithOtherTracks<T1: Track, T2: Track>(modeIsSelect: Bool, tracks: [T1], otherTracks: [T2]) -> [T1]
+    func duplicatedTracks<T: Track>(modeIsSelect: Bool, tracks: [T]) -> [T]
 }
 
 public class TrackFilterServiceImplementation: TrackFilterService {
@@ -64,7 +65,7 @@ public class TrackFilterServiceImplementation: TrackFilterService {
         playlistsManager.getAllPlaylistTracks(playlistId: otherPlaylistId)
             .mapError { error in error.errorDescription ?? "Error" }
             .map { otherPlaylistTracks in
-                TrackFilterExists().filterTracksWithOtherTracks(modeIsSelect: modeIsSelect, tracks: tracks, otherTracks: otherPlaylistTracks)
+                self.filterTracksWithOtherTracks(modeIsSelect: modeIsSelect, tracks: tracks, otherTracks: otherPlaylistTracks)
             }
             .eraseToAnyPublisher()
     }
@@ -88,6 +89,49 @@ public class TrackFilterServiceImplementation: TrackFilterService {
             }
 
             return !modeIsSelect
+        }
+    }
+
+    public func duplicatedTracks<T>(modeIsSelect: Bool, tracks: [T]) -> [T] where T: Track {
+
+        var possibleIds = Set<String>()
+        var otherExternalIds = Set<String>()
+        var uniqueTracks = [T]()
+        var duplicatedTracks = [T]()
+
+        tracks.forEach { track in
+
+            if possibleIds.contains(track.id) {
+                duplicatedTracks.append(track)
+                return
+            }
+
+            if let linkedTrack = track.linkedTrackId, possibleIds.contains(linkedTrack) {
+                duplicatedTracks.append(track)
+                return
+            }
+
+            if let eIds = track.externalIdsStr, !otherExternalIds.isDisjoint(with: eIds) {
+                duplicatedTracks.append(track)
+                return
+            }
+
+            possibleIds.insert(track.id)
+            if let linkedTrack = track.linkedTrackId {
+                possibleIds.insert(linkedTrack)
+            }
+
+            if let eIds = track.externalIdsStr {
+                otherExternalIds = otherExternalIds.union(eIds)
+            }
+
+            uniqueTracks.append(track)
+        }
+
+        if modeIsSelect {
+            return duplicatedTracks
+        } else {
+            return uniqueTracks
         }
     }
 }

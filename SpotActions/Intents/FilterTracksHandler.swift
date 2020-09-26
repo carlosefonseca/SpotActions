@@ -90,7 +90,9 @@ class FilterTracksHandler: NSObject, FilterTracksIntentHandling {
                                                           otherTracks: otherTracks)
             )
         case .dedup:
-            break
+            result = .success(
+                filterService.duplicatedTracks(modeIsSelect: select, tracks: tracks)
+            )
         case .first:
             break
         case .last:
