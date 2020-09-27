@@ -36,10 +36,11 @@ extension INPlaylist: Playlist {
 
 extension INTrack: Track {
     convenience init(from json: TrackJSON) {
-        self.init(identifier: json.id, display: "\(json.name!) - \(json.artists!.compactMap { $0.name }.joined(separator: ", "))")
+        self.init(identifier: json.id, display: concatTrackNameArtists(name: json.name!, artists: json.artists!))
         self.title = json.name!
         self.artists = json.artists?.compactMap { INArtist(from: $0) } ?? []
         self.uri = json.uri!
+        self.linkedTrackId = json.linkedFrom?.id
 
         self.externalIds = json.externalIds?.map { key, value in
             INExternalId(key: key, value: value)
@@ -51,6 +52,15 @@ extension INTrack: Track {
         }
     }
 
+    convenience init(artists: [INArtist], externalIds: [SpotActions.INExternalId]?, id: String, linkedTrackId: String?, name: String) {
+        self.init(identifier: id, display: concatTrackNameArtists(name: name, artists: artists))
+        self.title = name
+        self.artists = artists
+        self.uri = "spotify:track:\(id)"
+        self.externalIds = externalIds
+        self.linkedTrackId = linkedTrackId
+    }
+
     public var id: SpotifyID { identifier! }
 
     public var durationMs: Int? {
@@ -60,6 +70,10 @@ extension INTrack: Track {
     public var externalIdsStr: [String]? {
         externalIds?.compactMap { $0.identifier }
     }
+}
+
+func concatTrackNameArtists<A: Artist>(name: String, artists: [A]) -> String {
+    "\(name) - \(artists.compactMap { $0.name }.joined(separator: ", "))"
 }
 
 extension INCurrentlyPlaying {
@@ -89,5 +103,11 @@ extension INExternalId {
         self.init(identifier: "\(key):\(value)", display: "\(key):\(value)")
         self.key = key
         self.value = value
+    }
+
+    class func from(_ original: [String: String]) -> [INExternalId] {
+        original.map { (key, value) -> INExternalId in
+            INExternalId(key: key, value: value)
+        }
     }
 }
