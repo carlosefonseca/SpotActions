@@ -126,7 +126,7 @@ public struct PagingJSON<T>: ModelJSON where T: ModelJSON {
     }
 }
 
-public struct TrackJSON: ModelJSON {
+public struct TrackJSON: ModelJSON, Hashable {
     /// The artists who performed the track. Each artist object includes a link in href to more detailed information about the artist.
     public var artists: [ArtistJSON]?
     /// A list of the countries in which the track can be played, identified by their ISO 3166-1 alpha-2 code.
@@ -177,7 +177,7 @@ public extension TrackJSON {
     }
 }
 
-public struct ArtistJSON: Artist, ModelJSON {
+public struct ArtistJSON: Artist, ModelJSON, Hashable {
     /// Known external URLs for this artist.
     public var externalUrls: ExternalUrlJSON?
     /// A link to the Web API endpoint providing full details of the artist.
@@ -263,7 +263,7 @@ public struct ContextJSON: ModelJSON {
     public var type: String?
 }
 
-public struct TrackLinkJSON: ModelJSON {
+public struct TrackLinkJSON: ModelJSON, Hashable {
     /// Known external URLs for this track.
     public var externalUrls: ExternalUrlJSON?
     /// A link to the Web API endpoint providing full details of the track.
@@ -276,7 +276,7 @@ public struct TrackLinkJSON: ModelJSON {
     public var uri: SpotifyURI?
 }
 
-public struct RestrictionsJSON: ModelJSON {
+public struct RestrictionsJSON: ModelJSON, Hashable {
     /// The reason why the track is not available
     public var reason: String?
 }

@@ -93,10 +93,34 @@ class FilterTracksHandler: NSObject, FilterTracksIntentHandling {
             result = .success(
                 filterService.duplicatedTracks(modeIsSelect: select, tracks: tracks)
             )
-        case .first:
-            break
-        case .last:
-            break
+        case .limit:
+
+            let mode = intent.limitMode.asLimitMode
+            var amount = Int(truncating: intent.amount ?? 0)
+            let unit: LimitUnit
+
+            switch intent.unit {
+            case .tracks:
+                unit = .tracks
+            case .minutes:
+                unit = .minutes
+            case .hours:
+                unit = .minutes
+                amount = amount * 60
+            case .unknown:
+                completion(.failure(error: "Missing Limit Unit!"))
+                return
+            }
+
+            let extractedExpr: [INTrack] = filterService.limitTracks(modeIsSelect: select,
+                                                                     tracks: tracks,
+                                                                     mode: mode,
+                                                                     amount: amount,
+                                                                     unit: unit)
+
+            result = .success(
+                extractedExpr
+            )
         }
 
         switch result {
@@ -111,15 +135,28 @@ class FilterTracksHandler: NSObject, FilterTracksIntentHandling {
 
     func provideOtherPlaylistOptionsCollection(for intent: FilterTracksIntent, with completion: @escaping (INObjectCollection<INPlaylist>?, Error?) -> Void) {
         playlistsManager.getFirstPageUserPlaylists()
-            .sink(
-                receiveCompletion: { receiveCompletion in
-                    if case .failure(let error) = receiveCompletion {
-                        completion(nil, error)
-                    }
-                },
-                receiveValue: { value in
-                    completion(INObjectCollection(items: value.map { INPlaylist(from: $0) }), nil)
+            .sink(receiveCompletion: { receiveCompletion in
+                if case .failure(let error) = receiveCompletion {
+                    completion(nil, error)
                 }
-            ).store(in: &bag)
+            },
+                  receiveValue: { value in
+                completion(INObjectCollection(items: value.map { INPlaylist(from: $0) }), nil)
+            }).store(in: &bag)
+    }
+}
+
+extension INLimitMode {
+    var asLimitMode: LimitMode {
+        switch self {
+        case .first:
+            return LimitMode.first
+        case .last:
+            return LimitMode.last
+        case .any:
+            return LimitMode.any
+        case .unknown:
+            fatalError("No Limit Mode selected")
+        }
     }
 }

@@ -16,7 +16,7 @@ public protocol Artist: HasUri {
     var name: String? { get }
 }
 
-public protocol Track: HasUri {
+public protocol Track: HasUri, Hashable {
     associatedtype SomeArtist: Artist
     var artists: [SomeArtist]? { get }
     var title: String? { get }

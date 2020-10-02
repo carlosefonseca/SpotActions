@@ -5,11 +5,20 @@
 import Foundation
 import Combine
 
+public enum LimitMode {
+    case first, last, any
+}
+
+public enum LimitUnit {
+    case tracks, minutes
+}
+
 public protocol TrackFilterService {
     func filterByTitleArtist<T: Track>(modeIsSelect: Bool, tracks: [T], titles: [String]?, artists: [String]?, and: Bool, isRegex: Bool) -> Result<[T], ErrorMessage>
     func existsInPlaylist<T: Track>(modeIsSelect: Bool, tracks: [T], otherPlaylistId: String) -> AnyPublisher<[T], ErrorMessage>
     func filterTracksWithOtherTracks<T1: Track, T2: Track>(modeIsSelect: Bool, tracks: [T1], otherTracks: [T2]) -> [T1]
     func duplicatedTracks<T: Track>(modeIsSelect: Bool, tracks: [T]) -> [T]
+    func limitTracks<T: Track>(modeIsSelect: Bool, tracks: [T], mode: LimitMode, amount: Int, unit: LimitUnit) -> [T]
 }
 
 public class TrackFilterServiceImplementation: TrackFilterService {
@@ -133,6 +142,94 @@ public class TrackFilterServiceImplementation: TrackFilterService {
         } else {
             return uniqueTracks
         }
+    }
+
+    public func limitTracks<T: Track>(modeIsSelect: Bool, tracks: [T], mode: LimitMode, amount: Int, unit: LimitUnit) -> [T] {
+
+        switch unit {
+        case .tracks:
+
+            switch mode {
+            case .first:
+                return modeIsSelect ? Array(tracks.prefix(amount)) : Array(tracks.dropFirst(amount))
+            case .last:
+                return modeIsSelect ? Array(tracks.suffix(amount)) : Array(tracks.dropLast(amount))
+            case .any:
+                let selection = Set(tracks.shuffled().prefix(amount))
+                if modeIsSelect {
+                    return Array(tracks.filter { selection.contains($0) })
+                } else {
+                    return Array(tracks.filter { !selection.contains($0) })
+                }
+            }
+
+        case .minutes:
+            let amount = Double(amount)
+
+            switch mode {
+            case .first:
+
+                var minutesCounted = 0.0
+                if modeIsSelect {
+                    return Array(
+                        tracks.prefix(while: {
+                            guard minutesCounted < amount else { return false }
+                            minutesCounted += (Double(($0.durationMs ?? 0)) / 1000)/60
+                            return true
+                        })
+                    )
+                } else {
+                    return Array(
+                        tracks.drop(while: {
+                            guard minutesCounted < amount else { return false }
+                            minutesCounted += (Double(($0.durationMs ?? 0)) / 1000)/60
+                            return true
+                        })
+                    )
+                }
+
+            case .last:
+
+                var minutesCounted = 0.0
+                if modeIsSelect {
+                    return Array(
+                        tracks.reversed().prefix(while: {
+                            guard minutesCounted < amount else { return false }
+                            minutesCounted += (Double(($0.durationMs ?? 0)) / 1000)/60
+                            return true
+                    }).reversed()
+                    )
+                } else {
+                    return Array(
+                        tracks.reversed().drop(while: {
+                            guard minutesCounted < amount else { return false }
+                            minutesCounted += (Double(($0.durationMs ?? 0)) / 1000)/60
+                            return true
+                    }).reversed()
+                    )
+                }
+
+            case .any:
+
+                var minutesCounted = 0.0
+                let selection = Set(
+                    tracks.shuffled().prefix(while: {
+                        minutesCounted += (Double(($0.durationMs ?? 0)) / 1000)/60
+                        return minutesCounted < amount
+                    })
+                )
+
+                if modeIsSelect {
+                    return Array(tracks.filter { selection.contains($0) })
+                } else {
+                    return Array(tracks.filter { !selection.contains($0) })
+                }
+            }
+
+        default:
+            break
+        }
+        return []
     }
 }
 

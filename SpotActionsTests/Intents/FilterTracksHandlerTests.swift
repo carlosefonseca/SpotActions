@@ -202,7 +202,9 @@ class FilterTracksHandlerTests: XCTestCase {
 
         let intent = FilterTracksIntent()
         intent.mode = .reject
-        intent.filter = .first
+        intent.tracks = Array(largeINSet.prefix(4))
+        intent.filter = .limit
+        intent.limitMode = .first
         intent.amount = 2
         intent.unit = .tracks
 
@@ -216,7 +218,7 @@ class FilterTracksHandlerTests: XCTestCase {
         let resultingTrackIds = response?.result?.map { $0.id }
 
         XCTAssertEqual(response != nil, true)
-        XCTAssertEqual(resultingTrackIds, ["id0", "id1"])
+        XCTAssertEqual(resultingTrackIds, ["id3", "id4"])
         XCTAssertEqual(response?.error, nil)
     }
 
@@ -226,8 +228,10 @@ class FilterTracksHandlerTests: XCTestCase {
         var response: FilterTracksIntentResponse?
 
         let intent = FilterTracksIntent()
-        intent.mode = .reject
-        intent.filter = .first
+        intent.mode = .select
+        intent.tracks = largeINSet
+        intent.filter = .limit
+        intent.limitMode = .first
         intent.amount = 5
         intent.unit = .minutes
 
@@ -241,7 +245,7 @@ class FilterTracksHandlerTests: XCTestCase {
         let resultingTrackIds = response?.result?.map { $0.id }
 
         XCTAssertEqual(response != nil, true)
-        XCTAssertEqual(resultingTrackIds, ["id0", "id1", "id2", "id3"])
+        XCTAssertEqual(resultingTrackIds, ["id1", "id2", "id3", "id4"])
         XCTAssertEqual(response?.error, nil)
     }
 
@@ -251,8 +255,10 @@ class FilterTracksHandlerTests: XCTestCase {
         var response: FilterTracksIntentResponse?
 
         let intent = FilterTracksIntent()
-        intent.mode = .reject
-        intent.filter = .first
+        intent.mode = .select
+        intent.tracks = largeINSet
+        intent.filter = .limit
+        intent.limitMode = .first
         intent.amount = 1
         intent.unit = .hours
 
@@ -267,6 +273,7 @@ class FilterTracksHandlerTests: XCTestCase {
         let expectedTracks = Array(largeINSet.prefix(40))
 
         XCTAssertEqual(response != nil, true)
+        XCTAssertEqual(resultingTracks?.count, expectedTracks.count)
         XCTAssertEqual(resultingTracks, expectedTracks)
         XCTAssertEqual(response?.error, nil)
     }

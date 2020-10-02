@@ -163,23 +163,13 @@
 				</dict>
 				<dict>
 					<key>INEnumValueDisplayName</key>
-					<string>first</string>
+					<string>limit</string>
 					<key>INEnumValueDisplayNameID</key>
 					<string>w74CU2</string>
 					<key>INEnumValueIndex</key>
 					<integer>6</integer>
 					<key>INEnumValueName</key>
-					<string>first</string>
-				</dict>
-				<dict>
-					<key>INEnumValueDisplayName</key>
-					<string>last</string>
-					<key>INEnumValueDisplayNameID</key>
-					<string>tXd4xP</string>
-					<key>INEnumValueIndex</key>
-					<integer>7</integer>
-					<key>INEnumValueName</key>
-					<string>last</string>
+					<string>limit</string>
 				</dict>
 			</array>
 		</dict>
@@ -228,13 +218,13 @@
 		</dict>
 		<dict>
 			<key>INEnumDisplayName</key>
-			<string>Unit</string>
+			<string>IN Unit</string>
 			<key>INEnumDisplayNameID</key>
 			<string>zLDCLD</string>
 			<key>INEnumGeneratesHeader</key>
 			<true/>
 			<key>INEnumName</key>
-			<string>Unit</string>
+			<string>INUnit</string>
 			<key>INEnumType</key>
 			<string>Regular</string>
 			<key>INEnumValues</key>
@@ -322,17 +312,70 @@
 				</dict>
 			</array>
 		</dict>
+		<dict>
+			<key>INEnumDisplayName</key>
+			<string>IN Limit Mode</string>
+			<key>INEnumDisplayNameID</key>
+			<string>8ik00w</string>
+			<key>INEnumGeneratesHeader</key>
+			<true/>
+			<key>INEnumName</key>
+			<string>INLimitMode</string>
+			<key>INEnumType</key>
+			<string>Regular</string>
+			<key>INEnumValues</key>
+			<array>
+				<dict>
+					<key>INEnumValueDisplayName</key>
+					<string>unknown</string>
+					<key>INEnumValueDisplayNameID</key>
+					<string>N6AU5l</string>
+					<key>INEnumValueName</key>
+					<string>unknown</string>
+				</dict>
+				<dict>
+					<key>INEnumValueDisplayName</key>
+					<string>first</string>
+					<key>INEnumValueDisplayNameID</key>
+					<string>6WxmrF</string>
+					<key>INEnumValueIndex</key>
+					<integer>1</integer>
+					<key>INEnumValueName</key>
+					<string>first</string>
+				</dict>
+				<dict>
+					<key>INEnumValueDisplayName</key>
+					<string>last</string>
+					<key>INEnumValueDisplayNameID</key>
+					<string>DAcu23</string>
+					<key>INEnumValueIndex</key>
+					<integer>2</integer>
+					<key>INEnumValueName</key>
+					<string>last</string>
+				</dict>
+				<dict>
+					<key>INEnumValueDisplayName</key>
+					<string>any</string>
+					<key>INEnumValueDisplayNameID</key>
+					<string>uxcuPK</string>
+					<key>INEnumValueIndex</key>
+					<integer>3</integer>
+					<key>INEnumValueName</key>
+					<string>any</string>
+				</dict>
+			</array>
+		</dict>
 	</array>
 	<key>INIntentDefinitionModelVersion</key>
 	<string>1.2</string>
 	<key>INIntentDefinitionNamespace</key>
 	<string>3vrzzw</string>
 	<key>INIntentDefinitionSystemVersion</key>
-	<string>19G2021</string>
+	<string>19H2</string>
 	<key>INIntentDefinitionToolsBuildVersion</key>
-	<string>12A7209</string>
+	<string>12A7300</string>
 	<key>INIntentDefinitionToolsVersion</key>
-	<string>12.0</string>
+	<string>12.0.1</string>
 	<key>INIntents</key>
 	<array>
 		<dict>
@@ -1089,26 +1132,22 @@
 			<key>INIntentKeyParameter</key>
 			<string>tracks</string>
 			<key>INIntentLastParameterTag</key>
-			<integer>31</integer>
+			<integer>33</integer>
 			<key>INIntentManagedParameterCombinations</key>
 			<dict>
 				<key>mode,tracks,filter</key>
 				<dict>
 					<key>INIntentParameterCombinationSupportsBackgroundExecution</key>
 					<true/>
-					<key>INIntentParameterCombinationTitle</key>
-					<string>${mode} tracks from ${tracks} that ${filter}</string>
-					<key>INIntentParameterCombinationTitleID</key>
-					<string>CYmkUz</string>
 					<key>INIntentParameterCombinationUpdatesLinked</key>
 					<true/>
 				</dict>
-				<key>mode,tracks,filter,amount,unit</key>
+				<key>mode,tracks,filter,amount,unit,limitMode</key>
 				<dict>
 					<key>INIntentParameterCombinationSupportsBackgroundExecution</key>
 					<true/>
 					<key>INIntentParameterCombinationTitle</key>
-					<string>${mode} ${filter} ${amount} ${unit} from ${tracks}</string>
+					<string>${mode} ${filter} ${limitMode} ${amount} ${unit} from ${tracks}</string>
 					<key>INIntentParameterCombinationTitleID</key>
 					<string>lw76bl</string>
 					<key>INIntentParameterCombinationUpdatesLinked</key>
@@ -1559,14 +1598,237 @@
 					<key>INIntentParameterConfigurable</key>
 					<true/>
 					<key>INIntentParameterDisplayName</key>
-					<string>Amount</string>
+					<string>Titles</string>
 					<key>INIntentParameterDisplayNameID</key>
-					<string>Q8D5gA</string>
+					<string>EM2Sax</string>
 					<key>INIntentParameterDisplayPriority</key>
 					<integer>9</integer>
 					<key>INIntentParameterMetadata</key>
 					<dict>
+						<key>INIntentParameterMetadataCapitalization</key>
+						<string>Sentences</string>
+						<key>INIntentParameterMetadataDefaultValueID</key>
+						<string>1ujvI0</string>
+					</dict>
+					<key>INIntentParameterName</key>
+					<string>orTitles</string>
+					<key>INIntentParameterPromptDialogs</key>
+					<array>
+						<dict>
+							<key>INIntentParameterPromptDialogCustom</key>
+							<true/>
+							<key>INIntentParameterPromptDialogType</key>
+							<string>Configuration</string>
+						</dict>
+						<dict>
+							<key>INIntentParameterPromptDialogCustom</key>
+							<true/>
+							<key>INIntentParameterPromptDialogType</key>
+							<string>Primary</string>
+						</dict>
+					</array>
+					<key>INIntentParameterRelationship</key>
+					<dict>
+						<key>INIntentParameterRelationshipParentName</key>
+						<string>filter</string>
+						<key>INIntentParameterRelationshipPredicateName</key>
+						<string>EnumHasExactValue</string>
+						<key>INIntentParameterRelationshipPredicateValue</key>
+						<string>titleOrArtist</string>
+					</dict>
+					<key>INIntentParameterSupportsMultipleValues</key>
+					<true/>
+					<key>INIntentParameterTag</key>
+					<integer>28</integer>
+					<key>INIntentParameterType</key>
+					<string>String</string>
+				</dict>
+				<dict>
+					<key>INIntentParameterConfigurable</key>
+					<true/>
+					<key>INIntentParameterDisplayName</key>
+					<string>Artists</string>
+					<key>INIntentParameterDisplayNameID</key>
+					<string>97C2b1</string>
+					<key>INIntentParameterDisplayPriority</key>
+					<integer>10</integer>
+					<key>INIntentParameterMetadata</key>
+					<dict>
+						<key>INIntentParameterMetadataCapitalization</key>
+						<string>Sentences</string>
+						<key>INIntentParameterMetadataDefaultValueID</key>
+						<string>a1M40e</string>
+					</dict>
+					<key>INIntentParameterName</key>
+					<string>orArtists</string>
+					<key>INIntentParameterPromptDialogs</key>
+					<array>
+						<dict>
+							<key>INIntentParameterPromptDialogCustom</key>
+							<true/>
+							<key>INIntentParameterPromptDialogType</key>
+							<string>Configuration</string>
+						</dict>
+						<dict>
+							<key>INIntentParameterPromptDialogCustom</key>
+							<true/>
+							<key>INIntentParameterPromptDialogType</key>
+							<string>Primary</string>
+						</dict>
+					</array>
+					<key>INIntentParameterRelationship</key>
+					<dict>
+						<key>INIntentParameterRelationshipParentName</key>
+						<string>filter</string>
+						<key>INIntentParameterRelationshipPredicateName</key>
+						<string>EnumHasExactValue</string>
+						<key>INIntentParameterRelationshipPredicateValue</key>
+						<string>titleOrArtist</string>
+					</dict>
+					<key>INIntentParameterSupportsMultipleValues</key>
+					<true/>
+					<key>INIntentParameterTag</key>
+					<integer>29</integer>
+					<key>INIntentParameterType</key>
+					<string>String</string>
+				</dict>
+				<dict>
+					<key>INIntentParameterConfigurable</key>
+					<true/>
+					<key>INIntentParameterDisplayName</key>
+					<string>Is Regex</string>
+					<key>INIntentParameterDisplayNameID</key>
+					<string>uAiobd</string>
+					<key>INIntentParameterDisplayPriority</key>
+					<integer>11</integer>
+					<key>INIntentParameterMetadata</key>
+					<dict>
+						<key>INIntentParameterMetadataFalseDisplayName</key>
+						<string>false</string>
+						<key>INIntentParameterMetadataFalseDisplayNameID</key>
+						<string>QyffJi</string>
+						<key>INIntentParameterMetadataTrueDisplayName</key>
+						<string>true</string>
+						<key>INIntentParameterMetadataTrueDisplayNameID</key>
+						<string>vDLg7o</string>
+					</dict>
+					<key>INIntentParameterName</key>
+					<string>orIsRegex</string>
+					<key>INIntentParameterPromptDialogs</key>
+					<array>
+						<dict>
+							<key>INIntentParameterPromptDialogCustom</key>
+							<true/>
+							<key>INIntentParameterPromptDialogType</key>
+							<string>Configuration</string>
+						</dict>
+						<dict>
+							<key>INIntentParameterPromptDialogCustom</key>
+							<true/>
+							<key>INIntentParameterPromptDialogType</key>
+							<string>Primary</string>
+						</dict>
+					</array>
+					<key>INIntentParameterRelationship</key>
+					<dict>
+						<key>INIntentParameterRelationshipParentName</key>
+						<string>filter</string>
+						<key>INIntentParameterRelationshipPredicateName</key>
+						<string>EnumHasExactValue</string>
+						<key>INIntentParameterRelationshipPredicateValue</key>
+						<string>titleOrArtist</string>
+					</dict>
+					<key>INIntentParameterTag</key>
+					<integer>31</integer>
+					<key>INIntentParameterType</key>
+					<string>Boolean</string>
+				</dict>
+				<dict>
+					<key>INIntentParameterConfigurable</key>
+					<true/>
+					<key>INIntentParameterDisplayName</key>
+					<string>Limit Mode</string>
+					<key>INIntentParameterDisplayNameID</key>
+					<string>VBW5Y1</string>
+					<key>INIntentParameterDisplayPriority</key>
+					<integer>12</integer>
+					<key>INIntentParameterEnumType</key>
+					<string>INLimitMode</string>
+					<key>INIntentParameterEnumTypeNamespace</key>
+					<string>3vrzzw</string>
+					<key>INIntentParameterMetadata</key>
+					<dict>
+						<key>INIntentParameterMetadataDefaultValue</key>
+						<string>first</string>
+					</dict>
+					<key>INIntentParameterName</key>
+					<string>limitMode</string>
+					<key>INIntentParameterPromptDialogs</key>
+					<array>
+						<dict>
+							<key>INIntentParameterPromptDialogCustom</key>
+							<true/>
+							<key>INIntentParameterPromptDialogType</key>
+							<string>Configuration</string>
+						</dict>
+						<dict>
+							<key>INIntentParameterPromptDialogCustom</key>
+							<true/>
+							<key>INIntentParameterPromptDialogType</key>
+							<string>Primary</string>
+						</dict>
+						<dict>
+							<key>INIntentParameterPromptDialogCustom</key>
+							<true/>
+							<key>INIntentParameterPromptDialogFormatString</key>
+							<string>There are ${count} options matching ‘${limitMode}’.</string>
+							<key>INIntentParameterPromptDialogFormatStringID</key>
+							<string>ytO3hN</string>
+							<key>INIntentParameterPromptDialogType</key>
+							<string>DisambiguationIntroduction</string>
+						</dict>
+						<dict>
+							<key>INIntentParameterPromptDialogCustom</key>
+							<true/>
+							<key>INIntentParameterPromptDialogFormatString</key>
+							<string>Just to confirm, you wanted ‘${limitMode}’?</string>
+							<key>INIntentParameterPromptDialogFormatStringID</key>
+							<string>Z34Qsl</string>
+							<key>INIntentParameterPromptDialogType</key>
+							<string>Confirmation</string>
+						</dict>
+					</array>
+					<key>INIntentParameterRelationship</key>
+					<dict>
+						<key>INIntentParameterRelationshipParentName</key>
+						<string>filter</string>
+						<key>INIntentParameterRelationshipPredicateName</key>
+						<string>EnumHasExactValue</string>
+						<key>INIntentParameterRelationshipPredicateValue</key>
+						<string>limit</string>
+					</dict>
+					<key>INIntentParameterTag</key>
+					<integer>33</integer>
+					<key>INIntentParameterType</key>
+					<string>Integer</string>
+				</dict>
+				<dict>
+					<key>INIntentParameterConfigurable</key>
+					<true/>
+					<key>INIntentParameterDisplayName</key>
+					<string>Amount</string>
+					<key>INIntentParameterDisplayNameID</key>
+					<string>Q8D5gA</string>
+					<key>INIntentParameterDisplayPriority</key>
+					<integer>13</integer>
+					<key>INIntentParameterMetadata</key>
+					<dict>
+						<key>INIntentParameterMetadataDefaultValue</key>
+						<integer>10</integer>
 						<key>INIntentParameterMetadataMaximumValue</key>
+						<data>
+						</data>
+						<key>INIntentParameterMetadataMinimumValue</key>
 						<integer>1</integer>
 						<key>INIntentParameterMetadataType</key>
 						<string>Field</string>
@@ -1595,7 +1857,7 @@
 						<key>INIntentParameterRelationshipPredicateName</key>
 						<string>EnumHasExactValue</string>
 						<key>INIntentParameterRelationshipPredicateValue</key>
-						<string>first</string>
+						<string>limit</string>
 					</dict>
 					<key>INIntentParameterTag</key>
 					<integer>23</integer>
@@ -1610,9 +1872,9 @@
 					<key>INIntentParameterDisplayNameID</key>
 					<string>idFWMT</string>
 					<key>INIntentParameterDisplayPriority</key>
-					<integer>10</integer>
+					<integer>14</integer>
 					<key>INIntentParameterEnumType</key>
-					<string>Unit</string>
+					<string>INUnit</string>
 					<key>INIntentParameterEnumTypeNamespace</key>
 					<string>3vrzzw</string>
 					<key>INIntentParameterMetadata</key>
@@ -1664,161 +1926,12 @@
 						<key>INIntentParameterRelationshipPredicateName</key>
 						<string>EnumHasExactValue</string>
 						<key>INIntentParameterRelationshipPredicateValue</key>
-						<string>first</string>
+						<string>limit</string>
 					</dict>
 					<key>INIntentParameterTag</key>
 					<integer>25</integer>
 					<key>INIntentParameterType</key>
 					<string>Integer</string>
-				</dict>
-				<dict>
-					<key>INIntentParameterConfigurable</key>
-					<true/>
-					<key>INIntentParameterDisplayName</key>
-					<string>Titles</string>
-					<key>INIntentParameterDisplayNameID</key>
-					<string>EM2Sax</string>
-					<key>INIntentParameterDisplayPriority</key>
-					<integer>11</integer>
-					<key>INIntentParameterMetadata</key>
-					<dict>
-						<key>INIntentParameterMetadataCapitalization</key>
-						<string>Sentences</string>
-						<key>INIntentParameterMetadataDefaultValueID</key>
-						<string>1ujvI0</string>
-					</dict>
-					<key>INIntentParameterName</key>
-					<string>orTitles</string>
-					<key>INIntentParameterPromptDialogs</key>
-					<array>
-						<dict>
-							<key>INIntentParameterPromptDialogCustom</key>
-							<true/>
-							<key>INIntentParameterPromptDialogType</key>
-							<string>Configuration</string>
-						</dict>
-						<dict>
-							<key>INIntentParameterPromptDialogCustom</key>
-							<true/>
-							<key>INIntentParameterPromptDialogType</key>
-							<string>Primary</string>
-						</dict>
-					</array>
-					<key>INIntentParameterRelationship</key>
-					<dict>
-						<key>INIntentParameterRelationshipParentName</key>
-						<string>filter</string>
-						<key>INIntentParameterRelationshipPredicateName</key>
-						<string>EnumHasExactValue</string>
-						<key>INIntentParameterRelationshipPredicateValue</key>
-						<string>titleOrArtist</string>
-					</dict>
-					<key>INIntentParameterSupportsMultipleValues</key>
-					<true/>
-					<key>INIntentParameterTag</key>
-					<integer>28</integer>
-					<key>INIntentParameterType</key>
-					<string>String</string>
-				</dict>
-				<dict>
-					<key>INIntentParameterConfigurable</key>
-					<true/>
-					<key>INIntentParameterDisplayName</key>
-					<string>Artists</string>
-					<key>INIntentParameterDisplayNameID</key>
-					<string>97C2b1</string>
-					<key>INIntentParameterDisplayPriority</key>
-					<integer>12</integer>
-					<key>INIntentParameterMetadata</key>
-					<dict>
-						<key>INIntentParameterMetadataCapitalization</key>
-						<string>Sentences</string>
-						<key>INIntentParameterMetadataDefaultValueID</key>
-						<string>a1M40e</string>
-					</dict>
-					<key>INIntentParameterName</key>
-					<string>orArtists</string>
-					<key>INIntentParameterPromptDialogs</key>
-					<array>
-						<dict>
-							<key>INIntentParameterPromptDialogCustom</key>
-							<true/>
-							<key>INIntentParameterPromptDialogType</key>
-							<string>Configuration</string>
-						</dict>
-						<dict>
-							<key>INIntentParameterPromptDialogCustom</key>
-							<true/>
-							<key>INIntentParameterPromptDialogType</key>
-							<string>Primary</string>
-						</dict>
-					</array>
-					<key>INIntentParameterRelationship</key>
-					<dict>
-						<key>INIntentParameterRelationshipParentName</key>
-						<string>filter</string>
-						<key>INIntentParameterRelationshipPredicateName</key>
-						<string>EnumHasExactValue</string>
-						<key>INIntentParameterRelationshipPredicateValue</key>
-						<string>titleOrArtist</string>
-					</dict>
-					<key>INIntentParameterSupportsMultipleValues</key>
-					<true/>
-					<key>INIntentParameterTag</key>
-					<integer>29</integer>
-					<key>INIntentParameterType</key>
-					<string>String</string>
-				</dict>
-				<dict>
-					<key>INIntentParameterConfigurable</key>
-					<true/>
-					<key>INIntentParameterDisplayName</key>
-					<string>Is Regex</string>
-					<key>INIntentParameterDisplayNameID</key>
-					<string>uAiobd</string>
-					<key>INIntentParameterDisplayPriority</key>
-					<integer>13</integer>
-					<key>INIntentParameterMetadata</key>
-					<dict>
-						<key>INIntentParameterMetadataFalseDisplayName</key>
-						<string>false</string>
-						<key>INIntentParameterMetadataFalseDisplayNameID</key>
-						<string>QyffJi</string>
-						<key>INIntentParameterMetadataTrueDisplayName</key>
-						<string>true</string>
-						<key>INIntentParameterMetadataTrueDisplayNameID</key>
-						<string>vDLg7o</string>
-					</dict>
-					<key>INIntentParameterName</key>
-					<string>orIsRegex</string>
-					<key>INIntentParameterPromptDialogs</key>
-					<array>
-						<dict>
-							<key>INIntentParameterPromptDialogCustom</key>
-							<true/>
-							<key>INIntentParameterPromptDialogType</key>
-							<string>Configuration</string>
-						</dict>
-						<dict>
-							<key>INIntentParameterPromptDialogCustom</key>
-							<true/>
-							<key>INIntentParameterPromptDialogType</key>
-							<string>Primary</string>
-						</dict>
-					</array>
-					<key>INIntentParameterRelationship</key>
-					<dict>
-						<key>INIntentParameterRelationshipParentName</key>
-						<string>filter</string>
-						<key>INIntentParameterRelationshipPredicateName</key>
-						<string>EnumHasExactValue</string>
-						<key>INIntentParameterRelationshipPredicateValue</key>
-						<string>titleOrArtist</string>
-					</dict>
-					<key>INIntentParameterTag</key>
-					<integer>31</integer>
-					<key>INIntentParameterType</key>
-					<string>Boolean</string>
 				</dict>
 			</array>
 			<key>INIntentResponse</key>
