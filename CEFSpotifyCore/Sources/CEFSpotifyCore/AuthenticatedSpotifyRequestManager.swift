@@ -8,7 +8,6 @@ import Combine
 public class AuthenticatedSpotifyRequestManager: RequestManager {
 
     let jsonDecoder: JSONDecoder
-    let urlSession = URLSession.shared // TODO: REMOVE
 
     let auth: SpotifyAuthManager
     let requester: URLRequester
@@ -57,21 +56,7 @@ public class AuthenticatedSpotifyRequestManager: RequestManager {
                 return try self.applyAccessTokenToRequest(urlRequest: urlRequest, token: tokenResponse)
             }
             .print("SpotifyRequestManager")
-            .flatMap { urlRequest -> AnyPublisher<Data, Error> in
-
-                self.requester.request(urlRequest: urlRequest)
-//                    .print("SpotifyRequestManager")
-                    .catch { (error: UrlRequesterError) -> AnyPublisher<Data, Error> in
-                        if case UrlRequesterError.apiError(let response, let data) = error {
-                            print(String(data: data, encoding: .utf8) ?? "noData")
-                            if case .unauthorized = response.type {
-                                return self.refreshRetry(urlRequest: urlRequest)
-                            }
-                        }
-                        return Fail<Data, Error>(error: error).eraseToAnyPublisher()
-                    }
-                    .eraseToAnyPublisher()
-
+            .flatMap { urlRequest in self.runTheRequest(urlRequest, canRetry: true)
             }.eraseToAnyPublisher()
     }
 
@@ -81,9 +66,27 @@ public class AuthenticatedSpotifyRequestManager: RequestManager {
                 try self.applyAccessTokenToRequest(urlRequest: urlRequest, token: token)
             }.eraseToAnyPublisher()
             .flatMap { (urlRequest: URLRequest) -> AnyPublisher<Data, Error> in
-                self.requester.request(urlRequest: urlRequest)
-                    .mapError { (error: UrlRequesterError) -> Error in error as Error }
-                    .eraseToAnyPublisher()
+                self.runTheRequest(urlRequest, canRetry: false)
             }.eraseToAnyPublisher()
+    }
+
+    fileprivate func runTheRequest(_ urlRequest: URLRequest, canRetry: Bool) -> AnyPublisher<Data, Error> {
+        return requester.request(urlRequest: urlRequest)
+            .catch { (error: UrlRequesterError) -> AnyPublisher<Data, Error> in
+                self.handleRequest(error: error, urlRequestToRetry: canRetry ? urlRequest : nil)
+            }
+            .eraseToAnyPublisher()
+    }
+
+    fileprivate func handleRequest(error: UrlRequesterError, urlRequestToRetry urlRequest: URLRequest? = nil) -> AnyPublisher<Data, Error> {
+        if let urlRequest = urlRequest {
+            if case UrlRequesterError.apiError(let response, let data) = error {
+                print(String(data: data, encoding: .utf8) ?? "noData")
+                if case .unauthorized = response.type {
+                    return refreshRetry(urlRequest: urlRequest)
+                }
+            }
+        }
+        return Fail<Data, Error>(error: error).eraseToAnyPublisher()
     }
 }

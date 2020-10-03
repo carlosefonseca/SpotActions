@@ -19,9 +19,9 @@ public class UrlSessionRequester: URLRequester {
 
                 switch httpResponse.type {
                 case .success:
-                    print(String(data: data, encoding: .utf8)!)
                     return data
                 default:
+                    print(String(data: data, encoding: .utf8)!)
                     throw UrlRequesterError.apiError(response: httpResponse, data: data)
                 }
             }.mapError { error -> UrlRequesterError in
