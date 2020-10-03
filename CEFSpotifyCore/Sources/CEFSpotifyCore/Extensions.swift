@@ -28,3 +28,14 @@ public extension String {
     }
 }
 
+extension Sequence {
+    func toArray() -> [Iterator.Element] {
+        Array(self)
+    }
+}
+
+extension Sequence where Iterator.Element: Hashable {
+    func toSet() -> Set<Iterator.Element> {
+        Set(self)
+    }
+}

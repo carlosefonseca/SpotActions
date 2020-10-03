@@ -10,17 +10,26 @@ import CEFSpotifyDoubles
 class TrackFilterServiceTests: XCTestCase {
 
     let largeSet = (1..<1000).map {
-        TrackJSON(artists: [ArtistJSON(id: "aid\($0 % 20)", name: "Artist\($0 % 100)")],
+        TrackJSON(artists: [ArtistJSON(id: "aid\($0 % 100)", name: "Artist\($0 % 100)")],
                   externalIds: ["eid": "eid\($0)"],
                   id: "id\($0)",
                   linkedFrom: TrackLinkJSON(id: "lid\($0)"),
                   name: "Track\($0)")
     }
 
+    lazy var t1 = { largeSet[0] }()
+    lazy var t2 = { largeSet[1] }()
+    lazy var t3 = { largeSet[2] }()
+    lazy var t4 = { largeSet[3] }()
+    lazy var t5 = { largeSet[4] }()
+    lazy var t6 = { largeSet[5] }()
+
     let t_ID_567 = TrackJSON(id: "id567")
     let t_EID_789 = TrackJSON(externalIds: ["eid": "eid789"], id: "XXX")
     let t_LID_987 = TrackJSON(id: "lid987")
     let t_LID_345 = TrackJSON(id: "XXX", linkedFrom: TrackLinkJSON(id: "id345"))
+    let t_LID_2 = TrackJSON(id: "XXX", linkedFrom: TrackLinkJSON(id: "id2"))
+    let t_EID_2 = TrackJSON(externalIds: ["eid": "eid2"], id: "XXX")
     let t_XXX = TrackJSON(id: "XXX")
 
     var fakePlaylistsManager: FakePlaylistsManager!
@@ -29,6 +38,90 @@ class TrackFilterServiceTests: XCTestCase {
     override func setUp() {
         fakePlaylistsManager = FakePlaylistsManager()
         service = TrackFilterServiceImplementation(playlistsManager: fakePlaylistsManager)
+    }
+
+    func test_select_all() {
+        let set1 = largeSet
+        let set2 = largeSet
+
+        let output = service.filterTracksWithOtherTracks(modeIsSelect: true,
+                                                         tracks: set1,
+                                                         otherTracks: set2)
+        XCTAssertEqual(output, set1)
+    }
+
+    func test_select_none() {
+        let set1 = [t1, t2, t3]
+        let set2 = [t4, t5, t6]
+
+        let output = service.filterTracksWithOtherTracks(modeIsSelect: true, tracks: set1, otherTracks: set2)
+        XCTAssertEqual(output, [])
+    }
+
+    func test_select_partial() {
+        let set1 = [t1, t2, t3, t4, t5, t6]
+        let set2 = [t4, t5, t6]
+
+        let output = service.filterTracksWithOtherTracks(modeIsSelect: true, tracks: set1, otherTracks: set2)
+        XCTAssertEqual(output, set2)
+    }
+
+    func test_matches_two_different_tracks_by_linked_track() {
+        let set1 = [t1, t2]
+        let set2 = [t_LID_2]
+
+        let output = service.filterTracksWithOtherTracks(modeIsSelect: true, tracks: set1, otherTracks: set2)
+        XCTAssertEqual(output, [t2])
+    }
+
+    func test_matches_two_different_tracks_by_external_id() {
+        let set1 = [t1, t2]
+        let set2 = [t_EID_2]
+
+        let output = service.filterTracksWithOtherTracks(modeIsSelect: true, tracks: set1, otherTracks: set2)
+        XCTAssertEqual(output, [t2])
+    }
+
+    func test_select_large() {
+        let set1 = [t_ID_567, t_EID_789, t_LID_987, t_LID_345, t_XXX]
+        let set2 = largeSet
+
+        let output = service.filterTracksWithOtherTracks(modeIsSelect: true, tracks: set1, otherTracks: set2)
+        XCTAssertEqual(output, [t_ID_567, t_EID_789, t_LID_987, t_LID_345])
+    }
+
+    // MARK: - REJECT
+
+    func test_rejects_tracks_that_exist_in_other_set() {
+        let set1 = [t1, t2, t3, t4, t5, t6]
+        let set2 = [t1, t2, t3, t4, t5]
+
+        let output = service.filterTracksWithOtherTracks(modeIsSelect: false, tracks: set1, otherTracks: set2)
+        XCTAssertEqual(output, [t6])
+    }
+
+    func test_rejects_tracks_that_matches_by_linked_track() {
+        let set1 = [t1, t2]
+        let set2 = [t_LID_2]
+
+        let output = service.filterTracksWithOtherTracks(modeIsSelect: false, tracks: set1, otherTracks: set2)
+        XCTAssertEqual(output, [t1])
+    }
+
+    func test_rejects_tracks_that_matches_two_different_tracks_by_external_id() {
+        let set1 = [t1, t2]
+        let set2 = [t_EID_2]
+
+        let output = service.filterTracksWithOtherTracks(modeIsSelect: false, tracks: set1, otherTracks: set2)
+        XCTAssertEqual(output, [t1])
+    }
+
+    func test_reject_large() {
+        let set1 = [t_ID_567, t_EID_789, t_LID_987, t_LID_345, t_XXX]
+        let set2 = largeSet
+
+        let output = service.filterTracksWithOtherTracks(modeIsSelect: false, tracks: set1, otherTracks: set2)
+        XCTAssertEqual(output, [t_XXX])
     }
 
     // MARK: - Title
@@ -261,8 +354,8 @@ class TrackFilterServiceTests: XCTestCase {
     func test_filter_by_title_or_artist_plain_match_multiple() {
         let output = service.filterByTitleArtist(modeIsSelect: true,
                                                  tracks: largeSet,
-                                                 titles: ["Track101", "Track202"],
-                                                 artists: ["Artist1"],
+                                                 titles: ["Track103", "Track202"],
+                                                 artists: ["Artist10"],
                                                  and: false,
                                                  isRegex: false)
 
@@ -270,17 +363,18 @@ class TrackFilterServiceTests: XCTestCase {
 
         let ids = value.map { $0.id }
 
-        let expectation = ["id1",
-                           "id101",
-                           "id201",
+        let expectation = ["id10",
+                           "id103",
+                           "id110",
                            "id202",
-                           "id301",
-                           "id401",
-                           "id501",
-                           "id601",
-                           "id701",
-                           "id801",
-                           "id901"]
+                           "id210",
+                           "id310",
+                           "id410",
+                           "id510",
+                           "id610",
+                           "id710",
+                           "id810",
+                           "id910"]
 
         XCTAssertEqual(ids, expectation)
     }

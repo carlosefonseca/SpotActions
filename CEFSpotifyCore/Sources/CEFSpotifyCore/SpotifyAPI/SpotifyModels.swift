@@ -171,6 +171,12 @@ extension TrackJSON: Track {
     public var linkedTrackId: String? { linkedFrom?.id }
 }
 
+extension TrackJSON: CustomStringConvertible {
+    public var description: String {
+        return "TrackJSON[\(id), \(name ?? "name?"), \(artists?.map { $0.name ?? "?" }.joined(separator: ",") ?? "artists?")]"
+    }
+}
+
 public extension TrackJSON {
     init(id: String) {
         self.id = id

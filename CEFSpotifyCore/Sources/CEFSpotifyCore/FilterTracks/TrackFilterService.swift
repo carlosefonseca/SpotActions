@@ -151,15 +151,15 @@ public class TrackFilterServiceImplementation: TrackFilterService {
 
             switch mode {
             case .first:
-                return modeIsSelect ? Array(tracks.prefix(amount)) : Array(tracks.dropFirst(amount))
+                return modeIsSelect ? tracks.prefix(amount).toArray() : tracks.dropFirst(amount).toArray()
             case .last:
-                return modeIsSelect ? Array(tracks.suffix(amount)) : Array(tracks.dropLast(amount))
+                return modeIsSelect ? tracks.suffix(amount).toArray() : tracks.dropLast(amount).toArray()
             case .any:
                 let selection = Set(tracks.shuffled().prefix(amount))
                 if modeIsSelect {
-                    return Array(tracks.filter { selection.contains($0) })
+                    return tracks.filter { selection.contains($0) }.toArray()
                 } else {
-                    return Array(tracks.filter { !selection.contains($0) })
+                    return tracks.filter { !selection.contains($0) }.toArray()
                 }
             }
 
@@ -171,63 +171,60 @@ public class TrackFilterServiceImplementation: TrackFilterService {
 
                 var minutesCounted = 0.0
                 if modeIsSelect {
-                    return Array(
-                        tracks.prefix(while: {
-                            guard minutesCounted < amount else { return false }
-                            minutesCounted += (Double(($0.durationMs ?? 0)) / 1000)/60
-                            return true
-                        })
-                    )
+                    return tracks.prefix(while: {
+                        guard minutesCounted < amount else { return false }
+                        minutesCounted += (Double($0.durationMs ?? 0) / 1000) / 60
+                        return true
+                    }).toArray()
                 } else {
-                    return Array(
-                        tracks.drop(while: {
-                            guard minutesCounted < amount else { return false }
-                            minutesCounted += (Double(($0.durationMs ?? 0)) / 1000)/60
-                            return true
-                        })
-                    )
+                    return tracks.drop(while: {
+                        guard minutesCounted < amount else { return false }
+                        minutesCounted += (Double($0.durationMs ?? 0) / 1000) / 60
+                        return true
+                    }).toArray()
                 }
 
             case .last:
-
                 var minutesCounted = 0.0
                 if modeIsSelect {
-                    return Array(
-                        tracks.reversed().prefix(while: {
+                    return tracks
+                        .reversed()
+                        .prefix(while: {
                             guard minutesCounted < amount else { return false }
-                            minutesCounted += (Double(($0.durationMs ?? 0)) / 1000)/60
+                            minutesCounted += (Double($0.durationMs ?? 0) / 1000) / 60
                             return true
-                    }).reversed()
-                    )
+                        })
+                        .reversed()
+                        .toArray()
+
                 } else {
-                    return Array(
-                        tracks.reversed().drop(while: {
+                    return tracks
+                        .reversed()
+                        .drop(while: {
                             guard minutesCounted < amount else { return false }
-                            minutesCounted += (Double(($0.durationMs ?? 0)) / 1000)/60
+                            minutesCounted += (Double($0.durationMs ?? 0) / 1000) / 60
                             return true
-                    }).reversed()
-                    )
+                        })
+                        .reversed()
+                        .toArray()
                 }
 
             case .any:
 
                 var minutesCounted = 0.0
-                let selection = Set(
-                    tracks.shuffled().prefix(while: {
-                        minutesCounted += (Double(($0.durationMs ?? 0)) / 1000)/60
+                let selection = tracks
+                    .shuffled()
+                    .prefix(while: {
+                        minutesCounted += (Double($0.durationMs ?? 0) / 1000) / 60
                         return minutesCounted < amount
-                    })
-                )
+                    }).toSet()
 
                 if modeIsSelect {
-                    return Array(tracks.filter { selection.contains($0) })
+                    return tracks.filter { selection.contains($0) }.toArray()
                 } else {
-                    return Array(tracks.filter { !selection.contains($0) })
+                    return tracks.filter { !selection.contains($0) }.toArray()
                 }
             }
-
-        default:
-            break
         }
         return []
     }

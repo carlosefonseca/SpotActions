@@ -201,8 +201,35 @@ class FilterTracksHandlerTests: XCTestCase {
         var response: FilterTracksIntentResponse?
 
         let intent = FilterTracksIntent()
+        intent.mode = .select
+        intent.tracks = largeINSet.prefix(4).toArray()
+        intent.filter = .limit
+        intent.limitMode = .first
+        intent.amount = 2
+        intent.unit = .tracks
+
+        handler.handle(intent: intent) { r in
+            response = r
+            completion.fulfill()
+        }
+
+        waitForExpectations(timeout: 1)
+
+        let resultingTrackIds = response?.result?.map { $0.id }
+
+        XCTAssertEqual(response != nil, true)
+        XCTAssertEqual(resultingTrackIds, ["id1", "id2"])
+        XCTAssertEqual(response?.error, nil)
+    }
+
+    func test_filter_reject_first_tracks() {
+        let completion = expectation(description: "completionCalled")
+
+        var response: FilterTracksIntentResponse?
+
+        let intent = FilterTracksIntent()
         intent.mode = .reject
-        intent.tracks = Array(largeINSet.prefix(4))
+        intent.tracks = largeINSet.prefix(4).toArray()
         intent.filter = .limit
         intent.limitMode = .first
         intent.amount = 2
@@ -270,11 +297,96 @@ class FilterTracksHandlerTests: XCTestCase {
         waitForExpectations(timeout: 1)
 
         let resultingTracks = response?.result
-        let expectedTracks = Array(largeINSet.prefix(40))
+        let expectedTracks = largeINSet.prefix(40).toArray()
 
         XCTAssertEqual(response != nil, true)
         XCTAssertEqual(resultingTracks?.count, expectedTracks.count)
         XCTAssertEqual(resultingTracks, expectedTracks)
+        XCTAssertEqual(response?.error, nil)
+    }
+
+    func test_filter_reject_first_hour() {
+        let completion = expectation(description: "completionCalled")
+
+        var response: FilterTracksIntentResponse?
+
+        let intent = FilterTracksIntent()
+        intent.mode = .reject
+        intent.tracks = largeINSet
+        intent.filter = .limit
+        intent.limitMode = .first
+        intent.amount = 1
+        intent.unit = .hours
+
+        handler.handle(intent: intent) { r in
+            response = r
+            completion.fulfill()
+        }
+
+        waitForExpectations(timeout: 1)
+
+        let resultingTracks = response?.result
+        let expectedTracks = largeINSet.dropFirst(40).toArray()
+
+        XCTAssertEqual(response != nil, true)
+        XCTAssertEqual(resultingTracks?.count, expectedTracks.count)
+        XCTAssertEqual(resultingTracks, expectedTracks)
+        XCTAssertEqual(response?.error, nil)
+    }
+
+    func test_filter_select_last_hour() {
+        let completion = expectation(description: "completionCalled")
+
+        var response: FilterTracksIntentResponse?
+
+        let intent = FilterTracksIntent()
+        intent.mode = .select
+        intent.tracks = largeINSet
+        intent.filter = .limit
+        intent.limitMode = .last
+        intent.amount = 1
+        intent.unit = .hours
+
+        handler.handle(intent: intent) { r in
+            response = r
+            completion.fulfill()
+        }
+
+        waitForExpectations(timeout: 1)
+
+        let resultingTracks = response?.result
+        let expectedTracks = Array(largeINSet.suffix(40))
+
+        XCTAssertEqual(response != nil, true)
+        XCTAssertEqual(resultingTracks?.count, expectedTracks.count)
+        XCTAssertEqual(resultingTracks, expectedTracks)
+        XCTAssertEqual(response?.error, nil)
+    }
+
+    func test_filter_select_any_tracks() {
+        let completion = expectation(description: "completionCalled")
+
+        var response: FilterTracksIntentResponse?
+
+        let intent = FilterTracksIntent()
+        intent.mode = .select
+        intent.tracks = largeINSet
+        intent.filter = .limit
+        intent.limitMode = .any
+        intent.amount = 10
+        intent.unit = .tracks
+
+        handler.handle(intent: intent) { r in
+            response = r
+            completion.fulfill()
+        }
+
+        waitForExpectations(timeout: 1)
+
+        let resultingTracks = response?.result
+
+        XCTAssertEqual(response != nil, true)
+        XCTAssertEqual(resultingTracks?.count, 10)
         XCTAssertEqual(response?.error, nil)
     }
 }
