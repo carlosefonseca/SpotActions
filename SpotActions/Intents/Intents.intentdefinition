@@ -163,7 +163,7 @@
 				</dict>
 				<dict>
 					<key>INEnumValueDisplayName</key>
-					<string>limit</string>
+					<string>limited</string>
 					<key>INEnumValueDisplayNameID</key>
 					<string>w74CU2</string>
 					<key>INEnumValueIndex</key>
@@ -1139,6 +1139,10 @@
 				<dict>
 					<key>INIntentParameterCombinationSupportsBackgroundExecution</key>
 					<true/>
+					<key>INIntentParameterCombinationTitle</key>
+					<string>${mode} tracks from ${tracks} that ${filter}</string>
+					<key>INIntentParameterCombinationTitleID</key>
+					<string>o93AUt</string>
 					<key>INIntentParameterCombinationUpdatesLinked</key>
 					<true/>
 				</dict>
@@ -1147,7 +1151,7 @@
 					<key>INIntentParameterCombinationSupportsBackgroundExecution</key>
 					<true/>
 					<key>INIntentParameterCombinationTitle</key>
-					<string>${mode} ${filter} ${limitMode} ${amount} ${unit} from ${tracks}</string>
+					<string>${mode} subset of tracks ${filter} to ${limitMode} ${amount} ${unit} of ${tracks}</string>
 					<key>INIntentParameterCombinationTitleID</key>
 					<string>lw76bl</string>
 					<key>INIntentParameterCombinationUpdatesLinked</key>

@@ -13,6 +13,7 @@ public extension HasUri {
 }
 
 public protocol Artist: HasUri {
+    var id: SpotifyID { get }
     var name: String? { get }
 }
 

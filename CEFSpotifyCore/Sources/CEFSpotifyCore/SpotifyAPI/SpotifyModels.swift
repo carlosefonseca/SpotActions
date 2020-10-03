@@ -189,7 +189,7 @@ public struct ArtistJSON: Artist, ModelJSON, Hashable {
     /// A link to the Web API endpoint providing full details of the artist.
     public var href: String?
     /// The Spotify ID for the artist.
-    public var id: String?
+    public var id: SpotifyID
     /// The name of the artist.
     public var name: String?
     /// The object type: "artist"

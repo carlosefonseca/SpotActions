@@ -24,6 +24,7 @@ extension INArtist: Artist {
     }
 
     public var name: String? { displayString }
+    public var id: SpotifyID { identifier! }
 }
 
 extension INPlaylist: Playlist {

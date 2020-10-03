@@ -105,6 +105,7 @@ public class TrackFilterServiceImplementation: TrackFilterService {
 
         var possibleIds = Set<String>()
         var otherExternalIds = Set<String>()
+        var artistTrackTitles = [SpotifyID: Set<String>]()
         var uniqueTracks = [T]()
         var duplicatedTracks = [T]()
 
@@ -125,6 +126,16 @@ public class TrackFilterServiceImplementation: TrackFilterService {
                 return
             }
 
+            if let artistId = track.artists?.first?.id,
+                let artistTracks = artistTrackTitles[artistId],
+                let title = track.title,
+                artistTracks.contains(title) {
+                duplicatedTracks.append(track)
+                return
+            }
+
+            // NEW TRACK
+
             possibleIds.insert(track.id)
             if let linkedTrack = track.linkedTrackId {
                 possibleIds.insert(linkedTrack)
@@ -132,6 +143,14 @@ public class TrackFilterServiceImplementation: TrackFilterService {
 
             if let eIds = track.externalIdsStr {
                 otherExternalIds = otherExternalIds.union(eIds)
+            }
+
+            if let title = track.title,
+                let artistId = track.artists?.first?.id {
+                if artistTrackTitles[artistId] == nil {
+                    artistTrackTitles[artistId] = Set<String>()
+                }
+                artistTrackTitles[artistId]!.insert(title)
             }
 
             uniqueTracks.append(track)
@@ -215,8 +234,9 @@ public class TrackFilterServiceImplementation: TrackFilterService {
                 let selection = tracks
                     .shuffled()
                     .prefix(while: {
+                        guard minutesCounted < amount else { return false }
                         minutesCounted += (Double($0.durationMs ?? 0) / 1000) / 60
-                        return minutesCounted < amount
+                        return true
                     }).toSet()
 
                 if modeIsSelect {
@@ -226,7 +246,6 @@ public class TrackFilterServiceImplementation: TrackFilterService {
                 }
             }
         }
-        return []
     }
 }
 
