@@ -7,6 +7,7 @@ import Combine
 import XCTest
 @testable import CEFSpotifyCore
 import CEFSpotifyDoubles
+import CombineExpectations
 
 struct TestError: Error, Equatable {}
 
@@ -260,6 +261,25 @@ class PlaylistsManagerTests: XCTestCase {
             .add(tracks: ["track3", "track4"], playlistId: "playlist1", index: nil),
         ]
         XCTAssertEqual(fakeGateway.calls, expectedCalls)
+    }
+
+    func test_get_multiple_playlist_tracks() {
+        let pIDs = ["p1", "p2", "p3", "p4"]
+
+        let playlist1 = PagedTracksJSON(href: nil, items: [pageTrack1], limit: 1, next: nil, offset: 0, previous: nil, total: 1)
+        let playlist2 = PagedTracksJSON(href: nil, items: [pageTrack2], limit: 1, next: nil, offset: 0, previous: nil, total: 1)
+        let playlist3 = PagedTracksJSON(href: nil, items: [pageTrack3], limit: 1, next: nil, offset: 0, previous: nil, total: 1)
+        let playlist4 = PagedTracksJSON(href: nil, items: [pageTrack4], limit: 1, next: nil, offset: 0, previous: nil, total: 1)
+
+        fakeGateway.playlistTracksResponses.append(contentsOf: [
+            .success(playlist1), .success(playlist2), .success(playlist3), .success(playlist4),
+        ])
+
+        let publisher = playlistsManager.getMultiplePlaylistTracks(playlistIds: pIDs)
+
+        let elements = try? wait(for: publisher.record().elements, timeout: 1)
+
+        XCTAssertEqual(elements, [[track1], [track2], [track3], [track4]])
     }
 
     func test_blah() {

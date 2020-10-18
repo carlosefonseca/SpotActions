@@ -55,7 +55,7 @@ class GetUserPlaylistsHandler: NSObject, GetUserPlaylistsIntentHandling {
         fetchPublisher.map {
             let items = (regex != nil) ? $0.filter { $0.name?.contains(regex: regex!) ?? false } : $0
             return items.compactMap { (pJSON) -> INPlaylist in
-                INPlaylist(identifier: pJSON.id!, display: pJSON.name!)
+                INPlaylist(identifier: pJSON.id, display: pJSON.name!)
             }
         }.sink { it in
             switch it {

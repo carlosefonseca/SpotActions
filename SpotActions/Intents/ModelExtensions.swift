@@ -28,6 +28,7 @@ extension INArtist: Artist {
 }
 
 extension INPlaylist: Playlist {
+    public var id: SpotifyID { identifier! }
     public var totalTracks: Int? { self.trackCount?.intValue }
     convenience init(from json: PlaylistJSON) {
         self.init(identifier: json.id, display: json.name!)
@@ -36,6 +37,28 @@ extension INPlaylist: Playlist {
 }
 
 extension INTrack: Track {
+    convenience init(from json: Track) {
+        self.init(identifier: json.id, display: "\(json.title!) - \(json.artistNames.joined(separator: ", "))")
+        self.title = json.title
+
+        self.artists = zip(json.artistIds, json.artistNames)
+            .map { id, name in INArtist(identifier: id, display: name) }
+
+        self.uri = json.uri!
+        self.linkedTrackId = json.linkedTrackId
+
+        self.externalIds = json.externalIdsStr?.compactMap { str in
+            let split = str.split(separator: ":")
+            guard split.count >= 2 else { return nil }
+            return INExternalId(key: String(split.first!), value: String(split.last!))
+        }
+
+        if let millis = json.durationMs {
+            self.durationMillis = millis as NSNumber
+            self.duration = "\(millis / 1000 / 60):\(millis % 60)"
+        }
+    }
+
     convenience init(from json: TrackJSON) {
         self.init(identifier: json.id, display: concatTrackNameArtists(name: json.name!, artists: json.artists!))
         self.title = json.name!
@@ -70,6 +93,14 @@ extension INTrack: Track {
 
     public var externalIdsStr: [String]? {
         externalIds?.compactMap { $0.identifier }
+    }
+
+    public var artistIds: [SpotifyID] {
+        artists?.map { $0.id } ?? []
+    }
+
+    public var artistNames: [SpotifyID] {
+        artists?.map { $0.name ?? "" } ?? []
     }
 }
 

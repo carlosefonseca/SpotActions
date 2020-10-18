@@ -31,6 +31,7 @@ struct Dependencies {
     var playerManager: PlayerManager
 
     var trackFilterService : TrackFilterService
+    var trackMixerService : TrackMixerService
 
     init() {
         keychain = Keychain()
@@ -44,6 +45,7 @@ struct Dependencies {
         playerManager = PlayerManagerImplementation(gateway: gateways.player)
 
         trackFilterService = TrackFilterServiceImplementation(playlistsManager: playlistsManager)
+        trackMixerService = TrackMixerServiceImplementation(playlistsManager: playlistsManager)
     }
 }
 
@@ -87,6 +89,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             return GetPlayingTrackHandler(auth: dependencies.auth, playerManager: dependencies.playerManager)
         case is GetPlayingPlaylistIntent:
             return GetPlayingPlaylistHandler(auth: dependencies.auth, playerManager: dependencies.playerManager, playlistManager: dependencies.playlistsManager)
+        case is MixTracksIntent:
+            return MixTracksHandler(auth: dependencies.auth, playlistsManager: dependencies.playlistsManager, trackMixerService: dependencies.trackMixerService)
         default:
             fatalError("No handler for this intent")
         }

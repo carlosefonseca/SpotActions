@@ -38,7 +38,7 @@ public struct PlaylistJSON: ModelJSON {
     /// A link to the Web API endpoint providing full details of the playlist.
     public var href: String?
     /// The Spotify ID for the playlist.
-    public var id: String?
+    public var id: SpotifyID
     /// Images for the playlist. The array may be empty or contain up to three images. The images are returned by size in descending order. See Working with Playlists.Note: If returned, the source URL for the image ( url ) is temporary and will expire in less than a day.
     public var images: [ImageJSON]??
     /// The name of the playlist.
@@ -54,7 +54,7 @@ public struct PlaylistJSON: ModelJSON {
     /// The Spotify URI for the playlist.
     public var uri: String?
 
-    public init(collaborative: Bool? = nil, description: String? = nil, externalUrls: ExternalUrlJSON? = nil, href: String? = nil, id: String? = nil, images: [ImageJSON]?? = nil, name: String? = nil, owner: PublicUserJSON? = nil, snapshotId: String? = nil, tracks: PagedTracksJSON? = nil, uri: String? = nil) {
+    public init(collaborative: Bool? = nil, description: String? = nil, externalUrls: ExternalUrlJSON? = nil, href: String? = nil, id: String, images: [ImageJSON]?? = nil, name: String? = nil, owner: PublicUserJSON? = nil, snapshotId: String? = nil, tracks: PagedTracksJSON? = nil, uri: String? = nil) {
         self.collaborative = collaborative
         self.description = description
         self.externalUrls = externalUrls
@@ -169,6 +169,14 @@ extension TrackJSON: Track {
     public var title: String? { name }
     public var externalIdsStr: [String]? { externalIds?.compactMap { type, value in "\(type):\(value)" } }
     public var linkedTrackId: String? { linkedFrom?.id }
+
+    public var artistIds: [SpotifyID] {
+        artists?.map { $0.id } ?? []
+    }
+
+    public var artistNames: [SpotifyID] {
+        artists?.map { $0.name ?? "" } ?? []
+    }
 }
 
 extension TrackJSON: CustomStringConvertible {

@@ -18,7 +18,7 @@ public protocol TrackFilterService {
     func existsInPlaylist<T: Track>(modeIsSelect: Bool, tracks: [T], otherPlaylistId: String) -> AnyPublisher<[T], ErrorMessage>
     func filterTracksWithOtherTracks<T1: Track, T2: Track>(modeIsSelect: Bool, tracks: [T1], otherTracks: [T2]) -> [T1]
     func duplicatedTracks<T: Track>(modeIsSelect: Bool, tracks: [T]) -> [T]
-    func limitTracks<T: Track>(modeIsSelect: Bool, tracks: [T], mode: LimitMode, amount: Int, unit: LimitUnit) -> [T]
+    func limitTracks<T: Track & Hashable>(modeIsSelect: Bool, tracks: [T], mode: LimitMode, amount: Int, unit: LimitUnit) -> [T]
 }
 
 public class TrackFilterServiceImplementation: TrackFilterService {
@@ -126,7 +126,7 @@ public class TrackFilterServiceImplementation: TrackFilterService {
                 return
             }
 
-            if let artistId = track.artists?.first?.id,
+            if let artistId = track.artistIds.first,
                 let artistTracks = artistTrackTitles[artistId],
                 let title = track.title,
                 artistTracks.contains(title) {
@@ -146,7 +146,7 @@ public class TrackFilterServiceImplementation: TrackFilterService {
             }
 
             if let title = track.title,
-                let artistId = track.artists?.first?.id {
+                let artistId = track.artistIds.first {
                 if artistTrackTitles[artistId] == nil {
                     artistTrackTitles[artistId] = Set<String>()
                 }
@@ -163,7 +163,7 @@ public class TrackFilterServiceImplementation: TrackFilterService {
         }
     }
 
-    public func limitTracks<T: Track>(modeIsSelect: Bool, tracks: [T], mode: LimitMode, amount: Int, unit: LimitUnit) -> [T] {
+    public func limitTracks<T: Track & Hashable>(modeIsSelect: Bool, tracks: [T], mode: LimitMode, amount: Int, unit: LimitUnit) -> [T] {
 
         switch unit {
         case .tracks:
@@ -258,7 +258,7 @@ private extension Track {
 
         var matchArtist = true
         if let artistRegex = artistRegex {
-            matchArtist = (artists?.first(where: { artist in artist.name?.contains(regex: artistRegex) == true }) != nil)
+            matchArtist = (artistNames.first(where: { name in name.contains(regex: artistRegex) }) != nil)
         }
 
         return matchTitle && matchArtist
@@ -271,7 +271,7 @@ private extension Track {
         }
 
         if let artistRegex = artistRegex,
-            artists?.first(where: { artist in artist.name?.contains(regex: artistRegex) == true }) != nil {
+            artistNames.first(where: { name in name.contains(regex: artistRegex) == true }) != nil {
             return true
         }
 

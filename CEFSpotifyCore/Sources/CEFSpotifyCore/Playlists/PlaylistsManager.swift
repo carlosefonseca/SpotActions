@@ -13,6 +13,7 @@ public protocol PlaylistsManager {
     func getPlaylist(playlistId: SpotifyID) -> AnyPublisher<PlaylistJSON, PlaylistsManagerError>
     func save(tracks: [TrackJSON], on playlist: PlaylistJSON) throws -> AnyPublisher<Never, PlaylistsManagerError>
     func save(tracks: [String], on playlistId: String) throws -> AnyPublisher<Never, PlaylistsManagerError>
+    func getMultiplePlaylistTracks(playlistIds: [SpotifyID]) -> AnyPublisher<[TrackJSON], PlaylistsManagerError>
 }
 
 public class PlaylistsManagerImplementation: PlaylistsManager {
@@ -112,7 +113,7 @@ public class PlaylistsManagerImplementation: PlaylistsManager {
     }
 
     public func save(tracks: [TrackJSON], on playlist: PlaylistJSON) throws -> AnyPublisher<Never, PlaylistsManagerError> {
-        self.save(tracks: tracks.compactMap { $0.id }, on: playlist.id!)
+        self.save(tracks: tracks.compactMap { $0.id }, on: playlist.id)
     }
 
     public func save(tracks: [String], on playlist: String) -> AnyPublisher<Never, PlaylistsManagerError> {
@@ -161,6 +162,14 @@ public class PlaylistsManagerImplementation: PlaylistsManager {
     public func getPlaylist(playlistId: SpotifyID) -> AnyPublisher<PlaylistJSON, PlaylistsManagerError> {
         return self.gateway.getPlaylist(playlistId: playlistId)
             .mapError { PlaylistsManagerError.requestError(error: $0) }
+            .eraseToAnyPublisher()
+    }
+
+    public func getMultiplePlaylistTracks(playlistIds: [SpotifyID]) -> AnyPublisher<[TrackJSON], PlaylistsManagerError> {
+        return playlistIds
+            .publisher
+            .setFailureType(to: PlaylistsManagerError.self)
+            .flatMap { self.getAllPlaylistTracks(playlistId: $0) }
             .eraseToAnyPublisher()
     }
 

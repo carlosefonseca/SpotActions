@@ -38,6 +38,7 @@
 		<string>FilterTracksIntent</string>
 		<string>GetPlayingTrackIntent</string>
 		<string>GetPlayingPlaylistIntent</string>
+		<string>MixTracksIntent</string>
 	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
@@ -49,6 +50,7 @@
 		<string>GetPlaylistTracksIntent</string>
 		<string>GetUserPlaylistsIntent</string>
 		<string>GetUserProfileIntent</string>
+		<string>MixTracksIntent</string>
 		<string>SaveTracksOnPlaylistIntent</string>
 	</array>
 	<key>UIApplicationSceneManifest</key>

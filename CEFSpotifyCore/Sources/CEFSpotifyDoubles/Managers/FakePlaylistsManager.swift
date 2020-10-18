@@ -48,4 +48,8 @@ public class FakePlaylistsManager: PlaylistsManager {
     public func save(tracks: [String], on playlistId: String) throws -> AnyPublisher<Never, PlaylistsManagerError> {
         return Fail(error: PlaylistsManagerError.missingData(message: "TODO!!")).eraseToAnyPublisher()
     }
+
+    public func getMultiplePlaylistTracks(playlistIds: [SpotifyID]) -> AnyPublisher<[TrackJSON], PlaylistsManagerError> {
+        return Fail(error: PlaylistsManagerError.missingData(message: "TODO!!")).eraseToAnyPublisher()
+    }
 }
