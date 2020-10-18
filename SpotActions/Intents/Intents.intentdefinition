@@ -292,7 +292,7 @@
 				</dict>
 				<dict>
 					<key>INEnumValueDisplayName</key>
-					<string>first page</string>
+					<string>first 50</string>
 					<key>INEnumValueDisplayNameID</key>
 					<string>xvtsca</string>
 					<key>INEnumValueIndex</key>
@@ -302,7 +302,7 @@
 				</dict>
 				<dict>
 					<key>INEnumValueDisplayName</key>
-					<string>all pages</string>
+					<string>all</string>
 					<key>INEnumValueDisplayNameID</key>
 					<string>bP9A19</string>
 					<key>INEnumValueIndex</key>
@@ -415,6 +415,162 @@
 					<integer>3</integer>
 					<key>INEnumValueName</key>
 					<string>mix</string>
+				</dict>
+			</array>
+		</dict>
+		<dict>
+			<key>INEnumDisplayName</key>
+			<string>IN Details Of Track</string>
+			<key>INEnumDisplayNameID</key>
+			<string>4tljGK</string>
+			<key>INEnumGeneratesHeader</key>
+			<true/>
+			<key>INEnumName</key>
+			<string>INDetailsOfTrack</string>
+			<key>INEnumType</key>
+			<string>Regular</string>
+			<key>INEnumValues</key>
+			<array>
+				<dict>
+					<key>INEnumValueDisplayName</key>
+					<string>unknown</string>
+					<key>INEnumValueDisplayNameID</key>
+					<string>jAOQZ7</string>
+					<key>INEnumValueName</key>
+					<string>unknown</string>
+				</dict>
+				<dict>
+					<key>INEnumValueDisplayName</key>
+					<string>title</string>
+					<key>INEnumValueDisplayNameID</key>
+					<string>SfYZKB</string>
+					<key>INEnumValueIndex</key>
+					<integer>1</integer>
+					<key>INEnumValueName</key>
+					<string>title</string>
+				</dict>
+				<dict>
+					<key>INEnumValueDisplayName</key>
+					<string>artists</string>
+					<key>INEnumValueDisplayNameID</key>
+					<string>ytMmjK</string>
+					<key>INEnumValueIndex</key>
+					<integer>2</integer>
+					<key>INEnumValueName</key>
+					<string>artists</string>
+				</dict>
+				<dict>
+					<key>INEnumValueDisplayName</key>
+					<string>album</string>
+					<key>INEnumValueDisplayNameID</key>
+					<string>zgMegJ</string>
+					<key>INEnumValueIndex</key>
+					<integer>3</integer>
+					<key>INEnumValueName</key>
+					<string>album</string>
+				</dict>
+				<dict>
+					<key>INEnumValueDisplayName</key>
+					<string>duration</string>
+					<key>INEnumValueDisplayNameID</key>
+					<string>oGrbd8</string>
+					<key>INEnumValueIndex</key>
+					<integer>4</integer>
+					<key>INEnumValueName</key>
+					<string>duration</string>
+				</dict>
+				<dict>
+					<key>INEnumValueDisplayName</key>
+					<string>album artwork</string>
+					<key>INEnumValueDisplayNameID</key>
+					<string>JkuDas</string>
+					<key>INEnumValueIndex</key>
+					<integer>5</integer>
+					<key>INEnumValueName</key>
+					<string>albumArtwork</string>
+				</dict>
+			</array>
+		</dict>
+		<dict>
+			<key>INEnumDisplayName</key>
+			<string>IN Details Of Playlist</string>
+			<key>INEnumDisplayNameID</key>
+			<string>VYob7j</string>
+			<key>INEnumGeneratesHeader</key>
+			<true/>
+			<key>INEnumName</key>
+			<string>INDetailsOfPlaylist</string>
+			<key>INEnumType</key>
+			<string>Regular</string>
+			<key>INEnumValues</key>
+			<array>
+				<dict>
+					<key>INEnumValueDisplayName</key>
+					<string>unknown</string>
+					<key>INEnumValueDisplayNameID</key>
+					<string>Ysr6yC</string>
+					<key>INEnumValueName</key>
+					<string>unknown</string>
+				</dict>
+				<dict>
+					<key>INEnumValueDisplayName</key>
+					<string>tracks</string>
+					<key>INEnumValueDisplayNameID</key>
+					<string>lH9FlG</string>
+					<key>INEnumValueIndex</key>
+					<integer>1</integer>
+					<key>INEnumValueName</key>
+					<string>tracks</string>
+				</dict>
+				<dict>
+					<key>INEnumValueDisplayName</key>
+					<string>name</string>
+					<key>INEnumValueDisplayNameID</key>
+					<string>5iqpVN</string>
+					<key>INEnumValueIndex</key>
+					<integer>2</integer>
+					<key>INEnumValueName</key>
+					<string>name</string>
+				</dict>
+				<dict>
+					<key>INEnumValueDisplayName</key>
+					<string>image</string>
+					<key>INEnumValueDisplayNameID</key>
+					<string>sAT8S9</string>
+					<key>INEnumValueIndex</key>
+					<integer>3</integer>
+					<key>INEnumValueName</key>
+					<string>image</string>
+				</dict>
+				<dict>
+					<key>INEnumValueDisplayName</key>
+					<string>owner</string>
+					<key>INEnumValueDisplayNameID</key>
+					<string>xPDOUU</string>
+					<key>INEnumValueIndex</key>
+					<integer>4</integer>
+					<key>INEnumValueName</key>
+					<string>owner</string>
+				</dict>
+				<dict>
+					<key>INEnumValueDisplayName</key>
+					<string>description</string>
+					<key>INEnumValueDisplayNameID</key>
+					<string>uqiSvG</string>
+					<key>INEnumValueIndex</key>
+					<integer>5</integer>
+					<key>INEnumValueName</key>
+					<string>description</string>
+				</dict>
+				<dict>
+					<key>INEnumValueDisplayName</key>
+					<string>track count</string>
+					<key>INEnumValueDisplayNameID</key>
+					<string>cjFUGs</string>
+					<key>INEnumValueIndex</key>
+					<integer>6</integer>
+					<key>INEnumValueName</key>
+					<string>trackCount</string>
 				</dict>
 			</array>
 		</dict>
@@ -552,15 +708,15 @@
 			<key>INIntentIneligibleForSuggestions</key>
 			<true/>
 			<key>INIntentLastParameterTag</key>
-			<integer>4</integer>
+			<integer>5</integer>
 			<key>INIntentManagedParameterCombinations</key>
 			<dict>
-				<key>filter,fetchPageMode</key>
+				<key>filter,fetchPageMode,owner</key>
 				<dict>
 					<key>INIntentParameterCombinationSupportsBackgroundExecution</key>
 					<true/>
 					<key>INIntentParameterCombinationTitle</key>
-					<string>Get Spotify User Playlists</string>
+					<string>Get ${fetchPageMode} user playlists</string>
 					<key>INIntentParameterCombinationTitleID</key>
 					<string>X8an8T</string>
 					<key>INIntentParameterCombinationUpdatesLinked</key>
@@ -575,55 +731,11 @@
 					<key>INIntentParameterConfigurable</key>
 					<true/>
 					<key>INIntentParameterDisplayName</key>
-					<string>Filter</string>
-					<key>INIntentParameterDisplayNameID</key>
-					<string>ZZSy6H</string>
-					<key>INIntentParameterDisplayPriority</key>
-					<integer>1</integer>
-					<key>INIntentParameterMetadata</key>
-					<dict>
-						<key>INIntentParameterMetadataCapitalization</key>
-						<string>Sentences</string>
-						<key>INIntentParameterMetadataDefaultValueID</key>
-						<string>ILyVRQ</string>
-						<key>INIntentParameterMetadataDisableAutocorrect</key>
-						<true/>
-						<key>INIntentParameterMetadataDisableSmartDashes</key>
-						<true/>
-						<key>INIntentParameterMetadataDisableSmartQuotes</key>
-						<true/>
-					</dict>
-					<key>INIntentParameterName</key>
-					<string>filter</string>
-					<key>INIntentParameterPromptDialogs</key>
-					<array>
-						<dict>
-							<key>INIntentParameterPromptDialogCustom</key>
-							<true/>
-							<key>INIntentParameterPromptDialogType</key>
-							<string>Configuration</string>
-						</dict>
-						<dict>
-							<key>INIntentParameterPromptDialogCustom</key>
-							<true/>
-							<key>INIntentParameterPromptDialogType</key>
-							<string>Primary</string>
-						</dict>
-					</array>
-					<key>INIntentParameterTag</key>
-					<integer>1</integer>
-					<key>INIntentParameterType</key>
-					<string>String</string>
-				</dict>
-				<dict>
-					<key>INIntentParameterConfigurable</key>
-					<true/>
-					<key>INIntentParameterDisplayName</key>
 					<string>Fetch</string>
 					<key>INIntentParameterDisplayNameID</key>
 					<string>BcxIt3</string>
 					<key>INIntentParameterDisplayPriority</key>
-					<integer>2</integer>
+					<integer>1</integer>
 					<key>INIntentParameterEnumType</key>
 					<string>FetchPageMode</string>
 					<key>INIntentParameterEnumTypeNamespace</key>
@@ -674,6 +786,88 @@
 					<integer>4</integer>
 					<key>INIntentParameterType</key>
 					<string>Integer</string>
+				</dict>
+				<dict>
+					<key>INIntentParameterConfigurable</key>
+					<true/>
+					<key>INIntentParameterDisplayName</key>
+					<string>Filter</string>
+					<key>INIntentParameterDisplayNameID</key>
+					<string>ZZSy6H</string>
+					<key>INIntentParameterDisplayPriority</key>
+					<integer>2</integer>
+					<key>INIntentParameterMetadata</key>
+					<dict>
+						<key>INIntentParameterMetadataCapitalization</key>
+						<string>Sentences</string>
+						<key>INIntentParameterMetadataDefaultValueID</key>
+						<string>ILyVRQ</string>
+						<key>INIntentParameterMetadataDisableAutocorrect</key>
+						<true/>
+						<key>INIntentParameterMetadataDisableSmartDashes</key>
+						<true/>
+						<key>INIntentParameterMetadataDisableSmartQuotes</key>
+						<true/>
+					</dict>
+					<key>INIntentParameterName</key>
+					<string>filter</string>
+					<key>INIntentParameterPromptDialogs</key>
+					<array>
+						<dict>
+							<key>INIntentParameterPromptDialogCustom</key>
+							<true/>
+							<key>INIntentParameterPromptDialogType</key>
+							<string>Configuration</string>
+						</dict>
+						<dict>
+							<key>INIntentParameterPromptDialogCustom</key>
+							<true/>
+							<key>INIntentParameterPromptDialogType</key>
+							<string>Primary</string>
+						</dict>
+					</array>
+					<key>INIntentParameterTag</key>
+					<integer>1</integer>
+					<key>INIntentParameterType</key>
+					<string>String</string>
+				</dict>
+				<dict>
+					<key>INIntentParameterConfigurable</key>
+					<true/>
+					<key>INIntentParameterDisplayName</key>
+					<string>Owner</string>
+					<key>INIntentParameterDisplayNameID</key>
+					<string>5OOfyq</string>
+					<key>INIntentParameterDisplayPriority</key>
+					<integer>3</integer>
+					<key>INIntentParameterMetadata</key>
+					<dict>
+						<key>INIntentParameterMetadataCapitalization</key>
+						<string>Sentences</string>
+						<key>INIntentParameterMetadataDefaultValueID</key>
+						<string>VeRpzf</string>
+					</dict>
+					<key>INIntentParameterName</key>
+					<string>owner</string>
+					<key>INIntentParameterPromptDialogs</key>
+					<array>
+						<dict>
+							<key>INIntentParameterPromptDialogCustom</key>
+							<true/>
+							<key>INIntentParameterPromptDialogType</key>
+							<string>Configuration</string>
+						</dict>
+						<dict>
+							<key>INIntentParameterPromptDialogCustom</key>
+							<true/>
+							<key>INIntentParameterPromptDialogType</key>
+							<string>Primary</string>
+						</dict>
+					</array>
+					<key>INIntentParameterTag</key>
+					<integer>5</integer>
+					<key>INIntentParameterType</key>
+					<string>String</string>
 				</dict>
 			</array>
 			<key>INIntentResponse</key>
@@ -2290,6 +2484,8 @@
 			<string>create</string>
 			<key>INIntentConfigurable</key>
 			<true/>
+			<key>INIntentDescription</key>
+			<string>Join tracks from multiple playlists or variables into a single set of tracks.</string>
 			<key>INIntentDescriptionID</key>
 			<string>I1xWyt</string>
 			<key>INIntentIneligibleForSuggestions</key>
@@ -3096,6 +3292,289 @@
 			<key>INIntentVerb</key>
 			<string>Add</string>
 		</dict>
+		<dict>
+			<key>INIntentCategory</key>
+			<string>download</string>
+			<key>INIntentConfigurable</key>
+			<true/>
+			<key>INIntentDescriptionID</key>
+			<string>e0w4y0</string>
+			<key>INIntentIneligibleForSuggestions</key>
+			<true/>
+			<key>INIntentInput</key>
+			<string>track</string>
+			<key>INIntentKeyParameter</key>
+			<string>track</string>
+			<key>INIntentLastParameterTag</key>
+			<integer>4</integer>
+			<key>INIntentManagedParameterCombinations</key>
+			<dict>
+				<key>detail,track</key>
+				<dict>
+					<key>INIntentParameterCombinationSupportsBackgroundExecution</key>
+					<true/>
+					<key>INIntentParameterCombinationTitle</key>
+					<string>Get ${detail} from ${track}</string>
+					<key>INIntentParameterCombinationTitleID</key>
+					<string>fZffgI</string>
+					<key>INIntentParameterCombinationUpdatesLinked</key>
+					<true/>
+				</dict>
+			</dict>
+			<key>INIntentName</key>
+			<string>GetDetailsOfTrack</string>
+			<key>INIntentParameters</key>
+			<array>
+				<dict>
+					<key>INIntentParameterConfigurable</key>
+					<true/>
+					<key>INIntentParameterDisplayName</key>
+					<string>Detail</string>
+					<key>INIntentParameterDisplayNameID</key>
+					<string>TFecBg</string>
+					<key>INIntentParameterDisplayPriority</key>
+					<integer>1</integer>
+					<key>INIntentParameterEnumType</key>
+					<string>INDetailsOfTrack</string>
+					<key>INIntentParameterEnumTypeNamespace</key>
+					<string>3vrzzw</string>
+					<key>INIntentParameterMetadata</key>
+					<dict>
+						<key>INIntentParameterMetadataDefaultValue</key>
+						<string>artists</string>
+					</dict>
+					<key>INIntentParameterName</key>
+					<string>detail</string>
+					<key>INIntentParameterPromptDialogs</key>
+					<array>
+						<dict>
+							<key>INIntentParameterPromptDialogCustom</key>
+							<true/>
+							<key>INIntentParameterPromptDialogType</key>
+							<string>Configuration</string>
+						</dict>
+						<dict>
+							<key>INIntentParameterPromptDialogCustom</key>
+							<true/>
+							<key>INIntentParameterPromptDialogType</key>
+							<string>Primary</string>
+						</dict>
+						<dict>
+							<key>INIntentParameterPromptDialogCustom</key>
+							<true/>
+							<key>INIntentParameterPromptDialogFormatString</key>
+							<string>There are ${count} options matching ‘${detail}’.</string>
+							<key>INIntentParameterPromptDialogFormatStringID</key>
+							<string>deYNhU</string>
+							<key>INIntentParameterPromptDialogType</key>
+							<string>DisambiguationIntroduction</string>
+						</dict>
+						<dict>
+							<key>INIntentParameterPromptDialogCustom</key>
+							<true/>
+							<key>INIntentParameterPromptDialogFormatString</key>
+							<string>Just to confirm, you wanted ‘${detail}’?</string>
+							<key>INIntentParameterPromptDialogFormatStringID</key>
+							<string>yUD7TN</string>
+							<key>INIntentParameterPromptDialogType</key>
+							<string>Confirmation</string>
+						</dict>
+					</array>
+					<key>INIntentParameterTag</key>
+					<integer>3</integer>
+					<key>INIntentParameterType</key>
+					<string>Integer</string>
+				</dict>
+				<dict>
+					<key>INIntentParameterConfigurable</key>
+					<true/>
+					<key>INIntentParameterDisplayName</key>
+					<string>Track</string>
+					<key>INIntentParameterDisplayNameID</key>
+					<string>pq0tyK</string>
+					<key>INIntentParameterDisplayPriority</key>
+					<integer>2</integer>
+					<key>INIntentParameterName</key>
+					<string>track</string>
+					<key>INIntentParameterObjectType</key>
+					<string>INTrack</string>
+					<key>INIntentParameterObjectTypeNamespace</key>
+					<string>3vrzzw</string>
+					<key>INIntentParameterPromptDialogs</key>
+					<array>
+						<dict>
+							<key>INIntentParameterPromptDialogCustom</key>
+							<true/>
+							<key>INIntentParameterPromptDialogType</key>
+							<string>Configuration</string>
+						</dict>
+						<dict>
+							<key>INIntentParameterPromptDialogCustom</key>
+							<true/>
+							<key>INIntentParameterPromptDialogType</key>
+							<string>Primary</string>
+						</dict>
+					</array>
+					<key>INIntentParameterTag</key>
+					<integer>4</integer>
+					<key>INIntentParameterType</key>
+					<string>Object</string>
+				</dict>
+			</array>
+			<key>INIntentResponse</key>
+			<dict>
+				<key>INIntentResponseCodes</key>
+				<array>
+					<dict>
+						<key>INIntentResponseCodeName</key>
+						<string>success</string>
+						<key>INIntentResponseCodeSuccess</key>
+						<true/>
+					</dict>
+					<dict>
+						<key>INIntentResponseCodeConciseFormatString</key>
+						<string>${error}</string>
+						<key>INIntentResponseCodeConciseFormatStringID</key>
+						<string>VGgDoU</string>
+						<key>INIntentResponseCodeName</key>
+						<string>failure</string>
+					</dict>
+					<dict>
+						<key>INIntentResponseCodeConciseFormatString</key>
+						<string>${artist}</string>
+						<key>INIntentResponseCodeConciseFormatStringID</key>
+						<string>tEPkVe</string>
+						<key>INIntentResponseCodeName</key>
+						<string>artist</string>
+						<key>INIntentResponseCodeSuccess</key>
+						<true/>
+					</dict>
+					<dict>
+						<key>INIntentResponseCodeConciseFormatString</key>
+						<string>${albumArtwork}</string>
+						<key>INIntentResponseCodeConciseFormatStringID</key>
+						<string>7Ou5NJ</string>
+						<key>INIntentResponseCodeName</key>
+						<string>albumArtwork</string>
+						<key>INIntentResponseCodeSuccess</key>
+						<true/>
+					</dict>
+				</array>
+				<key>INIntentResponseLastParameterTag</key>
+				<integer>5</integer>
+				<key>INIntentResponseParameters</key>
+				<array>
+					<dict>
+						<key>INIntentResponseParameterDisplayName</key>
+						<string>Artist</string>
+						<key>INIntentResponseParameterDisplayNameID</key>
+						<string>waQuD1</string>
+						<key>INIntentResponseParameterDisplayPriority</key>
+						<integer>1</integer>
+						<key>INIntentResponseParameterName</key>
+						<string>artist</string>
+						<key>INIntentResponseParameterObjectType</key>
+						<string>INArtist</string>
+						<key>INIntentResponseParameterObjectTypeNamespace</key>
+						<string>3vrzzw</string>
+						<key>INIntentResponseParameterTag</key>
+						<integer>4</integer>
+						<key>INIntentResponseParameterType</key>
+						<string>Object</string>
+					</dict>
+					<dict>
+						<key>INIntentResponseParameterDisplayName</key>
+						<string>Album Artwork</string>
+						<key>INIntentResponseParameterDisplayNameID</key>
+						<string>1A62KJ</string>
+						<key>INIntentResponseParameterDisplayPriority</key>
+						<integer>2</integer>
+						<key>INIntentResponseParameterName</key>
+						<string>albumArtwork</string>
+						<key>INIntentResponseParameterTag</key>
+						<integer>3</integer>
+						<key>INIntentResponseParameterType</key>
+						<string>File</string>
+					</dict>
+					<dict>
+						<key>INIntentResponseParameterDisplayName</key>
+						<string>Error</string>
+						<key>INIntentResponseParameterDisplayNameID</key>
+						<string>ljDkXO</string>
+						<key>INIntentResponseParameterDisplayPriority</key>
+						<integer>3</integer>
+						<key>INIntentResponseParameterName</key>
+						<string>error</string>
+						<key>INIntentResponseParameterTag</key>
+						<integer>5</integer>
+						<key>INIntentResponseParameterType</key>
+						<string>String</string>
+					</dict>
+				</array>
+			</dict>
+			<key>INIntentTitle</key>
+			<string>Get Details Of Track</string>
+			<key>INIntentTitleID</key>
+			<string>U3MjWW</string>
+			<key>INIntentType</key>
+			<string>Custom</string>
+			<key>INIntentVerb</key>
+			<string>Get</string>
+		</dict>
+		<dict>
+			<key>INIntentCategory</key>
+			<string>generic</string>
+			<key>INIntentConfigurable</key>
+			<true/>
+			<key>INIntentDescriptionID</key>
+			<string>vK6QJm</string>
+			<key>INIntentManagedParameterCombinations</key>
+			<dict>
+				<key></key>
+				<dict>
+					<key>INIntentParameterCombinationSupportsBackgroundExecution</key>
+					<true/>
+					<key>INIntentParameterCombinationUpdatesLinked</key>
+					<true/>
+				</dict>
+			</dict>
+			<key>INIntentName</key>
+			<string>GetDetailsOfPlaylist</string>
+			<key>INIntentParameterCombinations</key>
+			<dict>
+				<key></key>
+				<dict>
+					<key>INIntentParameterCombinationIsPrimary</key>
+					<true/>
+					<key>INIntentParameterCombinationSupportsBackgroundExecution</key>
+					<true/>
+				</dict>
+			</dict>
+			<key>INIntentResponse</key>
+			<dict>
+				<key>INIntentResponseCodes</key>
+				<array>
+					<dict>
+						<key>INIntentResponseCodeName</key>
+						<string>success</string>
+						<key>INIntentResponseCodeSuccess</key>
+						<true/>
+					</dict>
+					<dict>
+						<key>INIntentResponseCodeName</key>
+						<string>failure</string>
+					</dict>
+				</array>
+			</dict>
+			<key>INIntentTitle</key>
+			<string>Get Details Of Playlist</string>
+			<key>INIntentTitleID</key>
+			<string>cvpiX4</string>
+			<key>INIntentType</key>
+			<string>Custom</string>
+			<key>INIntentVerb</key>
+			<string>Do</string>
+		</dict>
 	</array>
 	<key>INTypes</key>
 	<array>
@@ -3224,7 +3703,7 @@
 			<key>INTypeDisplayNameID</key>
 			<string>I7cI5n</string>
 			<key>INTypeLastPropertyTag</key>
-			<integer>105</integer>
+			<integer>116</integer>
 			<key>INTypeName</key>
 			<string>INPlaylist</string>
 			<key>INTypeProperties</key>
@@ -3307,6 +3786,62 @@
 					<key>INTypePropertyType</key>
 					<string>String</string>
 				</dict>
+				<dict>
+					<key>INTypePropertyDisplayName</key>
+					<string>Image Url</string>
+					<key>INTypePropertyDisplayNameID</key>
+					<string>J2QT6K</string>
+					<key>INTypePropertyDisplayPriority</key>
+					<integer>7</integer>
+					<key>INTypePropertyName</key>
+					<string>imageUrl</string>
+					<key>INTypePropertyTag</key>
+					<integer>111</integer>
+					<key>INTypePropertyType</key>
+					<string>URL</string>
+				</dict>
+				<dict>
+					<key>INTypePropertyDisplayName</key>
+					<string>Image Width</string>
+					<key>INTypePropertyDisplayNameID</key>
+					<string>3MEItj</string>
+					<key>INTypePropertyDisplayPriority</key>
+					<integer>8</integer>
+					<key>INTypePropertyName</key>
+					<string>imageWidth</string>
+					<key>INTypePropertyTag</key>
+					<integer>114</integer>
+					<key>INTypePropertyType</key>
+					<string>Integer</string>
+				</dict>
+				<dict>
+					<key>INTypePropertyDisplayName</key>
+					<string>Image Height</string>
+					<key>INTypePropertyDisplayNameID</key>
+					<string>m63TVQ</string>
+					<key>INTypePropertyDisplayPriority</key>
+					<integer>9</integer>
+					<key>INTypePropertyName</key>
+					<string>imageHeight</string>
+					<key>INTypePropertyTag</key>
+					<integer>115</integer>
+					<key>INTypePropertyType</key>
+					<string>Integer</string>
+				</dict>
+				<dict>
+					<key>INTypePropertyDisplayName</key>
+					<string>Owner Id</string>
+					<key>INTypePropertyDisplayNameID</key>
+					<string>j0Tgon</string>
+					<key>INTypePropertyDisplayPriority</key>
+					<integer>10</integer>
+					<key>INTypePropertyName</key>
+					<string>owner</string>
+					<key>INTypePropertyTag</key>
+					<integer>116</integer>
+					<key>INTypePropertyType</key>
+					<string>String</string>
+				</dict>
 			</array>
 		</dict>
 		<dict>
@@ -3315,7 +3850,7 @@
 			<key>INTypeDisplayNameID</key>
 			<string>E3x3xy</string>
 			<key>INTypeLastPropertyTag</key>
-			<integer>115</integer>
+			<integer>123</integer>
 			<key>INTypeName</key>
 			<string>INTrack</string>
 			<key>INTypeProperties</key>
@@ -3479,6 +4014,62 @@
 					<integer>115</integer>
 					<key>INTypePropertyType</key>
 					<string>String</string>
+				</dict>
+				<dict>
+					<key>INTypePropertyDisplayName</key>
+					<string>Album Name</string>
+					<key>INTypePropertyDisplayNameID</key>
+					<string>LQtsTq</string>
+					<key>INTypePropertyDisplayPriority</key>
+					<integer>12</integer>
+					<key>INTypePropertyName</key>
+					<string>albumName</string>
+					<key>INTypePropertyTag</key>
+					<integer>123</integer>
+					<key>INTypePropertyType</key>
+					<string>String</string>
+				</dict>
+				<dict>
+					<key>INTypePropertyDisplayName</key>
+					<string>Album Art Url</string>
+					<key>INTypePropertyDisplayNameID</key>
+					<string>viwgSQ</string>
+					<key>INTypePropertyDisplayPriority</key>
+					<integer>13</integer>
+					<key>INTypePropertyName</key>
+					<string>albumArtUrl</string>
+					<key>INTypePropertyTag</key>
+					<integer>120</integer>
+					<key>INTypePropertyType</key>
+					<string>URL</string>
+				</dict>
+				<dict>
+					<key>INTypePropertyDisplayName</key>
+					<string>Album Art Width</string>
+					<key>INTypePropertyDisplayNameID</key>
+					<string>rl1qy9</string>
+					<key>INTypePropertyDisplayPriority</key>
+					<integer>14</integer>
+					<key>INTypePropertyName</key>
+					<string>albumArtW</string>
+					<key>INTypePropertyTag</key>
+					<integer>121</integer>
+					<key>INTypePropertyType</key>
+					<string>Integer</string>
+				</dict>
+				<dict>
+					<key>INTypePropertyDisplayName</key>
+					<string>Album Art Height</string>
+					<key>INTypePropertyDisplayNameID</key>
+					<string>wp1X5Y</string>
+					<key>INTypePropertyDisplayPriority</key>
+					<integer>15</integer>
+					<key>INTypePropertyName</key>
+					<string>albumArtH</string>
+					<key>INTypePropertyTag</key>
+					<integer>122</integer>
+					<key>INTypePropertyType</key>
+					<string>Integer</string>
 				</dict>
 			</array>
 		</dict>

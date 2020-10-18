@@ -5,7 +5,7 @@
 
 import Foundation
 
-public protocol ModelJSON: Codable, Equatable {}
+public protocol ModelJSON: Codable, Hashable {}
 
 public struct UserJSON: ModelJSON, CustomStringConvertible, User {
     public var id: String?
@@ -40,7 +40,7 @@ public struct PlaylistJSON: ModelJSON {
     /// The Spotify ID for the playlist.
     public var id: SpotifyID
     /// Images for the playlist. The array may be empty or contain up to three images. The images are returned by size in descending order. See Working with Playlists.Note: If returned, the source URL for the image ( url ) is temporary and will expire in less than a day.
-    public var images: [ImageJSON]??
+    public var images: [ImageJSON]?
     /// The name of the playlist.
     public var name: String?
     /// The user who owns the playlist
@@ -54,7 +54,7 @@ public struct PlaylistJSON: ModelJSON {
     /// The Spotify URI for the playlist.
     public var uri: String?
 
-    public init(collaborative: Bool? = nil, description: String? = nil, externalUrls: ExternalUrlJSON? = nil, href: String? = nil, id: String, images: [ImageJSON]?? = nil, name: String? = nil, owner: PublicUserJSON? = nil, snapshotId: String? = nil, tracks: PagedTracksJSON? = nil, uri: String? = nil) {
+    public init(collaborative: Bool? = nil, description: String? = nil, externalUrls: ExternalUrlJSON? = nil, href: String? = nil, id: String, images: [ImageJSON]? = nil, name: String? = nil, owner: PublicUserJSON? = nil, snapshotId: String? = nil, tracks: PagedTracksJSON? = nil, uri: String? = nil) {
         self.collaborative = collaborative
         self.description = description
         self.externalUrls = externalUrls
@@ -126,7 +126,49 @@ public struct PagingJSON<T>: ModelJSON where T: ModelJSON {
     }
 }
 
+public enum AlbumGroupJSON: String, Hashable, Codable {
+    case album, single, compilation, appears_on
+}
+
+public enum AlbumTypeJSON: String, Hashable, Codable {
+    case album, single, compilation
+}
+
+public struct AlbumJSON: ModelJSON, Hashable {
+    /// The field is present when getting an artist’s albums. Possible values are “album”, “single”, “compilation”, “appears_on”. Compare to album_type this field represents relationship between the artist and the album.
+    public var albumGroup: AlbumGroupJSON?
+    /// The type of the album: one of “album”, “single”, or “compilation”.
+    public var albumType: AlbumTypeJSON
+    /// The artists of the album. Each artist object includes a link in href to more detailed information about the artist.
+    public var artists: [ArtistJSON]
+    /// The markets in which the album is available: ISO 3166-1 alpha-2 country codes. Note that an album is considered available in a market when at least 1 of its tracks is available in that market.
+    public var availableMarkets: [String]
+    /// Known external URLs for this album.
+    public var externalUrls: ExternalUrlJSON
+    /// A link to the Web API endpoint providing full details of the album.
+    public var href: String
+    /// The Spotify ID for the album.
+    public var id: SpotifyID
+    /// The cover art for the album in various sizes, widest first.
+    public var images: [ImageJSON]
+    /// The name of the album. In case of an album takedown, the value may be an empty string.
+    public var name: String
+    /// The date the album was first released, for example 1981. Depending on the precision, it might be shown as 1981-12 or 1981-12-15.
+    public var releaseDate: String
+    /// The precision with which releaseDate value is known: year , month , or day.
+    public var release_date_precision: String
+    /// Included in the response when a content restriction is applied. See Restriction Object for more details.
+    public var restrictions: RestrictionsJSON
+    /// The object type: “album”
+    public var type: String
+    /// The Spotify URI for the album.
+    public var uri: SpotifyURI
+}
+
 public struct TrackJSON: ModelJSON, Hashable {
+    /// A simplified album object
+    /// The album on which the track appears. The album object includes a link in href to full information about the album.
+    public var album: AlbumJSON?
     /// The artists who performed the track. Each artist object includes a link in href to more detailed information about the artist.
     public var artists: [ArtistJSON]?
     /// A list of the countries in which the track can be played, identified by their ISO 3166-1 alpha-2 code.
@@ -177,6 +219,14 @@ extension TrackJSON: Track {
     public var artistNames: [SpotifyID] {
         artists?.map { $0.name ?? "" } ?? []
     }
+
+    public var albumName: String? { album?.name }
+    public var albumArtUrl: URL? {
+        guard let url = album?.images.first?.url else { return nil }
+        return URL(string: url)
+    }
+    public var albumArtWidth: Int? { album?.images.first?.width }
+    public var albumArtHeight: Int? { album?.images.first?.height }
 }
 
 extension TrackJSON: CustomStringConvertible {

@@ -26,6 +26,11 @@ public protocol Track: HasUri, CustomStringConvertible {
 
     var artistIds: [SpotifyID] { get }
     var artistNames: [String] { get }
+
+    var albumName: String? { get }
+    var albumArtUrl: URL? { get }
+    var albumArtWidth: Int? { get }
+    var albumArtHeight: Int? { get }
 }
 
 public protocol Playlist: HasUri {

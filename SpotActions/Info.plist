@@ -39,12 +39,15 @@
 		<string>GetPlayingTrackIntent</string>
 		<string>GetPlayingPlaylistIntent</string>
 		<string>MixTracksIntent</string>
+		<string>GetDetailsOfTrackIntent</string>
 	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSUserActivityTypes</key>
 	<array>
 		<string>FilterTracksIntent</string>
+		<string>GetDetailsOfPlaylistIntent</string>
+		<string>GetDetailsOfTrackIntent</string>
 		<string>GetPlayingPlaylistIntent</string>
 		<string>GetPlayingTrackIntent</string>
 		<string>GetPlaylistTracksIntent</string>

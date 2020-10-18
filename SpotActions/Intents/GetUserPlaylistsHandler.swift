@@ -30,7 +30,7 @@ class GetUserPlaylistsHandler: NSObject, GetUserPlaylistsIntentHandling {
 
         let regex: NSRegularExpression?
         do {
-            if let filter = intent.filter {
+            if let filter = intent.filter, !filter.isEmpty {
                 regex = try NSRegularExpression(pattern: filter, options: .caseInsensitive)
             } else {
                 regex = nil
@@ -53,7 +53,17 @@ class GetUserPlaylistsHandler: NSObject, GetUserPlaylistsIntentHandling {
         }
 
         fetchPublisher.map {
-            let items = (regex != nil) ? $0.filter { $0.name?.contains(regex: regex!) ?? false } : $0
+            var items = (regex != nil) ? $0.filter { $0.name?.contains(regex: regex!) ?? false } : $0
+
+            if var ownerName = intent.owner, !ownerName.isEmpty {
+                if ownerName.starts(with: "!") {
+                    ownerName = String(ownerName.dropFirst())
+                    items = items.filter { $0.owner?.id != ownerName }
+                } else {
+                    items = items.filter { $0.owner?.id == ownerName }
+                }
+            }
+
             return items.compactMap { (pJSON) -> INPlaylist in
                 INPlaylist(identifier: pJSON.id, display: pJSON.name!)
             }

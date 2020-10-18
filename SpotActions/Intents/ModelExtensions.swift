@@ -4,6 +4,7 @@
 
 import Foundation
 import CEFSpotifyCore
+import Intents
 
 extension INUser: User {
     convenience init(from json: UserJSON) {
@@ -33,10 +34,18 @@ extension INPlaylist: Playlist {
     convenience init(from json: PlaylistJSON) {
         self.init(identifier: json.id, display: json.name!)
         self.uri = json.uri
+        if let image = json.images?.first, let imageUrlStr = image.url, let imageUrl = URL(string: imageUrlStr) {
+            self.imageUrl = imageUrl
+            self.imageWidth = NSNumber(value: image.width ?? -1)
+            self.imageHeight = NSNumber(value: image.height ?? -1)
+        }
     }
 }
 
 extension INTrack: Track {
+    public var albumArtWidth: Int? { self.albumArtW?.intValue }
+    public var albumArtHeight: Int? { self.albumArtH?.intValue }
+
     convenience init(from json: Track) {
         self.init(identifier: json.id, display: "\(json.title!) - \(json.artistNames.joined(separator: ", "))")
         self.title = json.title
@@ -57,24 +66,44 @@ extension INTrack: Track {
             self.durationMillis = millis as NSNumber
             self.duration = "\(millis / 1000 / 60):\(millis % 60)"
         }
-    }
 
-    convenience init(from json: TrackJSON) {
-        self.init(identifier: json.id, display: concatTrackNameArtists(name: json.name!, artists: json.artists!))
-        self.title = json.name!
-        self.artists = json.artists?.compactMap { INArtist(from: $0) } ?? []
-        self.uri = json.uri!
-        self.linkedTrackId = json.linkedFrom?.id
+        self.albumName = json.albumName
 
-        self.externalIds = json.externalIds?.map { key, value in
-            INExternalId(key: key, value: value)
-        }
-
-        if let millis = json.durationMs {
-            self.durationMillis = millis as NSNumber
-            self.duration = "\(millis / 1000 / 60):\(millis % 60)"
+        if let imageUrl = json.albumArtUrl {
+            self.albumArtUrl = imageUrl
+            if let width = json.albumArtWidth, let height = json.albumArtHeight {
+                self.albumArtW = NSNumber(value: width)
+                self.albumArtH = NSNumber(value: height)
+            }
         }
     }
+
+//    convenience init(from json: TrackJSON) {
+//        self.init(identifier: json.id, display: concatTrackNameArtists(name: json.name!, artists: json.artists!))
+//        self.title = json.name!
+//        self.artists = json.artists?.compactMap { INArtist(from: $0) } ?? []
+//        self.uri = json.uri!
+//        self.linkedTrackId = json.linkedFrom?.id
+//
+//        self.externalIds = json.externalIds?.map { key, value in
+//            INExternalId(key: key, value: value)
+//        }
+//
+//        if let millis = json.durationMs {
+//            self.durationMillis = millis as NSNumber
+//            self.duration = "\(millis / 1000 / 60):\(millis % 60)"
+//        }
+//
+//        if let image = json.images?.first, let imageUrlStr = image.url, let imageUrl = URL(string: imageUrlStr) {
+//            self.imageUrl = imageUrl
+//            self.imageWidth = NSNumber(value: image.width ?? -1)
+//            self.imageHeight = NSNumber(value: image.height ?? -1)
+//
+//            self.displayImage = INImage(url: imageUrl,
+//                                        width: image.width ?? -1,
+//                                        height: image.height ?? -1)
+//        }
+//    }
 
     convenience init(artists: [INArtist], externalIds: [SpotActions.INExternalId]?, id: String, linkedTrackId: String?, name: String) {
         self.init(identifier: id, display: concatTrackNameArtists(name: name, artists: artists))

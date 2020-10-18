@@ -28,6 +28,8 @@ class MixTracksHandler: NSObject, MixTracksIntentHandling {
             return
         }
 
+        print(playlists.map { $0.displayString })
+
         let p1: AnyPublisher<[Track], PlaylistsManagerError> =
             playlistsManager.getMultiplePlaylistTracks(playlistIds: playlists.map { $0.id })
                 .map { set in set.map { $0 as Track } }
