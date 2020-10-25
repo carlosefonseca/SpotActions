@@ -11,7 +11,7 @@ public extension SpotifyWebApi.Player {
 }
 
 extension SpotifyWebApi.Player.GetCurrentlyPlaying {
-    public typealias Response = CurrentlyPlayingJSON
+    public typealias Response = CurrentlyPlayingJSON?
 
     public struct Request: URLRequestable {
         public var urlRequest: URLRequest
@@ -39,7 +39,7 @@ extension SpotifyWebApi.Player.GetRecentlyPlayed {
 
 public protocol SpotifyPlayerGateway {
     func getRecentlyPlayed() -> AnyPublisher<PagedTracksJSON, Error>
-    func getCurrentlyPlaying() -> AnyPublisher<CurrentlyPlayingJSON, Error>
+    func getCurrentlyPlaying() -> AnyPublisher<CurrentlyPlayingJSON?, Error>
 }
 
 public class SpotifyPlayerGatewayImplementation: BaseSpotifyGateway, SpotifyPlayerGateway {
@@ -50,10 +50,12 @@ public class SpotifyPlayerGatewayImplementation: BaseSpotifyGateway, SpotifyPlay
             .eraseToAnyPublisher()
     }
 
-    public func getCurrentlyPlaying() -> AnyPublisher<CurrentlyPlayingJSON, Error> {
+    public func getCurrentlyPlaying() -> AnyPublisher<CurrentlyPlayingJSON?, Error> {
         let request = SpotifyWebApi.Player.GetCurrentlyPlaying.Request(baseURL: baseURL)
         return requestManager.execute(request: request)
+            .print("SpotifyPlayerGateway.getCurrentlyPlaying() 1")
             .decode(type: SpotifyWebApi.Player.GetCurrentlyPlaying.Response.self, decoder: decoder)
+            .print("SpotifyPlayerGateway.getCurrentlyPlaying() 2")
             .eraseToAnyPublisher()
     }
 }

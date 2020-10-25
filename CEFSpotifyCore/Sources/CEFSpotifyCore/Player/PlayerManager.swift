@@ -7,7 +7,7 @@ import Combine
 
 public protocol PlayerManager {
     func getRecentlyPlayed() -> AnyPublisher<[TrackJSON], PlayerError>
-    func getCurrentlyPlaying() -> AnyPublisher<CurrentlyPlayingJSON, PlayerError>
+    func getCurrentlyPlaying() -> AnyPublisher<CurrentlyPlayingJSON?, PlayerError>
 }
 
 public enum PlayerError: Error {
@@ -29,7 +29,7 @@ public class PlayerManagerImplementation: PlayerManager {
             .eraseToAnyPublisher()
     }
 
-    public func getCurrentlyPlaying() -> AnyPublisher<CurrentlyPlayingJSON, PlayerError> {
+    public func getCurrentlyPlaying() -> AnyPublisher<CurrentlyPlayingJSON?, PlayerError> {
         self.gateway.getCurrentlyPlaying()
             .mapError { PlayerError.requestError(error: $0) }
             .eraseToAnyPublisher()

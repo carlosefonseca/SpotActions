@@ -23,7 +23,6 @@ struct TestArtist: Artist, Equatable, Hashable {
 }
 
 struct TestTrack: Track, Equatable, Hashable {
-
     var id: SpotifyID
     var uri: String?
     var title: String?
@@ -35,9 +34,15 @@ struct TestTrack: Track, Equatable, Hashable {
 
     var linkedTrackId: String?
 
-    var description: String {
-        return "TestTrack(\(id))"
-    }
+    var description: String { "TestTrack(\(id))" }
+
+    var artistIds: [SpotifyID] = []
+    var artistNames: [String] = []
+
+    var albumName: String?
+    var albumArtUrl: URL?
+    var albumArtWidth: Int?
+    var albumArtHeight: Int?
 
     init(set: Int, index: Int, artist: TestArtist) {
         id = "\(set)\(index)"
@@ -67,7 +72,7 @@ class TrackMixerServiceTests: XCTestCase {
 
     func test_concat() {
         let finishedExpectation = expectation(description: "finished")
-        var output: [TestTrack]?
+        var output: [Track]?
 
         mixerService.mix(trackSets: [trackSet1, trackSet2, trackSet3], mixMode: MixMode.concat)
             .sink { completion in
@@ -91,9 +96,9 @@ class TrackMixerServiceTests: XCTestCase {
 
     func test_mix() {
         let finishedExpectation = expectation(description: "finished")
-        var output: [TestTrack]?
+        var output: [Track]?
 
-        mixerService.mix(trackSets: [trackSet1, trackSet2, trackSet3], mixMode: .mix)
+        mixerService.mix(trackSets: [trackSet1, trackSet2, trackSet3], mixMode: .alternate)
             .sink { completion in
                 finishedExpectation.fulfill()
                 guard case .finished = completion else {
@@ -115,14 +120,14 @@ class TrackMixerServiceTests: XCTestCase {
 
     func test_mix_shuffled() {
         let finishedExpectation = expectation(description: "finished")
-        var output: [TestTrack]?
+        var output: [Track]?
 
         var ids: [String]
         let notExpected1 = ["101", "102", "103", "201", "202", "203", "301", "302", "303"]
         let notExpected2 = ["101", "201", "301", "102", "202", "302", "103", "203", "303"]
 
         repeat {
-            mixerService.mix(trackSets: [trackSet1, trackSet2, trackSet3], mixMode: .mixShuffled)
+            mixerService.mix(trackSets: [trackSet1, trackSet2, trackSet3], mixMode: .mix)
                 .sink { completion in
                     finishedExpectation.fulfill()
                     guard case .finished = completion else {

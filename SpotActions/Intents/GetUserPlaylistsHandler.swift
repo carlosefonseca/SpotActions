@@ -52,30 +52,38 @@ class GetUserPlaylistsHandler: NSObject, GetUserPlaylistsIntentHandling {
             fetchPublisher = playlistsManager.getAllUserPlaylists()
         }
 
-        fetchPublisher.map {
-            var items = (regex != nil) ? $0.filter { $0.name?.contains(regex: regex!) ?? false } : $0
+        fetchPublisher
+            .map {
+                var items = (regex != nil) ? $0.filter { $0.name?.contains(regex: regex!) ?? false } : $0
 
-            if var ownerName = intent.owner, !ownerName.isEmpty {
-                if ownerName.starts(with: "!") {
-                    ownerName = String(ownerName.dropFirst())
-                    items = items.filter { $0.owner?.id != ownerName }
-                } else {
-                    items = items.filter { $0.owner?.id == ownerName }
+                if var ownerName = intent.owner, !ownerName.isEmpty {
+                    if ownerName.starts(with: "!") {
+                        ownerName = String(ownerName.dropFirst())
+                        items = items.filter { $0.owner?.id != ownerName }
+                    } else {
+                        items = items.filter { $0.owner?.id == ownerName }
+                    }
+                }
+
+                return items.compactMap { (pJSON) -> INPlaylist in
+                    var inImage: INImage?
+                    if let img = pJSON.images?.min(by: { (img1, img2) -> Bool in img1.width ?? 0 < img2.width ?? 0 }) {
+                        inImage = INImage(from: img)
+                    }
+                    return INPlaylist(identifier: pJSON.id, display: pJSON.name!, subtitle: pJSON.description, image: inImage)
+//                    return INPlaylist(identifier: pJSON.id, display: pJSON.name!)
                 }
             }
-
-            return items.compactMap { (pJSON) -> INPlaylist in
-                INPlaylist(identifier: pJSON.id, display: pJSON.name!)
-            }
-        }.sink { it in
-            switch it {
-            case .failure(let error):
-                completion(.failure(error: error.localizedDescription))
-            case .finished:
-                break
-            }
-        } receiveValue: { playlists in
-            completion(.success(result: playlists))
-        }.store(in: &bag)
+            .print("GetUserPlaylistsHandler")
+            .sink { it in
+                switch it {
+                case .failure(let error):
+                    completion(.failure(error: error.localizedDescription))
+                case .finished:
+                    break
+                }
+            } receiveValue: { playlists in
+                completion(.success(result: playlists))
+            }.store(in: &bag)
     }
 }

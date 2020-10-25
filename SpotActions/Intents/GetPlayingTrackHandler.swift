@@ -24,7 +24,7 @@ class GetPlayingTrackHandler: NSObject, GetPlayingTrackIntentHandling {
 
     private func processForTrack() -> AnyPublisher<TrackJSON?, PlayerError> {
         playerManager.getCurrentlyPlaying()
-            .map { $0.item }
+            .map { $0?.item }
             .eraseToAnyPublisher()
     }
 

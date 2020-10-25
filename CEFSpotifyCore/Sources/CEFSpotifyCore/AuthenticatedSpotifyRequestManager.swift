@@ -55,7 +55,7 @@ public class AuthenticatedSpotifyRequestManager: RequestManager {
                 }
                 return try self.applyAccessTokenToRequest(urlRequest: urlRequest, token: tokenResponse)
             }
-            .print("SpotifyRequestManager")
+            .print("SpotifyRequestManager.execute()")
             .flatMap { urlRequest in self.runTheRequest(urlRequest, canRetry: true)
             }.eraseToAnyPublisher()
     }

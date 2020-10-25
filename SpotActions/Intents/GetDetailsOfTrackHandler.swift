@@ -25,7 +25,7 @@ class GetDetailsOfTrackHandler: NSObject, GetDetailsOfTrackIntentHandling {
                 completion(.failure(error: "Track has no artist!"))
                 return
             }
-            completion(.artist(artist: artist))
+            completion(.artist(track: track))
             return
 
         case .albumArtwork:
@@ -42,16 +42,22 @@ class GetDetailsOfTrackHandler: NSObject, GetDetailsOfTrackIntentHandling {
                         return
                     }
                 } receiveValue: { (data: Data, response: URLResponse) in
-                    completion(.albumArtwork(albumArtwork: INFile(data: data, filename: response.suggestedFilename ?? "\(track.title!).jpg", typeIdentifier: .some(response.mimeType!))))
+//                    completion(.albumArtwork(albumArtwork: INFile(data: data, filename: response.suggestedFilename ?? "\(track.title!).jpg", typeIdentifier: .some(response.mimeType!))))
+                    completion(.albumArtwork(track: track))
                 }.store(in: &bag)
+            return
         case .album:
-            break
+            completion(.albumName(track: track))
+            return
         case .duration:
-            break
+            completion(.duration(track: track))
+            return
         case .title:
-            break
+            completion(.success(track: track))
+            return
         case .unknown:
-            break
+            completion(.failure(error: "No detail selected!"))
+            return
         }
     }
 }

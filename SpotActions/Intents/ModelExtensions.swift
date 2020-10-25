@@ -34,7 +34,7 @@ extension INPlaylist: Playlist {
     convenience init(from json: PlaylistJSON) {
         self.init(identifier: json.id, display: json.name!)
         self.uri = json.uri
-        if let image = json.images?.first, let imageUrlStr = image.url, let imageUrl = URL(string: imageUrlStr) {
+        if let image = json.images?.first, let imageUrl = URL(string: image.url) {
             self.imageUrl = imageUrl
             self.imageWidth = NSNumber(value: image.width ?? -1)
             self.imageHeight = NSNumber(value: image.height ?? -1)
@@ -64,7 +64,7 @@ extension INTrack: Track {
 
         if let millis = json.durationMs {
             self.durationMillis = millis as NSNumber
-            self.duration = "\(millis / 1000 / 60):\(millis % 60)"
+            self.duration = NSNumber(value: millis) // "\(millis / 1000 / 60):\(millis % 60)"
         }
 
         self.albumName = json.albumName
@@ -170,5 +170,18 @@ extension INExternalId {
         original.map { (key, value) -> INExternalId in
             INExternalId(key: key, value: value)
         }
+    }
+}
+
+extension INImage {
+    convenience init?(from imageJson: ImageJSON) {
+        guard
+            let url = URL(string: imageJson.url)
+        else { return nil }
+
+        if let w = imageJson.width, let h = imageJson.height {
+            self.init(url: url, width: Double(w), height: Double(h))
+        }
+        self.init(url: url)
     }
 }

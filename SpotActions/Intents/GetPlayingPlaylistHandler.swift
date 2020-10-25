@@ -27,9 +27,9 @@ class GetPlayingPlaylistHandler: NSObject, GetPlayingPlaylistIntentHandling {
     private func processForPlaylist() -> AnyPublisher<INPlaylist, GetPlayingPlaylistHandlerError> {
         playerManager.getCurrentlyPlaying()
             .mapError { GetPlayingPlaylistHandlerError.message($0.localizedDescription) }
-            .flatMap { (playing: CurrentlyPlayingJSON) -> AnyPublisher<INPlaylist, GetPlayingPlaylistHandlerError> in
+            .flatMap { (playing: CurrentlyPlayingJSON?) -> AnyPublisher<INPlaylist, GetPlayingPlaylistHandlerError> in
                 guard
-                    let context = playing.context,
+                    let context = playing?.context,
                     context.type == "playlist",
                     let uri = context.uri,
                     uri.category == "playlist"

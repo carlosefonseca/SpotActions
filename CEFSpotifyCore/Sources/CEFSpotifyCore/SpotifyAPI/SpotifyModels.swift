@@ -74,7 +74,7 @@ extension PlaylistJSON: Playlist {
 }
 
 public struct ImageJSON: ModelJSON {
-    public var url: String?
+    public var url: String
     public var height: Int?
     public var width: Int?
 }
@@ -154,11 +154,11 @@ public struct AlbumJSON: ModelJSON, Hashable {
     /// The name of the album. In case of an album takedown, the value may be an empty string.
     public var name: String
     /// The date the album was first released, for example 1981. Depending on the precision, it might be shown as 1981-12 or 1981-12-15.
-    public var releaseDate: String
+    public var releaseDate: String?
     /// The precision with which releaseDate value is known: year , month , or day.
-    public var release_date_precision: String
+    public var releaseDatePrecision: String?
     /// Included in the response when a content restriction is applied. See Restriction Object for more details.
-    public var restrictions: RestrictionsJSON
+    public var restrictions: RestrictionsJSON?
     /// The object type: “album”
     public var type: String
     /// The Spotify URI for the album.
