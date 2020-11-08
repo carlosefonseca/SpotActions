@@ -45,12 +45,13 @@ public struct PlaylistJSON: ModelJSON {
     public var name: String?
     /// The user who owns the playlist
     public var owner: PublicUserJSON?
-    // var public:    Bool or null    The playlist’s public/private status: true the playlist is public, false the playlist is private, null the playlist status is not relevant. For more about public/private status, see Working with Playlists.
+    /// The playlist’s public/private status: true the playlist is public, false the playlist is private, null the playlist status is not relevant. For more about public/private status, see Working with Playlists.
+    public var isPublic: Bool?
     /// The version identifier for the current playlist. Can be supplied in other requests to target a specific playlist version: see Remove tracks from a playlist
     public var snapshotId: String?
     /// array of playlist track objects inside a paging object    Information about the tracks of the playlist.
     public var tracks: PagedTracksJSON?
-    // var type:    String    The object type: “playlist”
+//     var type:    String    The object type: “playlist”
     /// The Spotify URI for the playlist.
     public var uri: String?
 
@@ -225,6 +226,7 @@ extension TrackJSON: Track {
         guard let url = album?.images.first?.url else { return nil }
         return URL(string: url)
     }
+
     public var albumArtWidth: Int? { album?.images.first?.width }
     public var albumArtHeight: Int? { album?.images.first?.height }
 }

@@ -93,6 +93,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             return MixTracksHandler(auth: dependencies.auth, playlistsManager: dependencies.playlistsManager, trackMixerService: dependencies.trackMixerService)
         case is GetDetailsOfTrackIntent:
             return GetDetailsOfTrackHandler()
+        case is RemoveTracksFromPlaylistsIntent:
+            return RemoveTracksFromPlaylistsHandler(auth: dependencies.auth, playlistsManager: dependencies.playlistsManager)
         default:
             fatalError("No handler for this intent")
         }

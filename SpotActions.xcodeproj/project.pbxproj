@@ -14,6 +14,7 @@
 		2D69014E2506E3580038F798 /* FilterTracksHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D69014D2506E3580038F798 /* FilterTracksHandler.swift */; };
 		2D69015025076B580038F798 /* GetPlayingTrackHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D69014F25076B580038F798 /* GetPlayingTrackHandler.swift */; };
 		2D6A966624F27D1800993587 /* GetUserPlaylistsHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D6A966524F27D1800993587 /* GetUserPlaylistsHandler.swift */; };
+		2D7063002545D6C200AA6867 /* RemoveTracksFromPlaylistsHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D7062FF2545D6C200AA6867 /* RemoveTracksFromPlaylistsHandler.swift */; };
 		2D755B0424F5897B00800222 /* GetUserProfileHandlerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D755B0324F5897B00800222 /* GetUserProfileHandlerTests.swift */; };
 		2D755B0924F5922600800222 /* CEFSpotifyDoubles in Frameworks */ = {isa = PBXBuildFile; productRef = 2D755B0824F5922600800222 /* CEFSpotifyDoubles */; };
 		2D7A560F2528B6150084D2B7 /* MixTracksHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D7A560E2528B6140084D2B7 /* MixTracksHandler.swift */; };
@@ -72,6 +73,7 @@
 		2D69014D2506E3580038F798 /* FilterTracksHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterTracksHandler.swift; sourceTree = "<group>"; };
 		2D69014F25076B580038F798 /* GetPlayingTrackHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetPlayingTrackHandler.swift; sourceTree = "<group>"; };
 		2D6A966524F27D1800993587 /* GetUserPlaylistsHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetUserPlaylistsHandler.swift; sourceTree = "<group>"; };
+		2D7062FF2545D6C200AA6867 /* RemoveTracksFromPlaylistsHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoveTracksFromPlaylistsHandler.swift; sourceTree = "<group>"; };
 		2D755B0324F5897B00800222 /* GetUserProfileHandlerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetUserProfileHandlerTests.swift; sourceTree = "<group>"; };
 		2D7A560E2528B6140084D2B7 /* MixTracksHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MixTracksHandler.swift; sourceTree = "<group>"; };
 		2D9272C6250D0C600052E4B6 /* ModelExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelExtensions.swift; sourceTree = "<group>"; };
@@ -219,6 +221,7 @@
 				2D7A560E2528B6140084D2B7 /* MixTracksHandler.swift */,
 				2D324DC1250578B200703432 /* SaveTracksOnPlaylistHandler.swift */,
 				2DE4A61D253CA71C00893326 /* GetDetailsOfTrackHandler.swift */,
+				2D7062FF2545D6C200AA6867 /* RemoveTracksFromPlaylistsHandler.swift */,
 			);
 			path = Intents;
 			sourceTree = "<group>";
@@ -371,6 +374,7 @@
 				2D69014E2506E3580038F798 /* FilterTracksHandler.swift in Sources */,
 				2D4E15E9250D2E7200BED733 /* GetPlayingPlaylistHandler.swift in Sources */,
 				2DA5DE5524EE819A00E9BE87 /* SpotActionsApp.swift in Sources */,
+				2D7063002545D6C200AA6867 /* RemoveTracksFromPlaylistsHandler.swift in Sources */,
 				2D69015025076B580038F798 /* GetPlayingTrackHandler.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
