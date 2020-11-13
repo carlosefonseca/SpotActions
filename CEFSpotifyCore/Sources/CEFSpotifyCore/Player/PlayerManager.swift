@@ -11,7 +11,7 @@ public protocol PlayerManager {
 }
 
 public enum PlayerError: Error {
-    // case missingData(message: String)
+    case missingData(message: String)
     case requestError(error: Error)
 }
 

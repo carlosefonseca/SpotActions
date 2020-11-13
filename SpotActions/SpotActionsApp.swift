@@ -59,7 +59,8 @@ struct SpotActionsApp: App {
         WindowGroup {
             ContentView(presenter: Presenter(auth: dependencies.auth,
                                              userManager: dependencies.userManager,
-                                             playlistManager: dependencies.playlistsManager))
+                                             playlistManager: dependencies.playlistsManager,
+                                             playerManager: dependencies.playerManager))
         }
     }
 }

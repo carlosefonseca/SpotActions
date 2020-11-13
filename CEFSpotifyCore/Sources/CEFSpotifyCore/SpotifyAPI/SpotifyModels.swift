@@ -217,7 +217,7 @@ extension TrackJSON: Track {
         artists?.map { $0.id } ?? []
     }
 
-    public var artistNames: [SpotifyID] {
+    public var artistNames: [String] {
         artists?.map { $0.name ?? "" } ?? []
     }
 

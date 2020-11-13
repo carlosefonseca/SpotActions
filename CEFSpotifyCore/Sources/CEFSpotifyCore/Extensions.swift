@@ -39,3 +39,29 @@ extension Sequence where Iterator.Element: Hashable {
         Set(self)
     }
 }
+
+extension DecodingError.Context {
+    var shortCodingPath: String {
+        guard !codingPath.isEmpty else { return "root object" }
+        return codingPath.map { key in
+            key.intValue != nil ? "[\(key.intValue!)]" : ".\(key.stringValue)"
+        }.joined()
+    }
+}
+
+extension DecodingError: CustomDebugStringConvertible {
+    public var debugDescription: String {
+        switch self {
+        case DecodingError.dataCorrupted(let context):
+            return "Data Corrupted: \(context)"
+        case DecodingError.keyNotFound(let key, let context):
+            return "Key '\(key.stringValue)' not found on \(context.shortCodingPath) (\(context.debugDescription))"
+        case DecodingError.valueNotFound(let value, let  context):
+            return "Value '\(value)' not found on path \(context.shortCodingPath) (\(context.debugDescription))"
+        case DecodingError.typeMismatch(let type, let context):
+            return "Type '\(type)' mismatch on path \(context.shortCodingPath) (\(context.debugDescription))"
+        default:
+            return "\(self)"
+        }
+    }
+}

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2D274108255E06250045AED7 /* SDWebImageSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 2D274107255E06250045AED7 /* SDWebImageSwiftUI */; };
 		2D324DC02504E63C00703432 /* GetPlaylistTracksHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D324DBF2504E63C00703432 /* GetPlaylistTracksHandler.swift */; };
 		2D324DC2250578B200703432 /* SaveTracksOnPlaylistHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D324DC1250578B200703432 /* SaveTracksOnPlaylistHandler.swift */; };
 		2D4E15E9250D2E7200BED733 /* GetPlayingPlaylistHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D4E15E8250D2E7200BED733 /* GetPlayingPlaylistHandler.swift */; };
@@ -103,6 +104,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2D274108255E06250045AED7 /* SDWebImageSwiftUI in Frameworks */,
 				2DA5DE8124EE845100E9BE87 /* AuthenticationServices.framework in Frameworks */,
 				2D755B0924F5922600800222 /* CEFSpotifyDoubles in Frameworks */,
 				2DD91ADE24F117620032D7C6 /* CEFSpotifyCore in Frameworks */,
@@ -246,6 +248,7 @@
 			packageProductDependencies = (
 				2DD91ADD24F117620032D7C6 /* CEFSpotifyCore */,
 				2D755B0824F5922600800222 /* CEFSpotifyDoubles */,
+				2D274107255E06250045AED7 /* SDWebImageSwiftUI */,
 			);
 			productName = SpotActions;
 			productReference = 2DA5DE5124EE819A00E9BE87 /* SpotActions.app */;
@@ -318,6 +321,9 @@
 				Base,
 			);
 			mainGroup = 2DA5DE4824EE819A00E9BE87;
+			packageReferences = (
+				2D274106255E06250045AED7 /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */,
+			);
 			productRefGroup = 2DA5DE5224EE819A00E9BE87 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -701,7 +707,23 @@
 		};
 /* End XCConfigurationList section */
 
+/* Begin XCRemoteSwiftPackageReference section */
+		2D274106255E06250045AED7 /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SDWebImage/SDWebImageSwiftUI.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.5.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
 /* Begin XCSwiftPackageProductDependency section */
+		2D274107255E06250045AED7 /* SDWebImageSwiftUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2D274106255E06250045AED7 /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */;
+			productName = SDWebImageSwiftUI;
+		};
 		2D755B0824F5922600800222 /* CEFSpotifyDoubles */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = CEFSpotifyDoubles;

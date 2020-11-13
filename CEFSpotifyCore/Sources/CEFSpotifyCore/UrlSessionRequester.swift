@@ -30,7 +30,16 @@ public class UrlSessionRequester: URLRequester {
                 } else {
                     return UrlRequesterError.systemError(error: error)
                 }
-            }.eraseToAnyPublisher()
+            }
+            .handleEvents(receiveOutput: { data in
+                if let str = String(data: data, encoding: .utf8) {
+                    let splits = str.split(separator: "\n")
+                    splits.forEach { line in
+                        print("<-- \(line)")
+                    }
+                }
+            })
+            .eraseToAnyPublisher()
     }
 }
 
