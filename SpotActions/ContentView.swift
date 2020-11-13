@@ -61,9 +61,79 @@ class Presenter: ObservableObject {
             .sink { self.playlists = $0 }
             .store(in: &bag)
 
-        self.playerManager.getCurrentlyPlaying()
+        Timer.publish(every: 10, on: .main, in: .common)
+            .autoconnect()
+            .flatMap { _ -> AnyPublisher<CurrentlyPlayingJSON?, PlayerError> in
+                self.playerManager.getCurrentlyPlaying()
+            }
             .receive(on: RunLoop.main)
             .sink(receiveCompletion: { _ in }) { self.playing = $0 }
+            .store(in: &bag)
+
+        refresh()
+    }
+
+    func refresh() {
+        playerManager.getCurrentlyPlaying()
+            .receive(on: RunLoop.main)
+            .sink(receiveCompletion: { _ in }) { self.playing = $0 }
+            .store(in: &bag)
+    }
+
+    func previous() {
+        playerManager.previous()
+            .flatMap { _ -> AnyPublisher<Never, Error> in
+                self.playerManager.getCurrentlyPlaying()
+                    .receive(on: RunLoop.main)
+                    .handleEvents(receiveOutput: { playing in self.playing = playing })
+                    .ignoreOutput()
+                    .mapError { e in e as Error }
+                    .eraseToAnyPublisher()
+            }
+            .sink(receiveCompletion: { _ in }, receiveValue: { _ in })
+            .store(in: &bag)
+    }
+
+    func next() {
+        playerManager.next().flatMap { _ -> AnyPublisher<Never, Error> in
+            self.playerManager.getCurrentlyPlaying()
+                .receive(on: RunLoop.main)
+                .handleEvents(receiveOutput: { playing in self.playing = playing })
+                .ignoreOutput()
+                .mapError { e in e as Error }
+                .eraseToAnyPublisher()
+        }
+        .sink(receiveCompletion: { _ in }, receiveValue: { _ in })
+        .store(in: &bag)
+    }
+
+    func playPause() {
+        let isPlaying = playing?.isPlaying == true
+        let publisher: AnyPublisher<Data, Error>
+        if isPlaying {
+            publisher = playerManager.pause()
+        } else {
+            publisher = playerManager.play()
+        }
+        publisher
+            .flatMap { a -> AnyPublisher<Date, Never> in
+                return Timer.publish(every: 0.5, on: .main, in: .common)
+                    .autoconnect()
+                    .eraseToAnyPublisher()
+            }
+            .flatMap { _ -> AnyPublisher<CurrentlyPlayingJSON?, Error> in
+                return self.playerManager.getCurrentlyPlaying()
+                    .mapError { e in e as Error }
+                    .eraseToAnyPublisher()
+            }
+            .drop(while: { (playing) -> Bool in
+                return playing?.isPlaying == isPlaying
+            })
+            .first()
+            .receive(on: RunLoop.main)
+            .handleEvents(receiveOutput: { playing in self.playing = playing })
+            .eraseToAnyPublisher()
+            .sink(receiveCompletion: { _ in }, receiveValue: { _ in })
             .store(in: &bag)
     }
 }
@@ -82,18 +152,18 @@ struct ContentView: View {
 
     fileprivate func mediaControls() -> some View {
         return HStack {
-            Button(action: { presenter.playerManager.previous() }) {
+            Button(action: { presenter.previous() }) {
                 Image(systemName: "backward.end.fill")
                     .foregroundColor(.primary)
             }.padding()
 
-            Button(action: {}) {
-                Image(systemName: "play.circle")
+            Button(action: { presenter.playPause() }) {
+                Image(systemName: presenter.playing?.isPlaying == true ? "pause.circle" : "play.circle")
                     .font(.system(size: 36, weight: .thin))
                     .foregroundColor(.primary)
             }.padding()
 
-            Button(action: {}) {
+            Button(action: { presenter.next() }) {
                 Image(systemName: "forward.end.fill")
                     .foregroundColor(.primary)
             }.padding()
@@ -109,7 +179,6 @@ struct ContentView: View {
                     Divider()
 
                     if let playing = presenter.playing, let item = playing.item {
-                        Text(playing.isPlaying ? "Playing" : "Not playing")
                         HStack(alignment: .bottom) {
 
                             WebImage(url: item.albumArtUrl)
@@ -122,6 +191,12 @@ struct ContentView: View {
                                 .padding()
 
                             VStack(alignment: .center) {
+                                HStack {
+                                    Spacer()
+                                    Button(action: { presenter.refresh() }, label: {
+                                        Image(systemName: "arrow.clockwise.circle")
+                                })
+                                }
 
 //                                if let contextType = playing.context?.type {
 //                                    Text("Playing \(contextType)!")

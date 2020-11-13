@@ -11,6 +11,7 @@ public class UrlSessionRequester: URLRequester {
 
     public func request(urlRequest: URLRequest) -> AnyPublisher<Data, UrlRequesterError> {
         return URLSession.shared.dataTaskPublisher(for: urlRequest)
+            .print("URLSession")
             .mapError { error -> UrlRequesterError in UrlRequesterError.systemError(error: error) }
             .tryMap { (data, response) -> Data in
                 guard let httpResponse = response as? HTTPURLResponse else {

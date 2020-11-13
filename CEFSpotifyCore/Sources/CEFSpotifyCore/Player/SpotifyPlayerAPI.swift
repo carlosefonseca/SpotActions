@@ -45,22 +45,20 @@ extension SpotifyWebApi.Player.Play {
     public struct Request: URLRequestable {
         public var urlRequest: URLRequest
 
-        init(baseURL: URL, deviceId: String? = nil) {
-            var urlComponents = URLComponents(url: URL(string: "/v1/me/player/play", relativeTo: baseURL)!, resolvingAgainstBaseURL: true)!
-            if let deviceId = deviceId {
-                urlComponents.queryItems = [URLQueryItem(name: "device_id", value: deviceId)]
-            }
+        init(baseURL: URL) {
+            let urlComponents = URLComponents(url: URL(string: "/v1/me/player/play", relativeTo: baseURL)!, resolvingAgainstBaseURL: true)!
             urlRequest = URLRequest(url: urlComponents.url!)
             urlRequest.httpMethod = "PUT"
         }
     }
 }
+
 extension SpotifyWebApi.Player.Pause {
     public struct Request: URLRequestable {
         public var urlRequest: URLRequest
 
         init(baseURL: URL) {
-            var urlComponents = URLComponents(url: URL(string: "/v1/me/player/pause", relativeTo: baseURL)!, resolvingAgainstBaseURL: true)!
+            let urlComponents = URLComponents(url: URL(string: "/v1/me/player/pause", relativeTo: baseURL)!, resolvingAgainstBaseURL: true)!
             urlRequest = URLRequest(url: urlComponents.url!)
             urlRequest.httpMethod = "PUT"
         }
@@ -71,11 +69,20 @@ extension SpotifyWebApi.Player.Previous {
     public struct Request: URLRequestable {
         public var urlRequest: URLRequest
 
-        init(baseURL: URL, deviceId: String? = nil) {
-            var urlComponents = URLComponents(url: URL(string: "/v1/me/player/play", relativeTo: baseURL)!, resolvingAgainstBaseURL: true)!
-            if let deviceId = deviceId {
-                urlComponents.queryItems = [URLQueryItem(name: "device_id", value: deviceId)]
-            }
+        init(baseURL: URL) {
+            let urlComponents = URLComponents(url: URL(string: "/v1/me/player/previous", relativeTo: baseURL)!, resolvingAgainstBaseURL: true)!
+            urlRequest = URLRequest(url: urlComponents.url!)
+            urlRequest.httpMethod = "POST"
+        }
+    }
+}
+
+extension SpotifyWebApi.Player.Next {
+    public struct Request: URLRequestable {
+        public var urlRequest: URLRequest
+
+        init(baseURL: URL) {
+            let urlComponents = URLComponents(url: URL(string: "/v1/me/player/next", relativeTo: baseURL)!, resolvingAgainstBaseURL: true)!
             urlRequest = URLRequest(url: urlComponents.url!)
             urlRequest.httpMethod = "POST"
         }
@@ -85,9 +92,20 @@ extension SpotifyWebApi.Player.Previous {
 public protocol SpotifyPlayerGateway {
     func getRecentlyPlayed() -> AnyPublisher<PagedTracksJSON, Error>
     func getCurrentlyPlaying() -> AnyPublisher<CurrentlyPlayingJSON?, Error>
+
+    func playPublisher() -> AnyPublisher<Data, Error>
+    func pausePublisher() -> AnyPublisher<Data, Error>
+    func nextPublisher() -> AnyPublisher<Data, Error>
+    func previousPublisher() -> AnyPublisher<Data, Error>
+
+    func play()
+    func pause()
+    func next()
+    func previous()
 }
 
 public class SpotifyPlayerGatewayImplementation: BaseSpotifyGateway, SpotifyPlayerGateway {
+
     public func getRecentlyPlayed() -> AnyPublisher<PagedTracksJSON, Error> {
         let request = SpotifyWebApi.Player.GetRecentlyPlayed.Request(baseURL: baseURL)
         return requestManager.execute(request: request)
@@ -108,5 +126,41 @@ public class SpotifyPlayerGatewayImplementation: BaseSpotifyGateway, SpotifyPlay
             })
             .print("SpotifyPlayerGateway.getCurrentlyPlaying() 2")
             .eraseToAnyPublisher()
+    }
+
+    public func playPublisher() -> AnyPublisher<Data, Error> {
+        let request = SpotifyWebApi.Player.Play.Request(baseURL: baseURL)
+        return requestManager.execute(request: request).eraseToAnyPublisher()
+    }
+
+    public func pausePublisher() -> AnyPublisher<Data, Error> {
+        let request = SpotifyWebApi.Player.Pause.Request(baseURL: baseURL)
+        return requestManager.execute(request: request).eraseToAnyPublisher()
+    }
+
+    public func nextPublisher() -> AnyPublisher<Data, Error> {
+        let request = SpotifyWebApi.Player.Next.Request(baseURL: baseURL)
+        return requestManager.execute(request: request).eraseToAnyPublisher()
+    }
+
+    public func previousPublisher() -> AnyPublisher<Data, Error> {
+        let request = SpotifyWebApi.Player.Previous.Request(baseURL: baseURL)
+        return requestManager.execute(request: request).eraseToAnyPublisher()
+    }
+
+    public func play() {
+        _ = playPublisher().print("SpotifyPlayerGateway.play()").sink(receiveCompletion: { _ in }, receiveValue: { _ in })
+    }
+
+    public func pause() {
+        _ = pausePublisher().print("SpotifyPlayerGateway.pause()").sink(receiveCompletion: { _ in }, receiveValue: { _ in })
+    }
+
+    public func next() {
+        _ = nextPublisher().print("SpotifyPlayerGateway.next()").sink(receiveCompletion: { _ in }, receiveValue: { _ in })
+    }
+
+    public func previous() {
+        _ = previousPublisher().print("SpotifyPlayerGateway.previous()").sink(receiveCompletion: { _ in }, receiveValue: { _ in })
     }
 }
