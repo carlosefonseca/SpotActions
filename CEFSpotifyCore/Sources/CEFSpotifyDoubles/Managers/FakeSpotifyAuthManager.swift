@@ -42,5 +42,5 @@ public class FakeSpotifyAuthManager: SpotifyAuthManager {
 
     @Published public var state: AuthState
 
-    public var statePublisher: Published<AuthState>.Publisher { $state }
+    public var statePublisher: AnyPublisher<AuthState, Never> { $state.eraseToAnyPublisher() }
 }

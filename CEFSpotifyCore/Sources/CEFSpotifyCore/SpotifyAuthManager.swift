@@ -13,7 +13,7 @@ public protocol WebAuth {
 public protocol SpotifyAuthManager {
     func login()
     var state: AuthState { get }
-    var statePublisher: Published<AuthState>.Publisher { get }
+    var statePublisher: AnyPublisher<AuthState, Never> { get }
     func logout()
     func refreshToken() -> AnyPublisher<TokenResponse, RefreshTokenError>
 }
@@ -40,7 +40,6 @@ public enum RefreshTokenError: Error, LocalizedError {
             return "Error (\(error))"
         case .other(let message):
             return "Error (\(message))"
-
         }
     }
 }
@@ -95,7 +94,10 @@ public final class SpotifyAuthManagerImplementation: ObservableObject, SpotifyAu
     }
 
     @Published public var state: AuthState = .notLoggedIn
-    public var statePublisher: Published<AuthState>.Publisher { $state }
+
+    public var statePublisher: AnyPublisher<AuthState, Never> {
+        $state.removeDuplicates().eraseToAnyPublisher()
+    }
 
     public func login() {
 
@@ -134,7 +136,10 @@ public final class SpotifyAuthManagerImplementation: ObservableObject, SpotifyAu
         let url = accessTokenUrl
         var urlRequest = URLRequest(url: url)
 
-        guard let authHeader = self.authHeader else { print("no auth header!"); return }
+        guard let authHeader = self.authHeader else {
+            print("no auth header!")
+            return
+        }
 
         urlRequest.setValue("Basic \(authHeader)", forHTTPHeaderField: "Authorization")
 
