@@ -17,6 +17,16 @@
 		2D38D2D0256184CD00071485 /* iOSDependencies.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D38D2CF256184CD00071485 /* iOSDependencies.swift */; };
 		2D38D2E6256188AA00071485 /* iOSConnectivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D38D2E5256188AA00071485 /* iOSConnectivity.swift */; };
 		2D4E15E9250D2E7200BED733 /* GetPlayingPlaylistHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D4E15E8250D2E7200BED733 /* GetPlayingPlaylistHandler.swift */; };
+		2D6562132561B8C1006D5FB8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2D6562122561B8C1006D5FB8 /* Assets.xcassets */; };
+		2D65621A2561B8C2006D5FB8 /* SpotActionsWatch Extension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 2D6562192561B8C2006D5FB8 /* SpotActionsWatch Extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		2D65621F2561B8C2006D5FB8 /* SpotActionsApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D65621E2561B8C2006D5FB8 /* SpotActionsApp.swift */; };
+		2D6562212561B8C2006D5FB8 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D6562202561B8C2006D5FB8 /* ContentView.swift */; };
+		2D6562232561B8C2006D5FB8 /* NotificationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D6562222561B8C2006D5FB8 /* NotificationController.swift */; };
+		2D6562252561B8C2006D5FB8 /* NotificationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D6562242561B8C2006D5FB8 /* NotificationView.swift */; };
+		2D6562272561B8C2006D5FB8 /* ComplicationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D6562262561B8C2006D5FB8 /* ComplicationController.swift */; };
+		2D6562292561B8C2006D5FB8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2D6562282561B8C2006D5FB8 /* Assets.xcassets */; };
+		2D65622C2561B8C2006D5FB8 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2D65622B2561B8C2006D5FB8 /* Preview Assets.xcassets */; };
+		2D6562312561B8C3006D5FB8 /* SpotActionsWatch.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 2D6562102561B8C0006D5FB8 /* SpotActionsWatch.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		2D6838EF25208EB300A80BE6 /* FilterTracksHandlerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D6838EE25208EB300A80BE6 /* FilterTracksHandlerTests.swift */; };
 		2D69014E2506E3580038F798 /* FilterTracksHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D69014D2506E3580038F798 /* FilterTracksHandler.swift */; };
 		2D69015025076B580038F798 /* GetPlayingTrackHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D69014F25076B580038F798 /* GetPlayingTrackHandler.swift */; };
@@ -43,6 +53,20 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		2D65621B2561B8C2006D5FB8 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2DA5DE4924EE819A00E9BE87 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 2D6562182561B8C2006D5FB8;
+			remoteInfo = "SpotActionsWatch Extension";
+		};
+		2D65622F2561B8C3006D5FB8 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2DA5DE4924EE819A00E9BE87 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 2D65620F2561B8C0006D5FB8;
+			remoteInfo = SpotActionsWatch;
+		};
 		2DA5DE6324EE819B00E9BE87 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 2DA5DE4924EE819A00E9BE87 /* Project object */;
@@ -60,6 +84,28 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
+		2D6562322561B8C3006D5FB8 /* Embed Watch Content */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "$(CONTENTS_FOLDER_PATH)/Watch";
+			dstSubfolderSpec = 16;
+			files = (
+				2D6562312561B8C3006D5FB8 /* SpotActionsWatch.app in Embed Watch Content */,
+			);
+			name = "Embed Watch Content";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2D6562352561B8C3006D5FB8 /* Embed App Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				2D65621A2561B8C2006D5FB8 /* SpotActionsWatch Extension.appex in Embed App Extensions */,
+			);
+			name = "Embed App Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		2DAC399924F1DB74003AC458 /* Embed App Extensions */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -82,6 +128,19 @@
 		2D38D2CF256184CD00071485 /* iOSDependencies.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iOSDependencies.swift; sourceTree = "<group>"; };
 		2D38D2E5256188AA00071485 /* iOSConnectivity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iOSConnectivity.swift; sourceTree = "<group>"; };
 		2D4E15E8250D2E7200BED733 /* GetPlayingPlaylistHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetPlayingPlaylistHandler.swift; sourceTree = "<group>"; };
+		2D6562102561B8C0006D5FB8 /* SpotActionsWatch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SpotActionsWatch.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		2D6562122561B8C1006D5FB8 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		2D6562142561B8C1006D5FB8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		2D6562192561B8C2006D5FB8 /* SpotActionsWatch Extension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "SpotActionsWatch Extension.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
+		2D65621E2561B8C2006D5FB8 /* SpotActionsApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotActionsApp.swift; sourceTree = "<group>"; };
+		2D6562202561B8C2006D5FB8 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		2D6562222561B8C2006D5FB8 /* NotificationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationController.swift; sourceTree = "<group>"; };
+		2D6562242561B8C2006D5FB8 /* NotificationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationView.swift; sourceTree = "<group>"; };
+		2D6562262561B8C2006D5FB8 /* ComplicationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComplicationController.swift; sourceTree = "<group>"; };
+		2D6562282561B8C2006D5FB8 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		2D65622B2561B8C2006D5FB8 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		2D65622D2561B8C3006D5FB8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		2D65622E2561B8C3006D5FB8 /* PushNotificationPayload.apns */ = {isa = PBXFileReference; lastKnownFileType = text; path = PushNotificationPayload.apns; sourceTree = "<group>"; };
 		2D6838EE25208EB300A80BE6 /* FilterTracksHandlerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterTracksHandlerTests.swift; sourceTree = "<group>"; };
 		2D69014D2506E3580038F798 /* FilterTracksHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterTracksHandler.swift; sourceTree = "<group>"; };
 		2D69014F25076B580038F798 /* GetPlayingTrackHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetPlayingTrackHandler.swift; sourceTree = "<group>"; };
@@ -112,6 +171,13 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		2D6562162561B8C2006D5FB8 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		2DA5DE4E24EE819A00E9BE87 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -140,6 +206,39 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		2D6562112561B8C0006D5FB8 /* SpotActionsWatch */ = {
+			isa = PBXGroup;
+			children = (
+				2D6562122561B8C1006D5FB8 /* Assets.xcassets */,
+				2D6562142561B8C1006D5FB8 /* Info.plist */,
+			);
+			path = SpotActionsWatch;
+			sourceTree = "<group>";
+		};
+		2D65621D2561B8C2006D5FB8 /* SpotActionsWatch Extension */ = {
+			isa = PBXGroup;
+			children = (
+				2D65621E2561B8C2006D5FB8 /* SpotActionsApp.swift */,
+				2D6562202561B8C2006D5FB8 /* ContentView.swift */,
+				2D6562222561B8C2006D5FB8 /* NotificationController.swift */,
+				2D6562242561B8C2006D5FB8 /* NotificationView.swift */,
+				2D6562262561B8C2006D5FB8 /* ComplicationController.swift */,
+				2D6562282561B8C2006D5FB8 /* Assets.xcassets */,
+				2D65622D2561B8C3006D5FB8 /* Info.plist */,
+				2D65622E2561B8C3006D5FB8 /* PushNotificationPayload.apns */,
+				2D65622A2561B8C2006D5FB8 /* Preview Content */,
+			);
+			path = "SpotActionsWatch Extension";
+			sourceTree = "<group>";
+		};
+		2D65622A2561B8C2006D5FB8 /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				2D65622B2561B8C2006D5FB8 /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
 		2D755B0524F58DC600800222 /* Intents */ = {
 			isa = PBXGroup;
 			children = (
@@ -156,6 +255,8 @@
 				2DA5DE5324EE819A00E9BE87 /* SpotActions */,
 				2DA5DE6524EE819B00E9BE87 /* SpotActionsTests */,
 				2DA5DE7024EE819B00E9BE87 /* SpotActionsUITests */,
+				2D6562112561B8C0006D5FB8 /* SpotActionsWatch */,
+				2D65621D2561B8C2006D5FB8 /* SpotActionsWatch Extension */,
 				2DA5DE5224EE819A00E9BE87 /* Products */,
 				2DA5DE7F24EE845100E9BE87 /* Frameworks */,
 			);
@@ -167,6 +268,8 @@
 				2DA5DE5124EE819A00E9BE87 /* SpotActions.app */,
 				2DA5DE6224EE819B00E9BE87 /* SpotActionsTests.xctest */,
 				2DA5DE6D24EE819B00E9BE87 /* SpotActionsUITests.xctest */,
+				2D6562102561B8C0006D5FB8 /* SpotActionsWatch.app */,
+				2D6562192561B8C2006D5FB8 /* SpotActionsWatch Extension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -249,6 +352,40 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		2D65620F2561B8C0006D5FB8 /* SpotActionsWatch */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2D6562392561B8C3006D5FB8 /* Build configuration list for PBXNativeTarget "SpotActionsWatch" */;
+			buildPhases = (
+				2D65620E2561B8C0006D5FB8 /* Resources */,
+				2D6562352561B8C3006D5FB8 /* Embed App Extensions */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				2D65621C2561B8C2006D5FB8 /* PBXTargetDependency */,
+			);
+			name = SpotActionsWatch;
+			productName = SpotActionsWatch;
+			productReference = 2D6562102561B8C0006D5FB8 /* SpotActionsWatch.app */;
+			productType = "com.apple.product-type.application.watchapp2";
+		};
+		2D6562182561B8C2006D5FB8 /* SpotActionsWatch Extension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2D6562382561B8C3006D5FB8 /* Build configuration list for PBXNativeTarget "SpotActionsWatch Extension" */;
+			buildPhases = (
+				2D6562152561B8C2006D5FB8 /* Sources */,
+				2D6562162561B8C2006D5FB8 /* Frameworks */,
+				2D6562172561B8C2006D5FB8 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "SpotActionsWatch Extension";
+			productName = "SpotActionsWatch Extension";
+			productReference = 2D6562192561B8C2006D5FB8 /* SpotActionsWatch Extension.appex */;
+			productType = "com.apple.product-type.watchkit2-extension";
+		};
 		2DA5DE5024EE819A00E9BE87 /* SpotActions */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 2DA5DE7624EE819B00E9BE87 /* Build configuration list for PBXNativeTarget "SpotActions" */;
@@ -257,10 +394,12 @@
 				2DA5DE4E24EE819A00E9BE87 /* Frameworks */,
 				2DA5DE4F24EE819A00E9BE87 /* Resources */,
 				2DAC399924F1DB74003AC458 /* Embed App Extensions */,
+				2D6562322561B8C3006D5FB8 /* Embed Watch Content */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				2D6562302561B8C3006D5FB8 /* PBXTargetDependency */,
 			);
 			name = SpotActions;
 			packageProductDependencies = (
@@ -317,6 +456,12 @@
 				LastSwiftUpdateCheck = 1220;
 				LastUpgradeCheck = 1200;
 				TargetAttributes = {
+					2D65620F2561B8C0006D5FB8 = {
+						CreatedOnToolsVersion = 12.2;
+					};
+					2D6562182561B8C2006D5FB8 = {
+						CreatedOnToolsVersion = 12.2;
+					};
 					2DA5DE5024EE819A00E9BE87 = {
 						CreatedOnToolsVersion = 12.0;
 					};
@@ -349,11 +494,30 @@
 				2DA5DE5024EE819A00E9BE87 /* SpotActions */,
 				2DA5DE6124EE819B00E9BE87 /* SpotActionsTests */,
 				2DA5DE6C24EE819B00E9BE87 /* SpotActionsUITests */,
+				2D65620F2561B8C0006D5FB8 /* SpotActionsWatch */,
+				2D6562182561B8C2006D5FB8 /* SpotActionsWatch Extension */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		2D65620E2561B8C0006D5FB8 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2D6562132561B8C1006D5FB8 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2D6562172561B8C2006D5FB8 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2D65622C2561B8C2006D5FB8 /* Preview Assets.xcassets in Resources */,
+				2D6562292561B8C2006D5FB8 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		2DA5DE4F24EE819A00E9BE87 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -380,6 +544,18 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		2D6562152561B8C2006D5FB8 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2D6562232561B8C2006D5FB8 /* NotificationController.swift in Sources */,
+				2D6562212561B8C2006D5FB8 /* ContentView.swift in Sources */,
+				2D6562272561B8C2006D5FB8 /* ComplicationController.swift in Sources */,
+				2D65621F2561B8C2006D5FB8 /* SpotActionsApp.swift in Sources */,
+				2D6562252561B8C2006D5FB8 /* NotificationView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		2DA5DE4D24EE819A00E9BE87 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -431,6 +607,16 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		2D65621C2561B8C2006D5FB8 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 2D6562182561B8C2006D5FB8 /* SpotActionsWatch Extension */;
+			targetProxy = 2D65621B2561B8C2006D5FB8 /* PBXContainerItemProxy */;
+		};
+		2D6562302561B8C3006D5FB8 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 2D65620F2561B8C0006D5FB8 /* SpotActionsWatch */;
+			targetProxy = 2D65622F2561B8C3006D5FB8 /* PBXContainerItemProxy */;
+		};
 		2DA5DE6424EE819B00E9BE87 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 2DA5DE5024EE819A00E9BE87 /* SpotActions */;
@@ -444,6 +630,94 @@
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
+		2D6562332561B8C3006D5FB8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = VF8BTMF3F4;
+				IBSC_MODULE = SpotActionsWatch_Extension;
+				INFOPLIST_FILE = SpotActionsWatch/Info.plist;
+				PRODUCT_BUNDLE_IDENTIFIER = com.carlosefonseca.SpotActions.watchkitapp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 7.0;
+			};
+			name = Debug;
+		};
+		2D6562342561B8C3006D5FB8 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = VF8BTMF3F4;
+				IBSC_MODULE = SpotActionsWatch_Extension;
+				INFOPLIST_FILE = SpotActionsWatch/Info.plist;
+				PRODUCT_BUNDLE_IDENTIFIER = com.carlosefonseca.SpotActions.watchkitapp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 7.0;
+			};
+			name = Release;
+		};
+		2D6562362561B8C3006D5FB8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_COMPLICATION_NAME = Complication;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_ASSET_PATHS = "\"SpotActionsWatch Extension/Preview Content\"";
+				DEVELOPMENT_TEAM = VF8BTMF3F4;
+				ENABLE_PREVIEWS = YES;
+				INFOPLIST_FILE = "SpotActionsWatch Extension/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.carlosefonseca.SpotActions.watchkitapp.watchkitextension;
+				PRODUCT_NAME = "${TARGET_NAME}";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 7.0;
+			};
+			name = Debug;
+		};
+		2D6562372561B8C3006D5FB8 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_COMPLICATION_NAME = Complication;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_ASSET_PATHS = "\"SpotActionsWatch Extension/Preview Content\"";
+				DEVELOPMENT_TEAM = VF8BTMF3F4;
+				ENABLE_PREVIEWS = YES;
+				INFOPLIST_FILE = "SpotActionsWatch Extension/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.carlosefonseca.SpotActions.watchkitapp.watchkitextension;
+				PRODUCT_NAME = "${TARGET_NAME}";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 7.0;
+			};
+			name = Release;
+		};
 		2DA5DE7424EE819B00E9BE87 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -693,6 +967,24 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		2D6562382561B8C3006D5FB8 /* Build configuration list for PBXNativeTarget "SpotActionsWatch Extension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2D6562362561B8C3006D5FB8 /* Debug */,
+				2D6562372561B8C3006D5FB8 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		2D6562392561B8C3006D5FB8 /* Build configuration list for PBXNativeTarget "SpotActionsWatch" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2D6562332561B8C3006D5FB8 /* Debug */,
+				2D6562342561B8C3006D5FB8 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		2DA5DE4C24EE819A00E9BE87 /* Build configuration list for PBXProject "SpotActions" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
