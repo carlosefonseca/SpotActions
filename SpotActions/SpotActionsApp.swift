@@ -7,53 +7,6 @@ import Intents
 import CEFSpotifyCore
 import Combine
 
-struct Gateways {
-    let userProfile: SpotifyUserProfileGateway
-    let playlists: SpotifyPlaylistsGateway
-    let player: SpotifyPlayerGateway
-
-    init(baseURL: URL, requestManager: RequestManager) {
-        userProfile = SpotifyUserProfileGatewayImplementation(baseURL: baseURL, requestManager: requestManager)
-        playlists = SpotifyPlaylistsGatewayImplementation(baseURL: baseURL, requestManager: requestManager)
-        player = SpotifyPlayerGatewayImplementation(baseURL: baseURL, requestManager: requestManager)
-    }
-}
-
-struct Dependencies {
-    var keychain: CredentialStore
-    var auth: SpotifyAuthManager
-    var spotifyRequestManager: RequestManager
-    var requester: URLRequester
-
-    var gateways: Gateways
-
-    var userManager: UserManager
-    var playlistsManager: PlaylistsManager
-    var playerManager: PlayerManager
-
-    var trackFilterService: TrackFilterService
-    var trackMixerService: TrackMixerService
-
-    var systemPublishers: SystemPublishers
-
-    init() {
-        keychain = Keychain()
-        requester = UrlSessionRequester()
-        auth = SpotifyAuthManagerImplementation(webAuthManager: WebAuthManager(), credentialStore: keychain, requester: requester)
-        spotifyRequestManager = AuthenticatedSpotifyRequestManager(auth: auth, requester: requester)
-        gateways = Gateways(baseURL: URL(string: "https://api.spotify.com")!, requestManager: spotifyRequestManager)
-
-        userManager = UserManagerImplementation(auth: auth, gateway: gateways.userProfile)
-        playlistsManager = PlaylistsManagerImplementation(auth: auth, gateway: gateways.playlists)
-        playerManager = PlayerManagerImplementation(gateway: gateways.player)
-
-        trackFilterService = TrackFilterServiceImplementation(playlistsManager: playlistsManager)
-        trackMixerService = TrackMixerServiceImplementation(playlistsManager: playlistsManager)
-
-        systemPublishers = SystemPublishersImplementation()
-    }
-}
-
 @main
 struct SpotActionsApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
@@ -70,18 +23,18 @@ struct SpotActionsApp: App {
 
     var body: some Scene {
         WindowGroup {
-            ContentView(presenter: Presenter(auth: dependencies.auth,
-                                             userManager: dependencies.userManager,
-                                             playlistManager: dependencies.playlistsManager,
-                                             playerManager: dependencies.playerManager,
-                                             systemPublishers: dependencies.systemPublishers))
+            ContentView(presenter: MainPresenter(auth: dependencies.auth,
+                                                 userManager: dependencies.userManager,
+                                                 playlistManager: dependencies.playlistsManager,
+                                                 playerManager: dependencies.playerManager,
+                                                 systemPublishers: dependencies.systemPublishers))
         }
     }
 }
 
 // @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
-    var dependencies = Dependencies()
+    var dependencies = iOSDependencies()
 
     lazy var userProfileHandler: GetUserProfileHandler = { GetUserProfileHandler(auth: dependencies.auth, userManager: dependencies.userManager) }()
     lazy var userPlaylistHandler: GetUserPlaylistsHandler = { GetUserPlaylistsHandler(auth: dependencies.auth, userManager: dependencies.userManager, playlistsManager: dependencies.playlistsManager) }()

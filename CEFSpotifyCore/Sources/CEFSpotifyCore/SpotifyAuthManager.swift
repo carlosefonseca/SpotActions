@@ -44,6 +44,7 @@ public enum RefreshTokenError: Error, LocalizedError {
     }
 }
 
+
 public final class SpotifyAuthManagerImplementation: ObservableObject, SpotifyAuthManager {
 
     // TODO: Move to config files or whatever
