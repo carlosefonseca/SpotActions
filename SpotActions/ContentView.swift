@@ -106,18 +106,23 @@ class Presenter: ObservableObject {
 
         $triggerUpdate
             .eraseToAnyPublisher()
-            .flatMap { _ ->  AnyPublisher<Int, Error> in
+            .flatMap { _ -> AnyPublisher<Int, Error> in
 
-                let a : AnyPublisher<Int, Error> = self.playerManager.getCurrentlyPlaying().handleEvents(receiveOutput: { self.playing = $0 }).map{_ in 0}.eraseToAnyPublisher()
-                    .mapError { $0 as Error}
+                let a: AnyPublisher<Int, Error> = self.playerManager.getCurrentlyPlaying()
+                    .receive(on: RunLoop.main)
+                    .handleEvents(receiveOutput: { self.playing = $0 }).map { _ in 0 }
+                    .mapError { $0 as Error }
                     .eraseToAnyPublisher()
-                let x = Publishers.Merge(
-                    a,
-                    self.playerManager.devices().handleEvents(receiveOutput: { self.devices = $0 }).map{_ in 0}.eraseToAnyPublisher())
-                return x.eraseToAnyPublisher()
+
+                let b = self.playerManager.devices()
+                    .receive(on: RunLoop.main)
+                    .handleEvents(receiveOutput: { self.devices = $0 }).map { _ in 0 }
+                    .eraseToAnyPublisher()
+
+                return Publishers.Merge(a, b).eraseToAnyPublisher()
             }
             .receive(on: RunLoop.main)
-            .sink(receiveCompletion: { _ in }) { _ in}
+            .sink(receiveCompletion: { _ in }) { _ in }
             .store(in: &bag)
     }
 
@@ -261,21 +266,26 @@ struct ContentView: View {
             Spacer()
         } else {
 
-            List {
-                Section(header: Text("Devices")) {
+            HStack {
+                Text("DEVICES")
+                Spacer()
+            }.background(Color("tablePlainHeaderFooterFloatingBackgroundColor"))
+
+            ScrollView(.horizontal) {
+                HStack {
                     ForEach(self.presenter.devices) { p in
                         Button(action: { self.presenter.transferPlayback(to: p) }) {
                             HStack {
                                 Label(p.name, systemImage: p.icon())
                                 if p.isActive {
-                                    Spacer()
                                     Image(systemName: "checkmark")
                                 }
                             }
                         }
+                        Divider()
                     }
                 }
-            }
+            }.frame(height: 40)
         }
     }
 
@@ -292,14 +302,19 @@ struct ContentView: View {
                     if let playing = presenter.playing, let item = playing.item {
                         HStack(alignment: .bottom) {
 
-                            WebImage(url: item.albumArtUrl)
-                                .resizable()
-                                .placeholder { Image(systemName: "music.mic").font(.system(size: 36, weight: .thin)) }
-                                .scaledToFill()
-                                .frame(width: 150.0, height: 150.0)
-                                .background(Color.gray.opacity(0.1))
-                                .cornerRadius(10.0)
-                                .padding()
+                            ZStack {
+                                Image(systemName: "music.mic").font(.system(size: 36, weight: .thin))
+                                WebImage(url: item.albumArtUrl)
+                                    .resizable()
+//                                .placeholder {  }
+//                                    .transition(.fade(duration: 0.5))
+                                    .transition(.fade)
+                                    .scaledToFill()
+                            }
+                            .frame(width: 150.0, height: 150.0)
+                            .background(Color.gray.opacity(0.1))
+                            .cornerRadius(10.0)
+                            .padding()
 
                             VStack(alignment: .center) {
                                 HStack {
