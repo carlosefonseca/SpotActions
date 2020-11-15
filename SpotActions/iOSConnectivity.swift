@@ -4,8 +4,10 @@
 
 import Foundation
 import WatchConnectivity
+import CEFSpotifyCore
 
 public class iOSConnectivity: NSObject, WCSessionDelegate {
+
     public func sessionDidBecomeInactive(_ session: WCSession) {
         print("sessionDidBecomeInactive")
     }
@@ -27,22 +29,26 @@ public class iOSConnectivity: NSObject, WCSessionDelegate {
 
     var lastMessage: CFAbsoluteTime = 0
 
-    func sendWatchMessage() {
-        let currentTime = CFAbsoluteTimeGetCurrent()
+    var encoder = JSONEncoder()
 
-        // if less than half a second has passed, bail out
-        if lastMessage + 0.5 > currentTime {
+    func sendWatchMessage(data: CurrentlyPlayingJSON?) {
+        guard WCSession.default.isReachable else {
+            print("WK: Not Reachable")
             return
         }
 
-        // send a message to the watch if it's reachable
-        if WCSession.default.isReachable {
-            // this is a meaningless message, but it's enough for our purposes
-            let message = ["Message": "Hello"]
-            WCSession.default.sendMessage(message, replyHandler: nil)
+        let m = WatchMessageWrapper()
+
+        if let data = data {
+            if let item = data.item {
+
+                m.trackName = item.title
+                m.trackArtistName = item.artistNames.joined(separator: ", ")
+                m.trackAlbumUrl = item.albumArtUrl?.absoluteString
+            }
+            m.isPlaying = data.isPlaying
         }
 
-        // update our rate limiting property
-        lastMessage = CFAbsoluteTimeGetCurrent()
+        try? WCSession.default.updateApplicationContext(m.message)
     }
 }

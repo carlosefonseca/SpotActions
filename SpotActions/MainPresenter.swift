@@ -124,7 +124,7 @@ class MainPresenter: ObservableObject {
                 return Publishers.Merge(a, b).eraseToAnyPublisher()
             }
             .receive(on: RunLoop.main)
-            .sink(receiveCompletion: { _ in }) { _ in self.connect.sendWatchMessage() }
+            .sink(receiveCompletion: { _ in }) { _ in self.connect.sendWatchMessage(data: self.playing) }
             .store(in: &bag)
     }
 
