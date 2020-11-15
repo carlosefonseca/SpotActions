@@ -10,6 +10,7 @@
 		2D274108255E06250045AED7 /* SDWebImageSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 2D274107255E06250045AED7 /* SDWebImageSwiftUI */; };
 		2D324DC02504E63C00703432 /* GetPlaylistTracksHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D324DBF2504E63C00703432 /* GetPlaylistTracksHandler.swift */; };
 		2D324DC2250578B200703432 /* SaveTracksOnPlaylistHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D324DC1250578B200703432 /* SaveTracksOnPlaylistHandler.swift */; };
+		2D38D22B2560987400071485 /* SystemPublishers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D38D22A2560987400071485 /* SystemPublishers.swift */; };
 		2D4E15E9250D2E7200BED733 /* GetPlayingPlaylistHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D4E15E8250D2E7200BED733 /* GetPlayingPlaylistHandler.swift */; };
 		2D6838EF25208EB300A80BE6 /* FilterTracksHandlerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D6838EE25208EB300A80BE6 /* FilterTracksHandlerTests.swift */; };
 		2D69014E2506E3580038F798 /* FilterTracksHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D69014D2506E3580038F798 /* FilterTracksHandler.swift */; };
@@ -69,6 +70,7 @@
 /* Begin PBXFileReference section */
 		2D324DBF2504E63C00703432 /* GetPlaylistTracksHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetPlaylistTracksHandler.swift; sourceTree = "<group>"; };
 		2D324DC1250578B200703432 /* SaveTracksOnPlaylistHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveTracksOnPlaylistHandler.swift; sourceTree = "<group>"; };
+		2D38D22A2560987400071485 /* SystemPublishers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemPublishers.swift; sourceTree = "<group>"; };
 		2D4E15E8250D2E7200BED733 /* GetPlayingPlaylistHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetPlayingPlaylistHandler.swift; sourceTree = "<group>"; };
 		2D6838EE25208EB300A80BE6 /* FilterTracksHandlerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterTracksHandlerTests.swift; sourceTree = "<group>"; };
 		2D69014D2506E3580038F798 /* FilterTracksHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterTracksHandler.swift; sourceTree = "<group>"; };
@@ -170,6 +172,7 @@
 				2DA5DE5824EE819B00E9BE87 /* Assets.xcassets */,
 				2DAC39A224F1EC0B003AC458 /* Intents */,
 				2DA5DE5A24EE819B00E9BE87 /* Preview Content */,
+				2D38D22A2560987400071485 /* SystemPublishers.swift */,
 			);
 			path = SpotActions;
 			sourceTree = "<group>";
@@ -371,6 +374,7 @@
 				2D324DC02504E63C00703432 /* GetPlaylistTracksHandler.swift in Sources */,
 				2DE4A61E253CA71C00893326 /* GetDetailsOfTrackHandler.swift in Sources */,
 				2D7A560F2528B6150084D2B7 /* MixTracksHandler.swift in Sources */,
+				2D38D22B2560987400071485 /* SystemPublishers.swift in Sources */,
 				2DD91AE224F11ADF0032D7C6 /* Keychain.swift in Sources */,
 				2D324DC2250578B200703432 /* SaveTracksOnPlaylistHandler.swift in Sources */,
 				2D6A966624F27D1800993587 /* GetUserPlaylistsHandler.swift in Sources */,

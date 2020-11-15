@@ -5,6 +5,7 @@
 import SwiftUI
 import Intents
 import CEFSpotifyCore
+import Combine
 
 struct Gateways {
     let userProfile: SpotifyUserProfileGateway
@@ -30,8 +31,10 @@ struct Dependencies {
     var playlistsManager: PlaylistsManager
     var playerManager: PlayerManager
 
-    var trackFilterService : TrackFilterService
-    var trackMixerService : TrackMixerService
+    var trackFilterService: TrackFilterService
+    var trackMixerService: TrackMixerService
+
+    var systemPublishers: SystemPublishers
 
     init() {
         keychain = Keychain()
@@ -46,6 +49,8 @@ struct Dependencies {
 
         trackFilterService = TrackFilterServiceImplementation(playlistsManager: playlistsManager)
         trackMixerService = TrackMixerServiceImplementation(playlistsManager: playlistsManager)
+
+        systemPublishers = SystemPublishersImplementation()
     }
 }
 
@@ -53,14 +58,23 @@ struct Dependencies {
 struct SpotActionsApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
 
+    var bag = Set<AnyCancellable>()
+
     var dependencies: Dependencies { appDelegate.dependencies }
+
+    init() {
+        dependencies.systemPublishers.appIsInForeground.sink { value in
+            print("AppForeground: \(value)")
+        }.store(in: &bag)
+    }
 
     var body: some Scene {
         WindowGroup {
             ContentView(presenter: Presenter(auth: dependencies.auth,
                                              userManager: dependencies.userManager,
                                              playlistManager: dependencies.playlistsManager,
-                                             playerManager: dependencies.playerManager))
+                                             playerManager: dependencies.playerManager,
+                                             systemPublishers: dependencies.systemPublishers))
         }
     }
 }

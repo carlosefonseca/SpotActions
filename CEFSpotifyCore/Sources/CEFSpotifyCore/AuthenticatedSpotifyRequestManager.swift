@@ -2,32 +2,34 @@
 //  AuthenticatedSpotifyRequestManager.swift
 //
 
-import Foundation
 import Combine
+import Foundation
 
 public class AuthenticatedSpotifyRequestManager: RequestManager {
+
+    enum State {
+        case notLoggedIn
+        case validLogin(token: TokenResponse)
+        case storedLogin(token: TokenResponse)
+    }
 
     let jsonDecoder: JSONDecoder
 
     let auth: SpotifyAuthManager
     let requester: URLRequester
 
-    var token: TokenResponse?
-
     var bag = Set<AnyCancellable>()
 
     public init(auth: SpotifyAuthManager, requester: URLRequester) {
         self.auth = auth
         self.requester = requester
-        self.jsonDecoder = JSONDecoder()
+        jsonDecoder = JSONDecoder()
         jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
 
         self.auth.statePublisher.sink { authState in
             switch authState {
-            case .loggedIn(let token):
-                self.token = token
-            default:
-                self.token = nil
+            case .loggedIn(let token): break
+            default: break
             }
         }.store(in: &bag)
     }
@@ -53,11 +55,12 @@ public class AuthenticatedSpotifyRequestManager: RequestManager {
                 guard case .loggedIn(let tokenResponse) = auth else {
                     throw SpotifyRequestError.noLogin
                 }
-                return try self.applyAccessTokenToRequest(urlRequest: urlRequest, token: tokenResponse)
+                return try self.applyAccessTokenToRequest(
+                    urlRequest: urlRequest, token: tokenResponse)
             }
             .print("SpotifyRequestManager.execute()")
-            .flatMap { urlRequest in self.runTheRequest(urlRequest, canRetry: true)
-            }.eraseToAnyPublisher()
+            .flatMap { urlRequest in self.runTheRequest(urlRequest, canRetry: true) }
+            .eraseToAnyPublisher()
     }
 
     func refreshRetry(urlRequest: URLRequest) -> AnyPublisher<Data, Error> {

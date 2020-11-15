@@ -10,8 +10,8 @@ public class UrlSessionRequester: URLRequester {
     public init() {}
 
     public func request(urlRequest: URLRequest) -> AnyPublisher<Data, UrlRequesterError> {
+        print(urlRequest.url!)
         return URLSession.shared.dataTaskPublisher(for: urlRequest)
-            .print("URLSession")
             .mapError { error -> UrlRequesterError in UrlRequesterError.systemError(error: error) }
             .tryMap { (data, response) -> Data in
                 guard let httpResponse = response as? HTTPURLResponse else {

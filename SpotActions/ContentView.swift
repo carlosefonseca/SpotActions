@@ -25,17 +25,24 @@ class Presenter: ObservableObject {
 
     var playlistManager: PlaylistsManager
 
-    @Published var playlists: [PlaylistJSON]?
+    @Published var playlists: [PlaylistJSON] = []
 
     var playerManager: PlayerManager
 
     @Published var playing: CurrentlyPlayingJSON?
 
-    public init(auth: SpotifyAuthManager, userManager: UserManager, playlistManager: PlaylistsManager, playerManager: PlayerManager) {
+    @Published var devices: [DeviceJSON] = []
+
+    var systemPublishers: SystemPublishers
+
+    @Published var triggerUpdate: Int = 0
+
+    public init(auth: SpotifyAuthManager, userManager: UserManager, playlistManager: PlaylistsManager, playerManager: PlayerManager, systemPublishers: SystemPublishers) {
         self.auth = auth
         self.userManager = userManager
         self.playlistManager = playlistManager
         self.playerManager = playerManager
+        self.systemPublishers = systemPublishers
 
         self.auth.statePublisher
             .receive(on: RunLoop.main)
@@ -52,59 +59,86 @@ class Presenter: ObservableObject {
             }.store(in: &bag)
 
         self.userManager.userPublisher.print("Presenter>userManager.userPublisher")
+            .handleEvents(receiveOutput: { _ in
+                self.subscribeOthers()
+            })
             .receive(on: RunLoop.main)
             .sink { self.user = $0 }
             .store(in: &bag)
+    }
 
-        self.playlistManager.publisher
+    func updateDevices() {
+        playerManager.devices()
             .receive(on: RunLoop.main)
-            .sink { self.playlists = $0 }
+            .sink(receiveCompletion: { _ in },
+                  receiveValue: { self.devices = $0 })
+            .store(in: &bag)
+    }
+
+    func subscribeOthers() {
+        playlistManager.getFirstPageUserPlaylists()
+            .receive(on: RunLoop.main)
+            .sink(receiveCompletion: { _ in },
+                  receiveValue: { self.playlists = $0 })
             .store(in: &bag)
 
-        Timer.publish(every: 10, on: .main, in: .common)
-            .autoconnect()
-            .flatMap { _ -> AnyPublisher<CurrentlyPlayingJSON?, PlayerError> in
-                self.playerManager.getCurrentlyPlaying()
+        updateDevices()
+
+        systemPublishers.appIsInForeground
+            .map { fg -> AnyPublisher<Int, Never> in
+                if fg {
+                    return Timer.publish(every: 100, on: .main, in: .common)
+                        .autoconnect()
+                        .print("TIMER-A")
+                        .map { _ in 0 }
+                        .prepend(0)
+                        .eraseToAnyPublisher()
+                } else {
+                    return Empty(completeImmediately: false)
+                        .replaceEmpty(with: 0)
+                        .setFailureType(to: Never.self)
+                        .eraseToAnyPublisher()
+                }
+            }
+            .switchToLatest()
+            .sink(receiveCompletion: { _ in }) { self.triggerUpdate = $0 }
+            .store(in: &bag)
+
+        $triggerUpdate
+            .eraseToAnyPublisher()
+            .flatMap { _ ->  AnyPublisher<Int, Error> in
+
+                let a : AnyPublisher<Int, Error> = self.playerManager.getCurrentlyPlaying().handleEvents(receiveOutput: { self.playing = $0 }).map{_ in 0}.eraseToAnyPublisher()
+                    .mapError { $0 as Error}
+                    .eraseToAnyPublisher()
+                let x = Publishers.Merge(
+                    a,
+                    self.playerManager.devices().handleEvents(receiveOutput: { self.devices = $0 }).map{_ in 0}.eraseToAnyPublisher())
+                return x.eraseToAnyPublisher()
             }
             .receive(on: RunLoop.main)
-            .sink(receiveCompletion: { _ in }) { self.playing = $0 }
+            .sink(receiveCompletion: { _ in }) { _ in}
             .store(in: &bag)
-
-        refresh()
     }
 
     func refresh() {
-        playerManager.getCurrentlyPlaying()
-            .receive(on: RunLoop.main)
-            .sink(receiveCompletion: { _ in }) { self.playing = $0 }
-            .store(in: &bag)
+        triggerUpdate = 0
     }
 
     func previous() {
         playerManager.previous()
-            .flatMap { _ -> AnyPublisher<Never, Error> in
-                self.playerManager.getCurrentlyPlaying()
-                    .receive(on: RunLoop.main)
-                    .handleEvents(receiveOutput: { playing in self.playing = playing })
-                    .ignoreOutput()
-                    .mapError { e in e as Error }
-                    .eraseToAnyPublisher()
-            }
+            .receive(on: RunLoop.main)
+            .handleEvents(receiveCompletion: { _ in self.triggerUpdate = 0 })
             .sink(receiveCompletion: { _ in }, receiveValue: { _ in })
             .store(in: &bag)
     }
 
     func next() {
-        playerManager.next().flatMap { _ -> AnyPublisher<Never, Error> in
-            self.playerManager.getCurrentlyPlaying()
-                .receive(on: RunLoop.main)
-                .handleEvents(receiveOutput: { playing in self.playing = playing })
-                .ignoreOutput()
-                .mapError { e in e as Error }
-                .eraseToAnyPublisher()
-        }
-        .sink(receiveCompletion: { _ in }, receiveValue: { _ in })
-        .store(in: &bag)
+        playerManager.next()
+            .receive(on: RunLoop.main)
+            .handleEvents(receiveCompletion: { _ in self.triggerUpdate = 0 })
+            .sink(receiveCompletion: { _ in }, receiveValue: { _ in })
+            .store(in: &bag)
     }
 
     func playPause() {
@@ -113,10 +147,10 @@ class Presenter: ObservableObject {
         if isPlaying {
             publisher = playerManager.pause()
         } else {
-            publisher = playerManager.play()
+            publisher = playerManager.play(contextUri: nil, deviceId: nil)
         }
         publisher
-            .flatMap { a -> AnyPublisher<Date, Never> in
+            .flatMap { _ -> AnyPublisher<Date, Never> in
                 return Timer.publish(every: 0.5, on: .main, in: .common)
                     .autoconnect()
                     .eraseToAnyPublisher()
@@ -133,6 +167,23 @@ class Presenter: ObservableObject {
             .receive(on: RunLoop.main)
             .handleEvents(receiveOutput: { playing in self.playing = playing })
             .eraseToAnyPublisher()
+            .sink(receiveCompletion: { _ in }, receiveValue: { _ in })
+            .store(in: &bag)
+    }
+
+    func play(playlist: PlaylistJSON) {
+        playerManager.play(contextUri: playlist.uri, deviceId: nil)
+            .receive(on: RunLoop.main)
+            .handleEvents(receiveCompletion: { _ in self.triggerUpdate = 0 })
+            .sink(receiveCompletion: { _ in }, receiveValue: { _ in })
+            .store(in: &bag)
+    }
+
+    func transferPlayback(to device: DeviceJSON) {
+        guard !device.isActive else { return }
+        playerManager.transferPlayback(to: device.id)
+            .receive(on: RunLoop.main)
+            .handleEvents(receiveCompletion: { _ in self.triggerUpdate = 0 })
             .sink(receiveCompletion: { _ in }, receiveValue: { _ in })
             .store(in: &bag)
     }
@@ -171,11 +222,71 @@ struct ContentView: View {
     }
 
     @ViewBuilder
+    fileprivate func playlists() -> some View {
+
+        if presenter.playlists.isEmpty {
+            Spacer()
+            ProgressView()
+            Text("Loading playlists…")
+            Spacer()
+        } else {
+
+            List {
+                Section(header: Text("Playlists")) {
+                    ForEach(self.presenter.playlists) { p in
+                        Button(action: {
+                            self.presenter.play(playlist: p)
+                        }, label: {
+
+                            HStack {
+                                Label(p.name ?? "?", systemImage: "music.note.list")
+                                if p.uri == self.presenter.playing?.context?.uri?.userless {
+                                    Spacer()
+                                    Image(systemName: "checkmark")
+                                }
+                            }
+                        })
+                    }
+                }
+            }
+        }
+    }
+
+    @ViewBuilder
+    func devices() -> some View {
+        if presenter.playlists.isEmpty {
+            Spacer()
+            ProgressView()
+            Text("Loading devices…")
+            Spacer()
+        } else {
+
+            List {
+                Section(header: Text("Devices")) {
+                    ForEach(self.presenter.devices) { p in
+                        Button(action: { self.presenter.transferPlayback(to: p) }) {
+                            HStack {
+                                Label(p.name, systemImage: p.icon())
+                                if p.isActive {
+                                    Spacer()
+                                    Image(systemName: "checkmark")
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     var body: some View {
         VStack {
             if presenter.isAuthenticated {
                 if let user = presenter.user, let displayName = user.displayName {
-                    Spacer()
+                    playlists()
+                    Divider()
+
+                    devices()
                     Divider()
 
                     if let playing = presenter.playing, let item = playing.item {
@@ -195,7 +306,7 @@ struct ContentView: View {
                                     Spacer()
                                     Button(action: { presenter.refresh() }, label: {
                                         Image(systemName: "arrow.clockwise.circle")
-                                })
+                                    })
                                 }
 
 //                                if let contextType = playing.context?.type {
@@ -213,6 +324,8 @@ struct ContentView: View {
                             }
                             Spacer()
                         }
+                    } else {
+                        Text("Nothing is playing")
                     }
 
                     Divider()
@@ -236,6 +349,22 @@ struct ContentView_Previews: PreviewProvider {
         ContentView(presenter: Presenter(auth: FakeSpotifyAuthManager(),
                                          userManager: FakeUserManager(),
                                          playlistManager: FakePlaylistsManager(),
-                                         playerManager: FakePlayerManager()))
+                                         playerManager: FakePlayerManager(),
+                                         systemPublishers: SystemPublishersImplementation()))
+    }
+}
+
+extension DeviceJSON {
+    func icon() -> String {
+        switch type {
+        case "Computer":
+            return "desktopcomputer"
+        case "Smartphone":
+            return "phone"
+        case "Speaker":
+            return "hifispeaker"
+        default:
+            return "questionmark.circle"
+        }
     }
 }

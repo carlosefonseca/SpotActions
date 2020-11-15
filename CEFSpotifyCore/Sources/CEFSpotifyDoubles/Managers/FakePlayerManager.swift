@@ -18,11 +18,27 @@ public class FakePlayerManager: PlayerManager {
         return Fail(error: PlayerError.missingData(message: "TODO!!")).eraseToAnyPublisher()
     }
 
-    public func play() -> AnyPublisher<Data, Error> { return Fail(error: PlayerError.missingData(message: "TODO!!")).eraseToAnyPublisher() }
+    public func play(contextUri: SpotifyURI? = nil, deviceId: String?) -> AnyPublisher<Data, Error> {
+        return Fail(error: PlayerError.missingData(message: "TODO!!")).eraseToAnyPublisher()
+    }
 
-    public func pause() -> AnyPublisher<Data, Error> { return Fail(error: PlayerError.missingData(message: "TODO!!")).eraseToAnyPublisher() }
+    public func pause() -> AnyPublisher<Data, Error> {
+        return Fail(error: PlayerError.missingData(message: "TODO!!")).eraseToAnyPublisher()
+    }
 
-    public func next() -> AnyPublisher<Data, Error> { return Fail(error: PlayerError.missingData(message: "TODO!!")).eraseToAnyPublisher() }
+    public func next() -> AnyPublisher<Data, Error> {
+        return Fail(error: PlayerError.missingData(message: "TODO!!")).eraseToAnyPublisher()
+    }
 
-    public func previous() -> AnyPublisher<Data, Error> { return Fail(error: PlayerError.missingData(message: "TODO!!")).eraseToAnyPublisher() }
+    public func previous() -> AnyPublisher<Data, Error> {
+        return Fail(error: PlayerError.missingData(message: "TODO!!")).eraseToAnyPublisher()
+    }
+
+    public func devices() -> AnyPublisher<[DeviceJSON], Error> {
+        return Fail(error: PlayerError.missingData(message: "TODO!!")).eraseToAnyPublisher()
+    }
+
+    public func transferPlayback(to device: SpotifyID) -> AnyPublisher<Data, Error> {
+        return Fail(error: PlayerError.missingData(message: "TODO!!")).eraseToAnyPublisher()
+    }
 }

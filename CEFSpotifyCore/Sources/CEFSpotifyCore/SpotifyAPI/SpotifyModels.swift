@@ -27,7 +27,7 @@ public struct UserJSON: ModelJSON, CustomStringConvertible, User {
     }
 }
 
-public struct PlaylistJSON: ModelJSON {
+public struct PlaylistJSON: ModelJSON, Identifiable {
     /// Returns true if context is not search and the owner allows other users to modify the playlist. Otherwise returns false.
     public var collaborative: Bool?
     /// The playlist description. Only returned for modified, verified playlists, otherwise null.
@@ -279,6 +279,13 @@ public extension SpotifyURI {
     var id: String {
         String(splits.last!)
     }
+
+    var userless : String {
+        if splits.count == 5 {
+            return [splits[0], splits[3], splits[4]].joined(separator: ":")
+        }
+        return self
+    }
 }
 
 public struct PageTrackJSON: ModelJSON {
@@ -302,6 +309,15 @@ struct URIListJSON: ModelJSON {
 }
 
 public struct CurrentlyPlayingJSON: ModelJSON {
+    public init(context: ContextJSON? = nil, timestamp: Int, progressMs: Int? = nil, isPlaying: Bool, item: TrackJSON? = nil, currentlyPlayingType: String) {
+        self.context = context
+        self.timestamp = timestamp
+        self.progressMs = progressMs
+        self.isPlaying = isPlaying
+        self.item = item
+        self.currentlyPlayingType = currentlyPlayingType
+    }
+
     /// A Context Object. Can be null.
     public var context: ContextJSON?
     /// Unix Millisecond Timestamp when data was fetched
@@ -320,7 +336,7 @@ public struct CurrentlyPlayingJSON: ModelJSON {
 
 public struct ContextJSON: ModelJSON {
     /// The uri of the context.
-    public var uri: String?
+    public var uri: SpotifyURI?
     /// The href of the context, or null if not available.
     public var href: String?
     /// The externalUrls of the context, or null if not available.
@@ -345,4 +361,14 @@ public struct TrackLinkJSON: ModelJSON, Hashable {
 public struct RestrictionsJSON: ModelJSON, Hashable {
     /// The reason why the track is not available
     public var reason: String?
+}
+
+public struct DeviceJSON: ModelJSON, Hashable, Identifiable {
+    public var id: SpotifyID
+    public var isActive: Bool
+    public var isPrivateSession: Bool
+    public var isRestricted: Bool
+    public var name: String
+    public var type: String
+    public var volumePercent: Int
 }

@@ -12,12 +12,14 @@ public extension SpotifyWebApi.Player {
     enum Next {}
     enum Play {}
     enum Pause {}
+    enum Devices {}
+    enum TransferPlayback {}
 }
 
-extension SpotifyWebApi.Player.GetCurrentlyPlaying {
-    public typealias Response = CurrentlyPlayingJSON?
+public extension SpotifyWebApi.Player.GetCurrentlyPlaying {
+    typealias Response = CurrentlyPlayingJSON?
 
-    public struct Request: URLRequestable {
+    struct Request: URLRequestable {
         public var urlRequest: URLRequest
 
         init(baseURL: URL) {
@@ -27,10 +29,10 @@ extension SpotifyWebApi.Player.GetCurrentlyPlaying {
     }
 }
 
-extension SpotifyWebApi.Player.GetRecentlyPlayed {
-    public typealias Response = PagedTracksJSON
+public extension SpotifyWebApi.Player.GetRecentlyPlayed {
+    typealias Response = PagedTracksJSON
 
-    public struct Request: URLRequestable {
+    struct Request: URLRequestable {
         public var urlRequest: URLRequest
 
         init(baseURL: URL) {
@@ -41,20 +43,36 @@ extension SpotifyWebApi.Player.GetRecentlyPlayed {
     }
 }
 
-extension SpotifyWebApi.Player.Play {
-    public struct Request: URLRequestable {
+public extension SpotifyWebApi.Player.Play {
+    struct PlayBody: Encodable {
+        var contextUri: SpotifyURI
+    }
+
+    struct Request: URLRequestable {
         public var urlRequest: URLRequest
 
-        init(baseURL: URL) {
-            let urlComponents = URLComponents(url: URL(string: "/v1/me/player/play", relativeTo: baseURL)!, resolvingAgainstBaseURL: true)!
+        init(baseURL: URL, contextUri: SpotifyURI? = nil, deviceId: String? = nil) {
+            var urlComponents = URLComponents(url: URL(string: "/v1/me/player/play", relativeTo: baseURL)!, resolvingAgainstBaseURL: true)!
+
+            if let deviceId = deviceId {
+                urlComponents.queryItems = [URLQueryItem(name: "device_id", value: deviceId)]
+            }
+
             urlRequest = URLRequest(url: urlComponents.url!)
             urlRequest.httpMethod = "PUT"
+
+            if let context = contextUri {
+                let body = PlayBody(contextUri: context)
+                let encoder = JSONEncoder()
+                encoder.keyEncodingStrategy = .convertToSnakeCase
+                urlRequest.httpBody = try? encoder.encode(body)
+            }
         }
     }
 }
 
-extension SpotifyWebApi.Player.Pause {
-    public struct Request: URLRequestable {
+public extension SpotifyWebApi.Player.Pause {
+    struct Request: URLRequestable {
         public var urlRequest: URLRequest
 
         init(baseURL: URL) {
@@ -65,8 +83,8 @@ extension SpotifyWebApi.Player.Pause {
     }
 }
 
-extension SpotifyWebApi.Player.Previous {
-    public struct Request: URLRequestable {
+public extension SpotifyWebApi.Player.Previous {
+    struct Request: URLRequestable {
         public var urlRequest: URLRequest
 
         init(baseURL: URL) {
@@ -77,8 +95,8 @@ extension SpotifyWebApi.Player.Previous {
     }
 }
 
-extension SpotifyWebApi.Player.Next {
-    public struct Request: URLRequestable {
+public extension SpotifyWebApi.Player.Next {
+    struct Request: URLRequestable {
         public var urlRequest: URLRequest
 
         init(baseURL: URL) {
@@ -89,19 +107,67 @@ extension SpotifyWebApi.Player.Next {
     }
 }
 
+public extension SpotifyWebApi.Player.Devices {
+
+    struct DevicesResponse: Decodable {
+        var devices: [DeviceJSON]
+    }
+
+    typealias Response = DevicesResponse
+
+    struct Request: URLRequestable {
+        public var urlRequest: URLRequest
+
+        init(baseURL: URL) {
+            let urlComponents = URLComponents(url: URL(string: "/v1/me/player/devices", relativeTo: baseURL)!, resolvingAgainstBaseURL: true)!
+            urlRequest = URLRequest(url: urlComponents.url!)
+            urlRequest.httpMethod = "GET"
+        }
+    }
+}
+
+public extension SpotifyWebApi.Player.TransferPlayback {
+    struct Request: URLRequestable {
+
+        struct Body: Encodable {
+            var deviceIds: [String]
+            var play: Bool = true
+
+            init(deviceId: String, play: Bool = true) {
+                self.deviceIds = [deviceId]
+                self.play = play
+            }
+        }
+
+        public var urlRequest: URLRequest
+
+        var encoder: JSONEncoder = {
+            let encoder = JSONEncoder()
+            encoder.keyEncodingStrategy = .convertToSnakeCase
+            return encoder
+        }()
+
+        init(baseURL: URL, deviceId: SpotifyID) {
+            let urlComponents = URLComponents(url: URL(string: "/v1/me/player", relativeTo: baseURL)!, resolvingAgainstBaseURL: true)!
+            urlRequest = URLRequest(url: urlComponents.url!)
+            urlRequest.httpMethod = "PUT"
+            urlRequest.httpBody = try! encoder.encode(Body(deviceId: deviceId))
+        }
+    }
+}
+
 public protocol SpotifyPlayerGateway {
     func getRecentlyPlayed() -> AnyPublisher<PagedTracksJSON, Error>
     func getCurrentlyPlaying() -> AnyPublisher<CurrentlyPlayingJSON?, Error>
 
-    func playPublisher() -> AnyPublisher<Data, Error>
-    func pausePublisher() -> AnyPublisher<Data, Error>
-    func nextPublisher() -> AnyPublisher<Data, Error>
-    func previousPublisher() -> AnyPublisher<Data, Error>
+    func play(contextUri: SpotifyURI?, deviceId: String?) -> AnyPublisher<Data, Error>
+    func pause() -> AnyPublisher<Data, Error>
+    func next() -> AnyPublisher<Data, Error>
+    func previous() -> AnyPublisher<Data, Error>
 
-    func play()
-    func pause()
-    func next()
-    func previous()
+    func devices() -> AnyPublisher<[DeviceJSON], Error>
+
+    func transferPlayback(to device: SpotifyID) -> AnyPublisher<Data, Error>
 }
 
 public class SpotifyPlayerGatewayImplementation: BaseSpotifyGateway, SpotifyPlayerGateway {
@@ -117,7 +183,9 @@ public class SpotifyPlayerGatewayImplementation: BaseSpotifyGateway, SpotifyPlay
         let request = SpotifyWebApi.Player.GetCurrentlyPlaying.Request(baseURL: baseURL)
         return requestManager.execute(request: request)
             .print("SpotifyPlayerGateway.getCurrentlyPlaying() 1")
+            .filter { !$0.isEmpty }
             .decode(type: SpotifyWebApi.Player.GetCurrentlyPlaying.Response.self, decoder: decoder)
+            .replaceEmpty(with: nil)
             .handleEvents(receiveCompletion: { completion in
                 if case Subscribers.Completion.failure(let error) = completion {
                     print("FAILS WHEN NOTHING IS PLAYING")
@@ -128,39 +196,36 @@ public class SpotifyPlayerGatewayImplementation: BaseSpotifyGateway, SpotifyPlay
             .eraseToAnyPublisher()
     }
 
-    public func playPublisher() -> AnyPublisher<Data, Error> {
-        let request = SpotifyWebApi.Player.Play.Request(baseURL: baseURL)
+    public func play(contextUri: SpotifyURI? = nil, deviceId: String? = nil) -> AnyPublisher<Data, Error> {
+        let request = SpotifyWebApi.Player.Play.Request(baseURL: baseURL, contextUri: contextUri, deviceId: deviceId)
         return requestManager.execute(request: request).eraseToAnyPublisher()
     }
 
-    public func pausePublisher() -> AnyPublisher<Data, Error> {
+    public func pause() -> AnyPublisher<Data, Error> {
         let request = SpotifyWebApi.Player.Pause.Request(baseURL: baseURL)
         return requestManager.execute(request: request).eraseToAnyPublisher()
     }
 
-    public func nextPublisher() -> AnyPublisher<Data, Error> {
+    public func next() -> AnyPublisher<Data, Error> {
         let request = SpotifyWebApi.Player.Next.Request(baseURL: baseURL)
         return requestManager.execute(request: request).eraseToAnyPublisher()
     }
 
-    public func previousPublisher() -> AnyPublisher<Data, Error> {
+    public func previous() -> AnyPublisher<Data, Error> {
         let request = SpotifyWebApi.Player.Previous.Request(baseURL: baseURL)
         return requestManager.execute(request: request).eraseToAnyPublisher()
     }
 
-    public func play() {
-        _ = playPublisher().print("SpotifyPlayerGateway.play()").sink(receiveCompletion: { _ in }, receiveValue: { _ in })
+    public func devices() -> AnyPublisher<[DeviceJSON], Error> {
+        let request = SpotifyWebApi.Player.Devices.Request(baseURL: baseURL)
+        return requestManager.execute(request: request)
+            .decode(type: SpotifyWebApi.Player.Devices.Response.self, decoder: decoder)
+            .map { $0.devices }
+            .eraseToAnyPublisher()
     }
 
-    public func pause() {
-        _ = pausePublisher().print("SpotifyPlayerGateway.pause()").sink(receiveCompletion: { _ in }, receiveValue: { _ in })
-    }
-
-    public func next() {
-        _ = nextPublisher().print("SpotifyPlayerGateway.next()").sink(receiveCompletion: { _ in }, receiveValue: { _ in })
-    }
-
-    public func previous() {
-        _ = previousPublisher().print("SpotifyPlayerGateway.previous()").sink(receiveCompletion: { _ in }, receiveValue: { _ in })
+    public func transferPlayback(to deviceId: SpotifyID) -> AnyPublisher<Data, Error> {
+        let request = SpotifyWebApi.Player.TransferPlayback.Request(baseURL: baseURL, deviceId: deviceId)
+        return requestManager.execute(request: request).eraseToAnyPublisher()
     }
 }
