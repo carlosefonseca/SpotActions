@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2D04495425633AD8002F1230 /* WatchPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D04495325633AD8002F1230 /* WatchPresenter.swift */; };
 		2D274108255E06250045AED7 /* SDWebImageSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 2D274107255E06250045AED7 /* SDWebImageSwiftUI */; };
 		2D324DC02504E63C00703432 /* GetPlaylistTracksHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D324DBF2504E63C00703432 /* GetPlaylistTracksHandler.swift */; };
 		2D324DC2250578B200703432 /* SaveTracksOnPlaylistHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D324DC1250578B200703432 /* SaveTracksOnPlaylistHandler.swift */; };
@@ -61,8 +62,8 @@
 		2DD91AE024F119B50032D7C6 /* WebAuth.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DD91ADF24F119B50032D7C6 /* WebAuth.swift */; };
 		2DD91AE224F11ADF0032D7C6 /* Keychain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DD91AE124F11ADF0032D7C6 /* Keychain.swift */; };
 		2DE4A61E253CA71C00893326 /* GetDetailsOfTrackHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DE4A61D253CA71C00893326 /* GetDetailsOfTrackHandler.swift */; };
-		2DF5B8A42561C66E008D1FE1 /* WatchMessageWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DF5B8A32561C66E008D1FE1 /* WatchMessageWrapper.swift */; };
-		2DF5B8AF2561C67D008D1FE1 /* WatchMessageWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DF5B8A32561C66E008D1FE1 /* WatchMessageWrapper.swift */; };
+		2DF5B8A42561C66E008D1FE1 /* WatchAppContextWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DF5B8A32561C66E008D1FE1 /* WatchAppContextWrapper.swift */; };
+		2DF5B8AF2561C67D008D1FE1 /* WatchAppContextWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DF5B8A32561C66E008D1FE1 /* WatchAppContextWrapper.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -132,6 +133,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		2D04495325633AD8002F1230 /* WatchPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchPresenter.swift; sourceTree = "<group>"; };
 		2D324DBF2504E63C00703432 /* GetPlaylistTracksHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetPlaylistTracksHandler.swift; sourceTree = "<group>"; };
 		2D324DC1250578B200703432 /* SaveTracksOnPlaylistHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveTracksOnPlaylistHandler.swift; sourceTree = "<group>"; };
 		2D38D22A2560987400071485 /* SystemPublishers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemPublishers.swift; sourceTree = "<group>"; };
@@ -185,7 +187,7 @@
 		2DD91ADF24F119B50032D7C6 /* WebAuth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebAuth.swift; sourceTree = "<group>"; };
 		2DD91AE124F11ADF0032D7C6 /* Keychain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Keychain.swift; sourceTree = "<group>"; };
 		2DE4A61D253CA71C00893326 /* GetDetailsOfTrackHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetDetailsOfTrackHandler.swift; sourceTree = "<group>"; };
-		2DF5B8A32561C66E008D1FE1 /* WatchMessageWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchMessageWrapper.swift; sourceTree = "<group>"; };
+		2DF5B8A32561C66E008D1FE1 /* WatchAppContextWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchAppContextWrapper.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -251,6 +253,7 @@
 				2D65622D2561B8C3006D5FB8 /* Info.plist */,
 				2D65622E2561B8C3006D5FB8 /* PushNotificationPayload.apns */,
 				2D65622A2561B8C2006D5FB8 /* Preview Content */,
+				2D04495325633AD8002F1230 /* WatchPresenter.swift */,
 			);
 			path = "SpotActionsWatch Extension";
 			sourceTree = "<group>";
@@ -316,7 +319,7 @@
 				2D38D2CF256184CD00071485 /* iOSDependencies.swift */,
 				2D38D2AC2561809700071485 /* Dependencies.swift */,
 				2D38D2E5256188AA00071485 /* iOSConnectivity.swift */,
-				2DF5B8A32561C66E008D1FE1 /* WatchMessageWrapper.swift */,
+				2DF5B8A32561C66E008D1FE1 /* WatchAppContextWrapper.swift */,
 			);
 			path = SpotActions;
 			sourceTree = "<group>";
@@ -591,7 +594,8 @@
 				2D65621F2561B8C2006D5FB8 /* SpotActionsApp.swift in Sources */,
 				2D65627C2561BAB1006D5FB8 /* Dependencies.swift in Sources */,
 				2D6562252561B8C2006D5FB8 /* NotificationView.swift in Sources */,
-				2DF5B8AF2561C67D008D1FE1 /* WatchMessageWrapper.swift in Sources */,
+				2D04495425633AD8002F1230 /* WatchPresenter.swift in Sources */,
+				2DF5B8AF2561C67D008D1FE1 /* WatchAppContextWrapper.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -601,7 +605,7 @@
 			files = (
 				2DD91AE024F119B50032D7C6 /* WebAuth.swift in Sources */,
 				2D9272C7250D0C600052E4B6 /* ModelExtensions.swift in Sources */,
-				2DF5B8A42561C66E008D1FE1 /* WatchMessageWrapper.swift in Sources */,
+				2DF5B8A42561C66E008D1FE1 /* WatchAppContextWrapper.swift in Sources */,
 				2D324DC02504E63C00703432 /* GetPlaylistTracksHandler.swift in Sources */,
 				2D38D28F25617EA200071485 /* iOSSystemPublishers.swift in Sources */,
 				2D65628F2561BCFC006D5FB8 /* WatchScreenModel.swift in Sources */,

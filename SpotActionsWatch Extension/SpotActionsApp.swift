@@ -17,6 +17,8 @@ struct SpotActionsApp: App {
 
     var connect: WatchConnect
 
+
+
     init() {
         systemPublishers.appIsInForeground.sink { value in
             print("AppForeground: \(value)")
@@ -28,7 +30,7 @@ struct SpotActionsApp: App {
     @SceneBuilder var body: some Scene {
         WindowGroup {
             NavigationView {
-                ContentView()
+                ContentView(presenter: WatchPresenter(connectivity: connect))
             }
         }
 

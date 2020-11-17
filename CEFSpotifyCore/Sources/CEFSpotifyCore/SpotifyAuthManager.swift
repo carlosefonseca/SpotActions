@@ -268,11 +268,11 @@ public final class SpotifyAuthManagerImplementation: ObservableObject, SpotifyAu
 }
 
 public struct TokenResponse: Codable, Equatable {
-    var accessToken: String?
-    var tokenType: String?
-    var scope: String?
-    var expiresIn: Int?
-    var refreshToken: String?
+    public var accessToken: String?
+    public var tokenType: String?
+    public var scope: String?
+    public var expiresIn: Int?
+    public var refreshToken: String?
 
     public init() {}
 }

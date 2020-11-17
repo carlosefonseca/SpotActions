@@ -37,7 +37,7 @@ class MainPresenter: ObservableObject {
 
     @Published var triggerUpdate: Int = 0
 
-    var connect = iOSConnectivity()
+    var connect: iOSConnectivity
 
     public init(auth: SpotifyAuthManager, userManager: UserManager, playlistManager: PlaylistsManager, playerManager: PlayerManager, systemPublishers: SystemPublishers) {
         self.auth = auth
@@ -45,6 +45,8 @@ class MainPresenter: ObservableObject {
         self.playlistManager = playlistManager
         self.playerManager = playerManager
         self.systemPublishers = systemPublishers
+
+        connect = iOSConnectivity(authManager: auth)
 
         self.auth.statePublisher
             .receive(on: RunLoop.main)
@@ -172,7 +174,10 @@ class MainPresenter: ObservableObject {
             })
             .first()
             .receive(on: RunLoop.main)
-            .handleEvents(receiveOutput: { playing in self.playing = playing })
+            .handleEvents(receiveOutput: { playing in
+                self.playing = playing
+                self.connect.sendWatchMessage(data: playing)
+            })
             .eraseToAnyPublisher()
             .sink(receiveCompletion: { _ in }, receiveValue: { _ in })
             .store(in: &bag)

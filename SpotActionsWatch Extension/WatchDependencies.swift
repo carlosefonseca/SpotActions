@@ -8,6 +8,7 @@ import SwiftUI
 import Intents
 import CEFSpotifyCore
 import WatchConnectivity
+import CEFSpotifyDoubles
 
 struct WatchDependencies: Dependencies {
     var keychain: CredentialStore
@@ -35,7 +36,7 @@ struct WatchDependencies: Dependencies {
     init() {
         keychain = Keychain()
         requester = UrlSessionRequester()
-        auth = MockSpotifyAuthManager()
+        auth = SpotifyAuthManagerImplementation(webAuthManager: NoCanDoWebAuth(), credentialStore: keychain, requester: requester)
         spotifyRequestManager = AuthenticatedSpotifyRequestManager(auth: auth, requester: requester)
         gateways = Gateways(baseURL: URL(string: "https://api.spotify.com")!, requestManager: spotifyRequestManager)
 
@@ -49,7 +50,6 @@ struct WatchDependencies: Dependencies {
         systemPublishers = WatchSystemPublishers()
     }
 }
-
 
 public class MockSpotifyAuthManager: SpotifyAuthManager {
 
@@ -88,4 +88,11 @@ public class MockSpotifyAuthManager: SpotifyAuthManager {
     @Published public var state: AuthState
 
     public var statePublisher: AnyPublisher<AuthState, Never> { $state.eraseToAnyPublisher() }
+}
+
+struct NoCanDoWebAuth: WebAuth {
+
+    func executeLogin(url: URL, callbackURLScheme: String, callback: @escaping (Result<URL, Error>) -> Void) {
+        callback(.failure("Please login on the iOS app"))
+    }
 }
