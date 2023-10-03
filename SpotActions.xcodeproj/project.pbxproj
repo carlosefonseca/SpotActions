@@ -168,6 +168,7 @@
 		2D755B0324F5897B00800222 /* GetUserProfileHandlerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetUserProfileHandlerTests.swift; sourceTree = "<group>"; };
 		2D7A560E2528B6140084D2B7 /* MixTracksHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MixTracksHandler.swift; sourceTree = "<group>"; };
 		2D9272C6250D0C600052E4B6 /* ModelExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelExtensions.swift; sourceTree = "<group>"; };
+		2D9A390A2ACC4795006EE8A7 /* Secrets.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Secrets.xcconfig; sourceTree = "<group>"; };
 		2DA5DE5124EE819A00E9BE87 /* SpotActions.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SpotActions.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2DA5DE5424EE819A00E9BE87 /* SpotActionsApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotActionsApp.swift; sourceTree = "<group>"; };
 		2DA5DE5624EE819A00E9BE87 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -320,6 +321,7 @@
 				2D38D2AC2561809700071485 /* Dependencies.swift */,
 				2D38D2E5256188AA00071485 /* iOSConnectivity.swift */,
 				2DF5B8A32561C66E008D1FE1 /* WatchAppContextWrapper.swift */,
+				2D9A390A2ACC4795006EE8A7 /* Secrets.xcconfig */,
 			);
 			path = SpotActions;
 			sourceTree = "<group>";

@@ -32,6 +32,15 @@ public class FakeUserManager: UserManager {
         self.fakeUser = fakeUser
     }
 
+    public init(defaultUser: Bool) {
+        if defaultUser {
+            var user = UserJSON()
+            user.id = "id"
+            user.displayName = "Fake User"
+            self.fakeUser = UserJSON()
+        }
+    }
+
     public func getUser(completion: @escaping (Result<UserJSON, SpotifyRequestError>) -> Void) {
         if getUserShouldFail {
             completion(.failure(SpotifyRequestError.requestError(error: nil)))

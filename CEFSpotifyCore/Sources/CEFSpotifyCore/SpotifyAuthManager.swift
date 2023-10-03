@@ -46,7 +46,6 @@ public enum RefreshTokenError: Error, LocalizedError {
 
 public final class SpotifyAuthManagerImplementation: ObservableObject, SpotifyAuthManager {
 
-    // TODO: Move to config files or whatever
     lazy var authorizationUrl = URL(string: "https://accounts.spotify.com/authorize")!
     lazy var accessTokenUrl = URL(string: "https://accounts.spotify.com/api/token")!
     lazy var scopes = "playlist-read-private playlist-read-collaborative playlist-modify-private playlist-modify-public user-read-email user-read-recently-played user-read-private user-read-playback-state user-modify-playback-state"

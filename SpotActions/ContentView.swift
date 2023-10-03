@@ -2,18 +2,19 @@
 //  ContentView.swift
 //
 
-import SwiftUI
-import Intents
 import CEFSpotifyCore
 import Combine
+import Intents
 import SDWebImageSwiftUI
+import SwiftUI
+import CEFSpotifyDoubles
 
 struct ContentView: View {
 
     @ObservedObject var presenter: MainPresenter
 
     fileprivate func userRow(_ name: String) -> some View {
-        return HStack {
+        HStack {
             Text(name)
             Spacer()
             Button("Logout", action: { presenter.auth.logout() })
@@ -21,7 +22,7 @@ struct ContentView: View {
     }
 
     fileprivate func mediaControls() -> some View {
-        return HStack {
+        HStack {
             Button(action: { presenter.previous() }) {
                 Image(systemName: "backward.end.fill")
                     .foregroundColor(.primary)
@@ -84,6 +85,21 @@ struct ContentView: View {
                 Text("DEVICES")
                 Spacer()
             }.background(Color("tablePlainHeaderFooterFloatingBackgroundColor"))
+
+            Menu {
+                ForEach(self.presenter.devices) { _ in
+
+                    Button {
+                        // do something
+                    } label: {
+                        Text("Linear")
+                        Image(systemName: "arrow.down.right.circle")
+                    }
+                }
+            } label: {
+                Text("Style")
+                Image(systemName: "tag.circle")
+            }
 
             ScrollView(.horizontal) {
                 HStack {
@@ -173,15 +189,14 @@ struct ContentView: View {
     }
 }
 
-//struct ContentView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        ContentView(presenter: MainPresenter(auth: FakeSpotifyAuthManager(),
-//                                             userManager: FakeUserManager(),
-//                                             playlistManager: FakePlaylistsManager(),
-//                                             playerManager: FakePlayerManager(),
-//                                             systemPublishers: SystemPublishersImplementation()))
-//    }
-//}
+#Preview {
+    ContentView(presenter: MainPresenter(auth: FakeSpotifyAuthManager(initialState: .loggedIn(token: TokenResponse())),
+                                         userManager: FakeUserManager(defaultUser: true),
+                                         playlistManager: FakePlaylistsManager(),
+                                         playerManager: FakePlayerManager(),
+                                         systemPublishers: iOSSystemPublishers()))
+    
+}
 
 extension DeviceJSON {
     func icon() -> String {
