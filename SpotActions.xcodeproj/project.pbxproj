@@ -48,6 +48,31 @@
 		2D755B0924F5922600800222 /* CEFSpotifyDoubles in Frameworks */ = {isa = PBXBuildFile; productRef = 2D755B0824F5922600800222 /* CEFSpotifyDoubles */; };
 		2D7A560F2528B6150084D2B7 /* MixTracksHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D7A560E2528B6140084D2B7 /* MixTracksHandler.swift */; };
 		2D9272C7250D0C600052E4B6 /* ModelExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D9272C6250D0C600052E4B6 /* ModelExtensions.swift */; };
+		2D9A38B12ACC0A7A006EE8A7 /* GetUserPlaylists.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D9A38982ACC0A7A006EE8A7 /* GetUserPlaylists.swift */; };
+		2D9A38B22ACC0A7A006EE8A7 /* RemoveTracksFromPlaylists.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D9A38992ACC0A7A006EE8A7 /* RemoveTracksFromPlaylists.swift */; };
+		2D9A38B32ACC0A7A006EE8A7 /* GetUserProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D9A389A2ACC0A7A006EE8A7 /* GetUserProfile.swift */; };
+		2D9A38B42ACC0A7A006EE8A7 /* GetPlaylistTracks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D9A389B2ACC0A7A006EE8A7 /* GetPlaylistTracks.swift */; };
+		2D9A38B52ACC0A7A006EE8A7 /* GetPlayingTrack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D9A389C2ACC0A7A006EE8A7 /* GetPlayingTrack.swift */; };
+		2D9A38B62ACC0A7A006EE8A7 /* MixTracks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D9A389D2ACC0A7A006EE8A7 /* MixTracks.swift */; };
+		2D9A38B72ACC0A7A006EE8A7 /* GetDetailsOfTrack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D9A389E2ACC0A7A006EE8A7 /* GetDetailsOfTrack.swift */; };
+		2D9A38B82ACC0A7A006EE8A7 /* GetDetailsOfPlaylist.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D9A389F2ACC0A7A006EE8A7 /* GetDetailsOfPlaylist.swift */; };
+		2D9A38B92ACC0A7A006EE8A7 /* SaveTracksOnPlaylist.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D9A38A02ACC0A7A006EE8A7 /* SaveTracksOnPlaylist.swift */; };
+		2D9A38BA2ACC0A7A006EE8A7 /* FilterTracks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D9A38A12ACC0A7A006EE8A7 /* FilterTracks.swift */; };
+		2D9A38BB2ACC0A7A006EE8A7 /* GetPlayingPlaylist.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D9A38A22ACC0A7A006EE8A7 /* GetPlayingPlaylist.swift */; };
+		2D9A38BC2ACC0A7A006EE8A7 /* INArtistAppEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D9A38A32ACC0A7A006EE8A7 /* INArtistAppEntity.swift */; };
+		2D9A38BD2ACC0A7A006EE8A7 /* INTrackAppEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D9A38A42ACC0A7A006EE8A7 /* INTrackAppEntity.swift */; };
+		2D9A38BE2ACC0A7A006EE8A7 /* INPlaylistAppEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D9A38A52ACC0A7A006EE8A7 /* INPlaylistAppEntity.swift */; };
+		2D9A38BF2ACC0A7A006EE8A7 /* INExternalIdAppEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D9A38A62ACC0A7A006EE8A7 /* INExternalIdAppEntity.swift */; };
+		2D9A38C02ACC0A7A006EE8A7 /* INUserAppEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D9A38A72ACC0A7A006EE8A7 /* INUserAppEntity.swift */; };
+		2D9A38C12ACC0A7A006EE8A7 /* FilterTracksModeAppEnum.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D9A38A82ACC0A7A006EE8A7 /* FilterTracksModeAppEnum.swift */; };
+		2D9A38C22ACC0A7A006EE8A7 /* INDetailsOfPlaylistAppEnum.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D9A38A92ACC0A7A006EE8A7 /* INDetailsOfPlaylistAppEnum.swift */; };
+		2D9A38C32ACC0A7A006EE8A7 /* FetchPageModeAppEnum.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D9A38AA2ACC0A7A006EE8A7 /* FetchPageModeAppEnum.swift */; };
+		2D9A38C42ACC0A7A006EE8A7 /* GetPlaylistTracksOptionAppEnum.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D9A38AB2ACC0A7A006EE8A7 /* GetPlaylistTracksOptionAppEnum.swift */; };
+		2D9A38C52ACC0A7A006EE8A7 /* INLimitModeAppEnum.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D9A38AC2ACC0A7A006EE8A7 /* INLimitModeAppEnum.swift */; };
+		2D9A38C62ACC0A7A006EE8A7 /* FilterTracksMatcherAppEnum.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D9A38AD2ACC0A7A006EE8A7 /* FilterTracksMatcherAppEnum.swift */; };
+		2D9A38C72ACC0A7A006EE8A7 /* INUnitAppEnum.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D9A38AE2ACC0A7A006EE8A7 /* INUnitAppEnum.swift */; };
+		2D9A38C82ACC0A7A006EE8A7 /* INMixTypeAppEnum.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D9A38AF2ACC0A7A006EE8A7 /* INMixTypeAppEnum.swift */; };
+		2D9A38C92ACC0A7A006EE8A7 /* INDetailsOfTrackAppEnum.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D9A38B02ACC0A7A006EE8A7 /* INDetailsOfTrackAppEnum.swift */; };
 		2DA5DE5524EE819A00E9BE87 /* SpotActionsApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DA5DE5424EE819A00E9BE87 /* SpotActionsApp.swift */; };
 		2DA5DE5724EE819A00E9BE87 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DA5DE5624EE819A00E9BE87 /* ContentView.swift */; };
 		2DA5DE5924EE819B00E9BE87 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2DA5DE5824EE819B00E9BE87 /* Assets.xcassets */; };
@@ -169,6 +194,31 @@
 		2D7A560E2528B6140084D2B7 /* MixTracksHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MixTracksHandler.swift; sourceTree = "<group>"; };
 		2D9272C6250D0C600052E4B6 /* ModelExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelExtensions.swift; sourceTree = "<group>"; };
 		2D9A390A2ACC4795006EE8A7 /* Secrets.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Secrets.xcconfig; sourceTree = "<group>"; };
+		2D9A38982ACC0A7A006EE8A7 /* GetUserPlaylists.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetUserPlaylists.swift; sourceTree = "<group>"; };
+		2D9A38992ACC0A7A006EE8A7 /* RemoveTracksFromPlaylists.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoveTracksFromPlaylists.swift; sourceTree = "<group>"; };
+		2D9A389A2ACC0A7A006EE8A7 /* GetUserProfile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetUserProfile.swift; sourceTree = "<group>"; };
+		2D9A389B2ACC0A7A006EE8A7 /* GetPlaylistTracks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetPlaylistTracks.swift; sourceTree = "<group>"; };
+		2D9A389C2ACC0A7A006EE8A7 /* GetPlayingTrack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetPlayingTrack.swift; sourceTree = "<group>"; };
+		2D9A389D2ACC0A7A006EE8A7 /* MixTracks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MixTracks.swift; sourceTree = "<group>"; };
+		2D9A389E2ACC0A7A006EE8A7 /* GetDetailsOfTrack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetDetailsOfTrack.swift; sourceTree = "<group>"; };
+		2D9A389F2ACC0A7A006EE8A7 /* GetDetailsOfPlaylist.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetDetailsOfPlaylist.swift; sourceTree = "<group>"; };
+		2D9A38A02ACC0A7A006EE8A7 /* SaveTracksOnPlaylist.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveTracksOnPlaylist.swift; sourceTree = "<group>"; };
+		2D9A38A12ACC0A7A006EE8A7 /* FilterTracks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterTracks.swift; sourceTree = "<group>"; };
+		2D9A38A22ACC0A7A006EE8A7 /* GetPlayingPlaylist.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetPlayingPlaylist.swift; sourceTree = "<group>"; };
+		2D9A38A32ACC0A7A006EE8A7 /* INArtistAppEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = INArtistAppEntity.swift; sourceTree = "<group>"; };
+		2D9A38A42ACC0A7A006EE8A7 /* INTrackAppEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = INTrackAppEntity.swift; sourceTree = "<group>"; };
+		2D9A38A52ACC0A7A006EE8A7 /* INPlaylistAppEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = INPlaylistAppEntity.swift; sourceTree = "<group>"; };
+		2D9A38A62ACC0A7A006EE8A7 /* INExternalIdAppEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = INExternalIdAppEntity.swift; sourceTree = "<group>"; };
+		2D9A38A72ACC0A7A006EE8A7 /* INUserAppEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = INUserAppEntity.swift; sourceTree = "<group>"; };
+		2D9A38A82ACC0A7A006EE8A7 /* FilterTracksModeAppEnum.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterTracksModeAppEnum.swift; sourceTree = "<group>"; };
+		2D9A38A92ACC0A7A006EE8A7 /* INDetailsOfPlaylistAppEnum.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = INDetailsOfPlaylistAppEnum.swift; sourceTree = "<group>"; };
+		2D9A38AA2ACC0A7A006EE8A7 /* FetchPageModeAppEnum.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchPageModeAppEnum.swift; sourceTree = "<group>"; };
+		2D9A38AB2ACC0A7A006EE8A7 /* GetPlaylistTracksOptionAppEnum.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetPlaylistTracksOptionAppEnum.swift; sourceTree = "<group>"; };
+		2D9A38AC2ACC0A7A006EE8A7 /* INLimitModeAppEnum.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = INLimitModeAppEnum.swift; sourceTree = "<group>"; };
+		2D9A38AD2ACC0A7A006EE8A7 /* FilterTracksMatcherAppEnum.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterTracksMatcherAppEnum.swift; sourceTree = "<group>"; };
+		2D9A38AE2ACC0A7A006EE8A7 /* INUnitAppEnum.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = INUnitAppEnum.swift; sourceTree = "<group>"; };
+		2D9A38AF2ACC0A7A006EE8A7 /* INMixTypeAppEnum.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = INMixTypeAppEnum.swift; sourceTree = "<group>"; };
+		2D9A38B02ACC0A7A006EE8A7 /* INDetailsOfTrackAppEnum.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = INDetailsOfTrackAppEnum.swift; sourceTree = "<group>"; };
 		2DA5DE5124EE819A00E9BE87 /* SpotActions.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SpotActions.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2DA5DE5424EE819A00E9BE87 /* SpotActionsApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotActionsApp.swift; sourceTree = "<group>"; };
 		2DA5DE5624EE819A00E9BE87 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -280,6 +330,31 @@
 		2DA5DE4824EE819A00E9BE87 = {
 			isa = PBXGroup;
 			children = (
+				2D9A38982ACC0A7A006EE8A7 /* GetUserPlaylists.swift */,
+				2D9A38992ACC0A7A006EE8A7 /* RemoveTracksFromPlaylists.swift */,
+				2D9A389A2ACC0A7A006EE8A7 /* GetUserProfile.swift */,
+				2D9A389B2ACC0A7A006EE8A7 /* GetPlaylistTracks.swift */,
+				2D9A389C2ACC0A7A006EE8A7 /* GetPlayingTrack.swift */,
+				2D9A389D2ACC0A7A006EE8A7 /* MixTracks.swift */,
+				2D9A389E2ACC0A7A006EE8A7 /* GetDetailsOfTrack.swift */,
+				2D9A389F2ACC0A7A006EE8A7 /* GetDetailsOfPlaylist.swift */,
+				2D9A38A02ACC0A7A006EE8A7 /* SaveTracksOnPlaylist.swift */,
+				2D9A38A12ACC0A7A006EE8A7 /* FilterTracks.swift */,
+				2D9A38A22ACC0A7A006EE8A7 /* GetPlayingPlaylist.swift */,
+				2D9A38A32ACC0A7A006EE8A7 /* INArtistAppEntity.swift */,
+				2D9A38A42ACC0A7A006EE8A7 /* INTrackAppEntity.swift */,
+				2D9A38A52ACC0A7A006EE8A7 /* INPlaylistAppEntity.swift */,
+				2D9A38A62ACC0A7A006EE8A7 /* INExternalIdAppEntity.swift */,
+				2D9A38A72ACC0A7A006EE8A7 /* INUserAppEntity.swift */,
+				2D9A38A82ACC0A7A006EE8A7 /* FilterTracksModeAppEnum.swift */,
+				2D9A38A92ACC0A7A006EE8A7 /* INDetailsOfPlaylistAppEnum.swift */,
+				2D9A38AA2ACC0A7A006EE8A7 /* FetchPageModeAppEnum.swift */,
+				2D9A38AB2ACC0A7A006EE8A7 /* GetPlaylistTracksOptionAppEnum.swift */,
+				2D9A38AC2ACC0A7A006EE8A7 /* INLimitModeAppEnum.swift */,
+				2D9A38AD2ACC0A7A006EE8A7 /* FilterTracksMatcherAppEnum.swift */,
+				2D9A38AE2ACC0A7A006EE8A7 /* INUnitAppEnum.swift */,
+				2D9A38AF2ACC0A7A006EE8A7 /* INMixTypeAppEnum.swift */,
+				2D9A38B02ACC0A7A006EE8A7 /* INDetailsOfTrackAppEnum.swift */,
 				2DA5DE5324EE819A00E9BE87 /* SpotActions */,
 				2DA5DE6524EE819B00E9BE87 /* SpotActionsTests */,
 				2DA5DE7024EE819B00E9BE87 /* SpotActionsUITests */,
@@ -605,30 +680,55 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2D9A38C42ACC0A7A006EE8A7 /* GetPlaylistTracksOptionAppEnum.swift in Sources */,
+				2D9A38BD2ACC0A7A006EE8A7 /* INTrackAppEntity.swift in Sources */,
 				2DD91AE024F119B50032D7C6 /* WebAuth.swift in Sources */,
 				2D9272C7250D0C600052E4B6 /* ModelExtensions.swift in Sources */,
+				2D9A38B82ACC0A7A006EE8A7 /* GetDetailsOfPlaylist.swift in Sources */,
+				2D9A38C22ACC0A7A006EE8A7 /* INDetailsOfPlaylistAppEnum.swift in Sources */,
+				2D9A38C02ACC0A7A006EE8A7 /* INUserAppEntity.swift in Sources */,
+				2D9A38B52ACC0A7A006EE8A7 /* GetPlayingTrack.swift in Sources */,
 				2DF5B8A42561C66E008D1FE1 /* WatchAppContextWrapper.swift in Sources */,
 				2D324DC02504E63C00703432 /* GetPlaylistTracksHandler.swift in Sources */,
 				2D38D28F25617EA200071485 /* iOSSystemPublishers.swift in Sources */,
 				2D65628F2561BCFC006D5FB8 /* WatchScreenModel.swift in Sources */,
+				2D9A38C32ACC0A7A006EE8A7 /* FetchPageModeAppEnum.swift in Sources */,
+				2D9A38B12ACC0A7A006EE8A7 /* GetUserPlaylists.swift in Sources */,
+				2D9A38BF2ACC0A7A006EE8A7 /* INExternalIdAppEntity.swift in Sources */,
 				2DE4A61E253CA71C00893326 /* GetDetailsOfTrackHandler.swift in Sources */,
 				2D7A560F2528B6150084D2B7 /* MixTracksHandler.swift in Sources */,
+				2D9A38BA2ACC0A7A006EE8A7 /* FilterTracks.swift in Sources */,
 				2D38D2E6256188AA00071485 /* iOSConnectivity.swift in Sources */,
+				2D9A38B92ACC0A7A006EE8A7 /* SaveTracksOnPlaylist.swift in Sources */,
 				2D38D22B2560987400071485 /* SystemPublishers.swift in Sources */,
 				2DD91AE224F11ADF0032D7C6 /* Keychain.swift in Sources */,
 				2D38D2AD2561809700071485 /* Dependencies.swift in Sources */,
+				2D9A38C52ACC0A7A006EE8A7 /* INLimitModeAppEnum.swift in Sources */,
 				2D324DC2250578B200703432 /* SaveTracksOnPlaylistHandler.swift in Sources */,
 				2D6A966624F27D1800993587 /* GetUserPlaylistsHandler.swift in Sources */,
+				2D9A38B32ACC0A7A006EE8A7 /* GetUserProfile.swift in Sources */,
 				2DA5DE5724EE819A00E9BE87 /* ContentView.swift in Sources */,
 				2DAC399F24F1DC73003AC458 /* Intents.intentdefinition in Sources */,
+				2D9A38C72ACC0A7A006EE8A7 /* INUnitAppEnum.swift in Sources */,
+				2D9A38C82ACC0A7A006EE8A7 /* INMixTypeAppEnum.swift in Sources */,
 				2DAC39A324F1ED40003AC458 /* GetUserProfileHandler.swift in Sources */,
 				2D69014E2506E3580038F798 /* FilterTracksHandler.swift in Sources */,
+				2D9A38B22ACC0A7A006EE8A7 /* RemoveTracksFromPlaylists.swift in Sources */,
+				2D9A38B62ACC0A7A006EE8A7 /* MixTracks.swift in Sources */,
+				2D9A38BC2ACC0A7A006EE8A7 /* INArtistAppEntity.swift in Sources */,
 				2D38D26925617D5600071485 /* MainPresenter.swift in Sources */,
+				2D9A38C12ACC0A7A006EE8A7 /* FilterTracksModeAppEnum.swift in Sources */,
 				2D38D2D0256184CD00071485 /* iOSDependencies.swift in Sources */,
 				2D4E15E9250D2E7200BED733 /* GetPlayingPlaylistHandler.swift in Sources */,
+				2D9A38C62ACC0A7A006EE8A7 /* FilterTracksMatcherAppEnum.swift in Sources */,
+				2D9A38B42ACC0A7A006EE8A7 /* GetPlaylistTracks.swift in Sources */,
 				2DA5DE5524EE819A00E9BE87 /* SpotActionsApp.swift in Sources */,
 				2D7063002545D6C200AA6867 /* RemoveTracksFromPlaylistsHandler.swift in Sources */,
 				2D69015025076B580038F798 /* GetPlayingTrackHandler.swift in Sources */,
+				2D9A38BE2ACC0A7A006EE8A7 /* INPlaylistAppEntity.swift in Sources */,
+				2D9A38C92ACC0A7A006EE8A7 /* INDetailsOfTrackAppEnum.swift in Sources */,
+				2D9A38B72ACC0A7A006EE8A7 /* GetDetailsOfTrack.swift in Sources */,
+				2D9A38BB2ACC0A7A006EE8A7 /* GetPlayingPlaylist.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -693,7 +793,6 @@
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 4;
-				WATCHOS_DEPLOYMENT_TARGET = 7.0;
 			};
 			name = Debug;
 		};
@@ -713,7 +812,6 @@
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 4;
-				WATCHOS_DEPLOYMENT_TARGET = 7.0;
 			};
 			name = Release;
 		};
@@ -737,7 +835,6 @@
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 4;
-				WATCHOS_DEPLOYMENT_TARGET = 7.0;
 			};
 			name = Debug;
 		};
@@ -761,7 +858,6 @@
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 4;
-				WATCHOS_DEPLOYMENT_TARGET = 7.0;
 			};
 			name = Release;
 		};
@@ -816,13 +912,14 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				WATCHOS_DEPLOYMENT_TARGET = 10.0;
 			};
 			name = Debug;
 		};
@@ -871,13 +968,14 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				VALIDATE_PRODUCT = YES;
+				WATCHOS_DEPLOYMENT_TARGET = 10.0;
 			};
 			name = Release;
 		};
@@ -892,7 +990,6 @@
 				DEVELOPMENT_TEAM = VF8BTMF3F4;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = SpotActions/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -915,7 +1012,6 @@
 				DEVELOPMENT_TEAM = VF8BTMF3F4;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = SpotActions/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -935,7 +1031,6 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = VF8BTMF3F4;
 				INFOPLIST_FILE = SpotActionsTests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -957,7 +1052,6 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = VF8BTMF3F4;
 				INFOPLIST_FILE = SpotActionsTests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

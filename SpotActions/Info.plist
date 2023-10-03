@@ -56,7 +56,6 @@
 		<string>GetUserProfileIntent</string>
 		<string>MixTracksIntent</string>
 		<string>RemoveTracksFromPlaylistIntent</string>
-		<string>RemoveTracksFromPlaylistsIntent</string>
 		<string>SaveTracksOnPlaylistIntent</string>
 	</array>
 	<key>UIApplicationSceneManifest</key>
