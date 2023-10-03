@@ -580,11 +580,11 @@
 	<key>INIntentDefinitionNamespace</key>
 	<string>3vrzzw</string>
 	<key>INIntentDefinitionSystemVersion</key>
-	<string>19H2</string>
+	<string>22G91</string>
 	<key>INIntentDefinitionToolsBuildVersion</key>
-	<string>12A7403</string>
+	<string>15A240d</string>
 	<key>INIntentDefinitionToolsVersion</key>
-	<string>12.1</string>
+	<string>15.0</string>
 	<key>INIntents</key>
 	<array>
 		<dict>
@@ -3937,26 +3937,6 @@
 							<true/>
 							<key>INIntentParameterPromptDialogType</key>
 							<string>Primary</string>
-						</dict>
-						<dict>
-							<key>INIntentParameterPromptDialogCustom</key>
-							<true/>
-							<key>INIntentParameterPromptDialogFormatString</key>
-							<string>There are ${count} options matching ‘${playlists}’.</string>
-							<key>INIntentParameterPromptDialogFormatStringID</key>
-							<string>FRu4et</string>
-							<key>INIntentParameterPromptDialogType</key>
-							<string>DisambiguationIntroduction</string>
-						</dict>
-						<dict>
-							<key>INIntentParameterPromptDialogCustom</key>
-							<true/>
-							<key>INIntentParameterPromptDialogFormatString</key>
-							<string>Just to confirm, you wanted ‘${playlists}’?</string>
-							<key>INIntentParameterPromptDialogFormatStringID</key>
-							<string>Gt34zc</string>
-							<key>INIntentParameterPromptDialogType</key>
-							<string>Confirmation</string>
 						</dict>
 					</array>
 					<key>INIntentParameterSupportsDynamicEnumeration</key>

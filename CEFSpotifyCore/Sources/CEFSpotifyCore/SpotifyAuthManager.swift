@@ -2,8 +2,8 @@
 //  SpotifyAuthManager.swift
 //
 
-import Foundation
 import Combine
+import Foundation
 
 public protocol WebAuth {
     func executeLogin(url: URL, callbackURLScheme: String, callback: @escaping (Result<URL, Error>) -> Void)
@@ -34,11 +34,11 @@ public enum RefreshTokenError: Error, LocalizedError {
         switch self {
         case .noLogin:
             return "No Login"
-        case .requestError(let error):
+        case let .requestError(error):
             return "Request Error (\(error))"
-        case .otherError(let error):
+        case let .otherError(error):
             return "Error (\(error))"
-        case .other(let message):
+        case let .other(message):
             return "Error (\(message))"
         }
     }
@@ -47,16 +47,17 @@ public enum RefreshTokenError: Error, LocalizedError {
 public final class SpotifyAuthManagerImplementation: ObservableObject, SpotifyAuthManager {
 
     // TODO: Move to config files or whatever
-    lazy var authorizationUrl = { URL(string: "https://accounts.spotify.com/authorize")! }()
-    lazy var accessTokenUrl = { URL(string: "https://accounts.spotify.com/api/token")! }()
-    lazy var scopes = { "playlist-read-private playlist-read-collaborative playlist-modify-private playlist-modify-public user-read-email user-read-recently-played user-read-private user-read-playback-state user-modify-playback-state" }()
+    lazy var authorizationUrl = URL(string: "https://accounts.spotify.com/authorize")!
+    lazy var accessTokenUrl = URL(string: "https://accounts.spotify.com/api/token")!
+    lazy var scopes = "playlist-read-private playlist-read-collaborative playlist-modify-private playlist-modify-public user-read-email user-read-recently-played user-read-private user-read-playback-state user-modify-playback-state"
 
-    lazy var clientId = { "" }()
-    lazy var clientSecret = { "" }()
+    lazy var clientId = ""
+    lazy var clientSecret = ""
 
-    lazy var authUrlState = { UUID().uuidString }()
+    lazy var authUrlState = UUID().uuidString
 
     let redirectUri = "spotactions://auth"
+    let callbackScheme = "spotactions"
 
     private let defaultAccountKey = "defaultAccount"
 
@@ -70,12 +71,12 @@ public final class SpotifyAuthManagerImplementation: ObservableObject, SpotifyAu
             URLQueryItem(name: "response_type", value: "code"),
             URLQueryItem(name: "redirect_uri", value: redirectUri),
             URLQueryItem(name: "state", value: authUrlState),
-            URLQueryItem(name: "scope", value: scopes),
+            URLQueryItem(name: "scope", value: scopes)
         ]
         return y.url!
     }()
 
-    lazy var authHeader = { "\(clientId):\(clientSecret)".data(using: String.Encoding.utf8)?.base64EncodedString() }()
+    lazy var authHeader = "\(clientId):\(clientSecret)".data(using: String.Encoding.utf8)?.base64EncodedString()
 
     var webAuthManager: WebAuth
     var credentialStore: CredentialStore
@@ -101,9 +102,9 @@ public final class SpotifyAuthManagerImplementation: ObservableObject, SpotifyAu
 
     public func login() {
 
-        webAuthManager.executeLogin(url: fullAuthorizationUrl, callbackURLScheme: redirectUri) { result in
+        webAuthManager.executeLogin(url: fullAuthorizationUrl, callbackURLScheme: callbackScheme) { result in
             switch result {
-            case .success(let url):
+            case let .success(url):
                 let token = NSURLComponents(string: url.absoluteString)?.queryItems?.filter { $0.name == "code" }.first
 
                 // Do what you now that you've got the token, or use the callBack URL
@@ -116,7 +117,7 @@ public final class SpotifyAuthManagerImplementation: ObservableObject, SpotifyAu
 
                 self.swapCodeForToken(token: oauthToken)
 
-            case .failure(let error):
+            case let .failure(error):
                 print(error)
                 self.state = .error(error.localizedDescription)
             }
@@ -154,7 +155,7 @@ public final class SpotifyAuthManagerImplementation: ObservableObject, SpotifyAu
             .decode(type: TokenResponse.self, decoder: decoder)
             .print()
             .sink { completion in
-                if case .failure(let error) = completion {
+                if case let .failure(error) = completion {
                     self.state = .error(error.localizedDescription)
                 }
             } receiveValue: { (value: TokenResponse) in
@@ -200,12 +201,12 @@ public final class SpotifyAuthManagerImplementation: ObservableObject, SpotifyAu
     }
 
     func createRefreshTokenUrlRequest() -> AnyPublisher<URLRequest, RefreshTokenError> {
-        return statePublisher
+        statePublisher
             .first()
             .tryMap { existingToken -> URLRequest in
 
                 guard
-                    case .loggedIn(let token) = existingToken,
+                    case let .loggedIn(token) = existingToken,
                     let refreshToken = token.refreshToken
                 else {
                     print("no refresh token!")
@@ -231,7 +232,7 @@ public final class SpotifyAuthManagerImplementation: ObservableObject, SpotifyAu
                 print(urlRequest)
 
                 return urlRequest
-            }.mapError { (error) -> RefreshTokenError in
+            }.mapError { error -> RefreshTokenError in
 
                 if let refreshTokenError = error as? RefreshTokenError {
                     return refreshTokenError
@@ -252,14 +253,14 @@ public final class SpotifyAuthManagerImplementation: ObservableObject, SpotifyAu
     }
 
     public func refreshToken() -> AnyPublisher<TokenResponse, RefreshTokenError> {
-        return createRefreshTokenUrlRequest()
+        createRefreshTokenUrlRequest()
             .flatMap { self.requestRefreshToken(urlRequest: $0) }
             .eraseToAnyPublisher()
             .print("SpotifyAuthManager.refreshToken")
             .handleEvents(receiveOutput: { value in
                 self.state = .loggedIn(token: value)
             }, receiveCompletion: { completion in
-                if case .failure(let error) = completion {
+                if case let .failure(error) = completion {
                     self.state = .error(error.localizedDescription)
                 }
             })
