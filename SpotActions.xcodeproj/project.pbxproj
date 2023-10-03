@@ -679,6 +679,7 @@
 /* Begin XCBuildConfiguration section */
 		2D6562332561B8C3006D5FB8 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 2D9A390A2ACC4795006EE8A7 /* Secrets.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -699,6 +700,7 @@
 		};
 		2D6562342561B8C3006D5FB8 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 2D9A390A2ACC4795006EE8A7 /* Secrets.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -883,6 +885,7 @@
 		};
 		2DA5DE7724EE819B00E9BE87 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 2D9A390A2ACC4795006EE8A7 /* Secrets.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -906,6 +909,7 @@
 		};
 		2DA5DE7824EE819B00E9BE87 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 2D9A390A2ACC4795006EE8A7 /* Secrets.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;

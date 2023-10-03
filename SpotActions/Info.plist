@@ -64,6 +64,10 @@
 		<key>UIApplicationSupportsMultipleScenes</key>
 		<true/>
 	</dict>
+	<key>ClientId</key>
+	<string>${clientId}</string>
+	<key>ClientSecret</key>
+	<string>$(clientSecret)</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UILaunchScreen</key>

@@ -34,9 +34,12 @@ struct WatchDependencies: Dependencies {
     var systemPublishers: SystemPublishers
 
     init() {
+        let clientId = Bundle.main.object(forInfoDictionaryKey: "ClientId") as! String
+        let clientSecret = Bundle.main.object(forInfoDictionaryKey: "ClientSecret") as! String
+
         keychain = Keychain()
         requester = UrlSessionRequester()
-        auth = SpotifyAuthManagerImplementation(webAuthManager: NoCanDoWebAuth(), credentialStore: keychain, requester: requester)
+        auth = SpotifyAuthManagerImplementation(webAuthManager: NoCanDoWebAuth(), credentialStore: keychain, requester: requester, clientId: clientId, clientSecret: clientSecret)
         spotifyRequestManager = AuthenticatedSpotifyRequestManager(auth: auth, requester: requester)
         gateways = Gateways(baseURL: URL(string: "https://api.spotify.com")!, requestManager: spotifyRequestManager)
 

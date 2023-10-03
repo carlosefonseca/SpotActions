@@ -29,5 +29,9 @@
 	<string>com.carlosefonseca.SpotActions</string>
 	<key>WKWatchKitApp</key>
 	<true/>
+	<key>ClientId</key>
+	<string>${clientId}</string>
+	<key>ClientSecret</key>
+	<string>${clientSecret}</string>
 </dict>
 </plist>

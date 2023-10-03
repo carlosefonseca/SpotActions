@@ -50,8 +50,8 @@ public final class SpotifyAuthManagerImplementation: ObservableObject, SpotifyAu
     lazy var accessTokenUrl = URL(string: "https://accounts.spotify.com/api/token")!
     lazy var scopes = "playlist-read-private playlist-read-collaborative playlist-modify-private playlist-modify-public user-read-email user-read-recently-played user-read-private user-read-playback-state user-modify-playback-state"
 
-    lazy var clientId = ""
-    lazy var clientSecret = ""
+    var clientId = ""
+    var clientSecret = ""
 
     lazy var authUrlState = UUID().uuidString
 
@@ -83,10 +83,12 @@ public final class SpotifyAuthManagerImplementation: ObservableObject, SpotifyAu
 
     let decoder: JSONDecoder
 
-    public init(webAuthManager: WebAuth, credentialStore: CredentialStore, requester: URLRequester) {
+    public init(webAuthManager: WebAuth, credentialStore: CredentialStore, requester: URLRequester, clientId: String, clientSecret: String) {
         self.webAuthManager = webAuthManager
         self.credentialStore = credentialStore
         self.requester = requester
+        self.clientId = clientId
+        self.clientSecret = clientSecret
         decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
         guard let token = getToken() else { return }
